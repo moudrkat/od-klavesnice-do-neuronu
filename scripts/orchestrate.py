@@ -2,7 +2,7 @@
 # Orchestrace v terminálu: přání -> refiner(4B) -> builder(1.5B) -> reviewer(4B) -> guard(probe)
 import sys, json, torch, glob, os
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"
+dev="cuda" if torch.cuda.is_available() else "cpu"
 def snap(repo):
     for r in ["~/.cache/huggingface","~/projects/science/vibe-inside/hf"]:
         g=glob.glob(os.path.expanduser(r+"/hub/models--"+repo.replace("/","--")+"/snapshots/*"))
@@ -11,7 +11,7 @@ def snap(repo):
 R=lambda s:f"\x1b[31m{s}\x1b[0m"; G=lambda s:f"\x1b[32m{s}\x1b[0m"; C=lambda s:f"\x1b[36m{s}\x1b[0m"
 Y=lambda s:f"\x1b[33m{s}\x1b[0m"; D=lambda s:f"\x1b[90m{s}\x1b[0m"; B=lambda s:f"\x1b[1m{s}\x1b[0m"
 def load(name):
-    t=AutoTokenizer.from_pretrained(name); m=AutoModelForCausalLM.from_pretrained(name,dtype=torch.bfloat16).to(dev).eval(); return t,m
+    t=AutoTokenizer.from_pretrained(name); m=AutoModelForCausalLM.from_pretrained(name,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval(); return t,m
 print(D("… nahrávám modely (4B refiner+reviewer, 1.5B builder, probe) …"),flush=True)
 t4,m4=load(snap("Qwen/Qwen3-4B-Instruct-2507"))
 tC,mC=load(snap("Qwen/Qwen2.5-Coder-1.5B-Instruct"))

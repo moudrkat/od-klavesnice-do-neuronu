@@ -6,9 +6,9 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 P="HumanEval.jsonl.gz"
 if not os.path.exists(P): urllib.request.urlretrieve("https://github.com/openai/human-eval/raw/master/data/HumanEval.jsonl.gz",P)
 probs=[json.loads(l) for l in gzip.open(P,"rt")]
-dev="cuda"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
+dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 tok=AutoTokenizer.from_pretrained(I); tok.padding_side="left"
-m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 SYS="You are a coding agent. Complete the given Python function. Reply with the complete function in one ```python block."
 def chat(pr): return tok.apply_chat_template([{"role":"system","content":SYS},{"role":"user","content":pr}],tokenize=False,add_generation_prompt=True)
 outs=[]

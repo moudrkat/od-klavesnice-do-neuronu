@@ -1,8 +1,8 @@
 import json, re, torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"; M="Qwen/Qwen2.5-Coder-1.5B-Instruct"
+dev="cuda" if torch.cuda.is_available() else "cpu"; M="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 L=json.load(open("orch_lock.json")); BSYS=L["builder_sys"]; REF=L["refiner_out"]
-tok=AutoTokenizer.from_pretrained(M); m=AutoModelForCausalLM.from_pretrained(M,dtype=torch.bfloat16).to(dev).eval()
+tok=AutoTokenizer.from_pretrained(M); m=AutoModelForCausalLM.from_pretrained(M,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 PROMPT=tok.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":REF}],tokenize=False,add_generation_prompt=True)
 ids=tok(PROMPT,return_tensors="pt").input_ids.to(dev)
 with torch.no_grad(): o=m.generate(ids,max_new_tokens=120,do_sample=False,pad_token_id=tok.eos_token_id)

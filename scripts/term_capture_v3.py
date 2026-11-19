@@ -3,7 +3,7 @@
 import json, torch, glob, os, re
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from ansitoimg.render import ansiToSVG
-dev="cuda"; OUT="term_shots"; os.makedirs(OUT,exist_ok=True)
+dev="cuda" if torch.cuda.is_available() else "cpu"; OUT="term_shots"; os.makedirs(OUT,exist_ok=True)
 def snap(repo):
     for r in ["~/.cache/huggingface","~/projects/science/vibe-inside/hf"]:
         g=glob.glob(os.path.expanduser(r+"/hub/models--"+repo.replace("/","--")+"/snapshots/*"))
@@ -13,7 +13,7 @@ sgr=lambda n:(lambda s:f"\x1b[{n}m{s}\x1b[0m")
 R=sgr("31");G=sgr("32");C=sgr("36");Y=sgr("33");D=sgr("90");B=sgr("1");CB=sgr("1;36");DB=sgr("1;90")
 print(D("… nahrávám modely …"),flush=True)
 def load(name):
-    t=AutoTokenizer.from_pretrained(name); m=AutoModelForCausalLM.from_pretrained(name,dtype=torch.bfloat16).to(dev).eval(); return t,m
+    t=AutoTokenizer.from_pretrained(name); m=AutoModelForCausalLM.from_pretrained(name,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval(); return t,m
 t4,m4=load(snap("Qwen/Qwen3-4B-Instruct-2507"))
 tc,mc=load(snap("Qwen/Qwen2.5-Coder-1.5B-Instruct"))
 P=json.load(open("intent_probe.json")); DIRV=torch.tensor(P["direction"]).to(dev).float(); BIAS=P["bias"]; PL=int(P.get("layer",14)); THR=json.load(open("guard_orch.json"))["thr"]

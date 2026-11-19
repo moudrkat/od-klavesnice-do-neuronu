@@ -1,9 +1,9 @@
 import json, re, torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"
+dev="cuda" if torch.cuda.is_available() else "cpu"
 def load(m,cache):
     import os; os.environ["HF_HOME"]=cache
-    t=AutoTokenizer.from_pretrained(m); mm=AutoModelForCausalLM.from_pretrained(m,dtype=torch.bfloat16).to(dev).eval(); return t,mm
+    t=AutoTokenizer.from_pretrained(m); mm=AutoModelForCausalLM.from_pretrained(m,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval(); return t,mm
 def gen(t,m,msgs,n=140):
     ids=t(t.apply_chat_template(msgs,tokenize=False,add_generation_prompt=True),return_tensors="pt").input_ids.to(dev)
     with torch.no_grad(): o=m.generate(ids,max_new_tokens=n,do_sample=False,pad_token_id=t.eos_token_id)

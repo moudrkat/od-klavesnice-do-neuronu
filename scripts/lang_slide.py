@@ -2,8 +2,8 @@
 # Jazyk retest: neutrální prompt + směr ze SIGNATURY (ne těla) + steer jen střední vrstvy.
 import json,re,torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
-tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
+tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 NL=m.config.num_hidden_layers; HS=m.config.hidden_size
 BSYS="You are a coding agent. You receive a task and write one function. Reply with code only."
 BAND=list(range(6,19))  # střední vrstvy

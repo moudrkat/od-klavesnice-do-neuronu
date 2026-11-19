@@ -2,9 +2,9 @@
 # Hlava, která něco dělá: kumulativní vypnutí nejsilnějších hlav (podle poklesu p(sum)) → p(sum) a celý kód; attention hlavy 20·6.
 import json, re, torch, numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
+dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; USER=Lk["refiner_out"]; CODE0=Lk["builder_out"]
-t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16,attn_implementation="eager").to(dev).eval()
+t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32),attn_implementation="eager").to(dev).eval()
 H=m.config.num_attention_heads; D=m.config.hidden_size//H
 cl=json.load(open("circuit_layer.json")); order=[(L,h) for d,L,h in cl["head_causal_all"]]
 tmpl=t.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":USER}],tokenize=False,add_generation_prompt=True)

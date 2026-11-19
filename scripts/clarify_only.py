@@ -3,7 +3,7 @@
 import torch, glob, os
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from ansitoimg.render import ansiToSVG
-dev="cuda"; OUT="term_shots"
+dev="cuda" if torch.cuda.is_available() else "cpu"; OUT="term_shots"
 def snap(repo):
     for r in ["~/.cache/huggingface","~/projects/science/vibe-inside/hf"]:
         g=glob.glob(os.path.expanduser(r+"/hub/models--"+repo.replace("/","--")+"/snapshots/*"))
@@ -12,7 +12,7 @@ def snap(repo):
 sgr=lambda n:(lambda s:f"\x1b[{n}m{s}\x1b[0m")
 C=sgr("36");Y=sgr("33");D=sgr("90");CB=sgr("1;36");DB=sgr("1;90")
 I=snap("Qwen/Qwen2.5-Coder-1.5B-Instruct")
-tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 def gen(msgs,n=320):
     ids=tok(tok.apply_chat_template(msgs,tokenize=False,add_generation_prompt=True),return_tensors="pt").input_ids.to(dev)
     with torch.no_grad(): o=m.generate(ids,max_new_tokens=n,do_sample=False,pad_token_id=tok.eos_token_id)

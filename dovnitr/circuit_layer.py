@@ -5,9 +5,9 @@
 # na pozicích, kde svítí; (4) logit lens po vrstvách na pozici po `return`. Jen dopředné průchody a greedy generování.
 import json, re, torch, numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
+dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; USER=Lk["refiner_out"]; CODE0=Lk["builder_out"]
-t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16,attn_implementation="eager").to(dev).eval()
+t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32),attn_implementation="eager").to(dev).eval()
 H=m.config.num_attention_heads; D=m.config.hidden_size//H; NL=m.config.num_hidden_layers
 tmpl=t.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":USER}],tokenize=False,add_generation_prompt=True)
 ids=t(tmpl,return_tensors="pt").input_ids.to(dev)

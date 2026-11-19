@@ -4,7 +4,7 @@
 # Greedy, teplota 0. Stejné tokeny jako full_context.py (tmpl + ```python + kód + ```). Výstup: head_null.json
 import json, re, torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"; LZ=20; HD=6
+dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"; LZ=20; HD=6
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; USER=Lk["refiner_out"]; CODE0=Lk["builder_out"]
 t=AutoTokenizer.from_pretrained(I)
 tmpl=t.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":USER}],tokenize=False,add_generation_prompt=True)
@@ -12,7 +12,7 @@ ids=t(tmpl,return_tensors="pt").input_ids.to(dev)
 mm=re.search(r"```(?:python)?\s*(.*?)```",CODE0,re.S); code0=(mm.group(1) if mm else CODE0).strip()
 pref=t(tmpl+"```python\n"+code0[:code0.index("return")+len("return")],return_tensors="pt").input_ids.to(dev)
 # --- 1) ablace po hlavách (sdpa jako v decku) ---
-m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 H=m.config.num_attention_heads; D=m.config.hidden_size//H
 def head_hook(h,f):
     def pre(mod,args):
@@ -38,7 +38,7 @@ null=min(cands,key=lambda r: abs(r["d_sum"]))["head"] if cands else None
 print("líná hlava:",null,flush=True)
 del m; torch.cuda.empty_cache()
 # --- 2) matice pozornosti (eager) na stejných 87 tokenech jako full_context.py ---
-m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16,attn_implementation="eager").to(dev).eval()
+m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32),attn_implementation="eager").to(dev).eval()
 full=tmpl+"```python\n"+code0+"```"; enc=t(full,return_offsets_mapping=True); fids=torch.tensor([enc.input_ids]).to(dev); offs=enc.offset_mapping
 toks=[full[a:b] for a,b in offs]
 us=full.index(USER); ue=us+len(USER); ss=full.index(BSYS); se=ss+len(BSYS); cs=full.index("def ")

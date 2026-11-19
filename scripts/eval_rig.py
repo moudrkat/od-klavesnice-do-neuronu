@@ -1,12 +1,12 @@
 import json, re, torch, numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from sklearn.metrics import roc_auc_score
-dev="cuda"; M="Qwen/Qwen2.5-Coder-1.5B-Instruct"; L=14; MAXTOK=384
+dev="cuda" if torch.cuda.is_available() else "cpu"; M="Qwen/Qwen2.5-Coder-1.5B-Instruct"; L=14; MAXTOK=384
 P=json.load(open("intent_probe.json")); dirv=torch.tensor(P["direction"]); BIAS=P["bias"]
 KW=re.compile(r"\b(malware|exploit\w*|attack\w*|c2|keylog\w*|exfiltrat\w*|payload|evad\w*|firewall|block\w*|detect\w*|threat|vulnerab\w*|monitor\w*|ransom\w*|trojan|backdoor|botnet|phish\w*|credential\w*|steal\w*|hack\w*|bypass\w*|inject\w*|spyware|rootkit)\b", re.I)
 rows=json.load(open("guard_data.json"))
 def sel(lang,kind,n=150): return [r["text"] for r in rows if r["split"]=="test" and r["lang"]==lang and r["kind"]==kind][:n]
-tok=AutoTokenizer.from_pretrained(M); model=AutoModelForCausalLM.from_pretrained(M,dtype=torch.bfloat16).to(dev).eval(); dv=dirv.to(dev).float()
+tok=AutoTokenizer.from_pretrained(M); model=AutoModelForCausalLM.from_pretrained(M,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval(); dv=dirv.to(dev).float()
 def uslice(t):
     pre=tok.apply_chat_template([{"role":"user","content":chr(0)}],tokenize=False,add_generation_prompt=True).split(chr(0))[0]
     a=tok(pre,add_special_tokens=False).input_ids; b=tok(t,add_special_tokens=False).input_ids[:MAXTOK]; return a+b,len(a)

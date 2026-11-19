@@ -3,10 +3,10 @@
 # Stejný kontext jako attn_map.py (orch_lock.json). Jen dopředný průchod.
 import json, re, torch, numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
+dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; code=Lk["builder_out"]; USER=Lk["refiner_out"]
 mm=re.search(r"```(?:python)?\s*(.*?)```",code,re.S); CODE=(mm.group(1) if mm else code).strip()
-t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16,attn_implementation="eager").to(dev).eval()
+t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32),attn_implementation="eager").to(dev).eval()
 tmpl=t.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":USER}],tokenize=False,add_generation_prompt=True)
 full=tmpl+"```python\n"+CODE+"```"
 enc=t(full,return_offsets_mapping=True); ids=torch.tensor([enc.input_ids]).to(dev); offs=enc.offset_mapping

@@ -1,13 +1,13 @@
 import json, torch, glob, os, re, random
 from transformers import AutoTokenizer, AutoModelForCausalLM
-dev="cuda"
+dev="cuda" if torch.cuda.is_available() else "cpu"
 def snap(repo):
     for r in ["~/.cache/huggingface","~/projects/science/vibe-inside/hf"]:
         g=glob.glob(os.path.expanduser(r+"/hub/models--"+repo.replace("/","--")+"/snapshots/*"))
         if g: return g[0]
     return repo
 I=snap("Qwen/Qwen3-4B-Instruct-2507")
-tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 NL=m.config.num_hidden_layers
 RSYS="You are an agent that turns a vague user wish into ONE precise programming task: a single Python function. Reply with exactly one line in English: Write a Python function name(args): return ... ."
 D=json.load(open("guard_data_aug.json")); random.seed(1)

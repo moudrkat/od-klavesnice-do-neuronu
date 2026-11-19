@@ -2,13 +2,13 @@
 # Čísla na slide přímo z modelu: config, počet parametrů (celkem / bez embeddingu / MLP / attention), tokeny/s na této kartě.
 import json, time, torch, glob
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoConfig
-I="Qwen/Qwen2.5-Coder-1.5B-Instruct"; dev="cuda"
+I="Qwen/Qwen2.5-Coder-1.5B-Instruct"; dev="cuda" if torch.cuda.is_available() else "cpu"
 cfg=AutoConfig.from_pretrained(I); c=cfg.to_dict()
 keys=["num_hidden_layers","hidden_size","intermediate_size","num_attention_heads","num_key_value_heads","vocab_size","max_position_embeddings","tie_word_embeddings","torch_dtype","rope_theta"]
 print("config:",{k:c.get(k) for k in keys},flush=True)
 snap=glob.glob(f"hf/hub/models--Qwen--Qwen2.5-Coder-1.5B-Instruct/snapshots/*/")[0]
 print("snapshot:",snap, "| soubory:",sorted(p.split('/')[-1] for p in glob.glob(snap+'*')),flush=True)
-tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 tot=sum(p.numel() for p in m.parameters()); emb=m.model.embed_tokens.weight.numel()
 mlp=sum(p.numel() for n,p in m.named_parameters() if ".mlp." in n); attn=sum(p.numel() for n,p in m.named_parameters() if ".self_attn." in n)
 head=0 if c.get("tie_word_embeddings") else m.lm_head.weight.numel()

@@ -12,9 +12,9 @@ def snap(repo):
         g=glob.glob(os.path.expanduser(r+"/hub/models--"+repo.replace("/","--")+"/snapshots/*"))
         if g: return g[0]
     return repo
-dev="cuda"; I=snap("Qwen/Qwen3-4B-Instruct-2507")
+dev="cuda" if torch.cuda.is_available() else "cpu"; I=snap("Qwen/Qwen3-4B-Instruct-2507")
 tok=AutoTokenizer.from_pretrained(I); tok.padding_side="left"
-m=AutoModelForCausalLM.from_pretrained(I,dtype=torch.bfloat16).to(dev).eval()
+m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
 SYS="You are a coding agent. Complete the given Python function. Reply with the complete function in one ```python block."
 def chat(pr): return tok.apply_chat_template([{"role":"system","content":SYS},{"role":"user","content":pr}],tokenize=False,add_generation_prompt=True)
 outs=[]
