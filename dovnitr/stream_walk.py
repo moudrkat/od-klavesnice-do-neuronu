@@ -31,7 +31,7 @@ for L in range(NL+1):
         c_all=torch.nn.functional.cosine_similarity(hid[L][user_start:user_end],hid[L-1][user_start:user_end],dim=1); chg=float((1-c_all).mean())
     else: chg=None
     res["layers"].append({"layer":L,"dims":[round(float(v[d]),2) for d in DIMS],"norm":round(float(v.norm()),1),"cos_prev":None if cos is None else round(cos,3),"change_all_user":None if chg is None else round(chg,4),"lens":lens(v)})
-    print(f"L{L:2d} |v|={float(v.norm()):6.1f} first 8: {[round(float(v[d]),2) for d in DIMS]} cos with previous {'' if cos is None else round(cos,3)} lens {lens(v)[:2]}",flush=True)
+    print(f"L{L:2d} |v|={float(v.norm()):6.1f} prvních 8: {[round(float(v[d]),2) for d in DIMS]} cos s předchozím {'' if cos is None else round(cos,3)} lens {lens(v)[:2]}",flush=True)
 # dokola: dalších 6 tokenů greedy s top-3 na každém kroku
 steps=[]; cur=ids
 for k in range(6):

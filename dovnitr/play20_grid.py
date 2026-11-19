@@ -35,5 +35,5 @@ with torch.no_grad(): out=m(pref,output_hidden_states=True)
 lg=out.logits[0,-1].float(); p=torch.softmax(lg,-1); top=torch.topk(lg,6); hpost=out.hidden_states[-1][0,-1].float(); hpre=out.hidden_states[-2][0,-1].float()
 nw={"h_after_layer28_8":[round(float(x),2) for x in hpre[:8]],"h_after_norm_8":[round(float(x),2) for x in hpost[:8]],"W_shape":list(m.lm_head.weight.shape),
     "top":[(t.decode([int(i)]),round(float(lg[i]),2),round(float(p[i])*100,1)) for i in top.indices],"logit_min":round(float(lg.min()),1),"logit_median":round(float(lg.median()),1)}
-print("word:",nw["top"],"| min",nw["logit_min"],"median",nw["logit_median"],flush=True)
+print("slovo:",nw["top"],"| min",nw["logit_min"],"medián",nw["logit_median"],flush=True)
 json.dump({"grid":grid,"next_word":nw,"system_prompt":BSYS,"user":USER,"code":code0},open("play20_grid.json","w"),ensure_ascii=False); print("GRIDDONE",flush=True)

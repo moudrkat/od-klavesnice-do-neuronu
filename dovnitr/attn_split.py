@@ -18,7 +18,7 @@ for i,(a,b) in enumerate(offs):
 code=[i for i in range(T) if grp[i]=="jeho kód"]; ret=[i for i in code if full[offs[i][0]:offs[i][1]].strip()=="return"][0]
 with torch.no_grad(): att=m(fids,output_attentions=True).attentions
 G=["první token","šablona","systémový prompt","tvoje zadání","jeho kód"]; counts={g:int((grp==g).sum()) for g in G}
-print("tokens:",counts,flush=True)
+print("tokenů:",counts,flush=True)
 per_layer=[]; tot=np.zeros(len(G)); tot_ret=np.zeros(len(G))
 for L in range(len(att)):
     A=att[L][0].float().cpu().numpy().mean(0)          # průměr přes hlavy [T,T]
@@ -26,7 +26,7 @@ for L in range(len(att)):
     v=[float(row[grp==g].sum()) for g in G]; per_layer.append([round(x,3) for x in v]); tot+=v
     tot_ret+=[float(A[ret][grp==g].sum()) for g in G]
 tot/=len(att); tot_ret/=len(att)
-print("TOTAL (mean over layers and heads), from the code tokens:",{g:round(float(x)*100,1) for g,x in zip(G,tot)},flush=True)
+print("CELKEM (průměr přes vrstvy a hlavy), z tokenů kódu:",{g:round(float(x)*100,1) for g,x in zip(G,tot)},flush=True)
 print("z pozice return:",{g:round(float(x)*100,1) for g,x in zip(G,tot_ret)},flush=True)
-print("per token (total / tokens in the group):",{g:round(float(x)*100/counts[g],2) for g,x in zip(G,tot)},flush=True)
+print("na jeden token (celkem / počet tokenů skupiny):",{g:round(float(x)*100/counts[g],2) for g,x in zip(G,tot)},flush=True)
 json.dump({"groups":G,"counts":counts,"total_from_code":[float(x) for x in tot],"from_return":[float(x) for x in tot_ret],"per_layer":per_layer,"system_prompt":BSYS},open("attn_split.json","w"),ensure_ascii=False); print("ATTNSPLITDONE",flush=True)

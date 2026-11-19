@@ -29,13 +29,13 @@ def gen(hs):
     with torch.no_grad(): g=m.generate(ids,max_new_tokens=120,do_sample=False,pad_token_id=t.eos_token_id)
     return t.decode(g[0,ids.shape[1]:],skip_special_tokens=True).strip()
 with torch.no_grad(): base=torch.softmax(m(pref).logits[0,-1].float(),-1)
-sid=int(torch.argmax(base)); print("no intervention, after return:",t.decode([sid]),round(float(base[sid])*100,1),flush=True)
+sid=int(torch.argmax(base)); print("bez zásahu po return:",t.decode([sid]),round(float(base[sid])*100,1),flush=True)
 nd=[]
 for n in range(m.config.intermediate_size):
     hk=neuron_hook(n,0.0)
     with torch.no_grad(): p=torch.softmax(m(pref).logits[0,-1].float(),-1)
     hk.remove(); nd.append((float(base[sid]-p[sid])*100,n))
-nd.sort(reverse=True); print("layer 20, neuron off → drop in p(sum), top 8:",[(round(d,1),n) for d,n in nd[:8]],flush=True)
+nd.sort(reverse=True); print("vrstva 20, vypnutí neuronu → pokles p(sum), top 8:",[(round(d,1),n) for d,n in nd[:8]],flush=True)
 out={"scan":[(round(d,1),n) for d,n in nd[:15]],"neurons":{}}
 box={}
 cap=m.model.layers[LZ].mlp.down_proj.register_forward_pre_hook(lambda mod,args: box.__setitem__("x",args[0][0].float().detach().cpu()))
@@ -52,8 +52,8 @@ for d,n in nd[:3]:
     r["user_strip"]=[round(float(X0[i,n]),2) for i in user_toks]; r["code_strip"]=[round(float(X0[i,n]),2) for i in code_toks]
     r["at_return"]={"head x1":round(float(X0[ret,n]),2),"head x0":round(float(box[0.0][ret,n]),2),"head x2":round(float(box[2.0][ret,n]),2)}
     top_u=sorted(zip(r["user_strip"],[lab(i) for i in user_toks]),key=lambda p:-abs(p[0]))[:4]; top_c=sorted(zip(r["code_strip"],[lab(i) for i in code_toks]),key=lambda p:-abs(p[0]))[:4]
-    print(f"=== neuron 20·{n} (−{d:.1f} pts): when off {r['p_next_off'][:2]} | code: {r['code_off'].replace(chr(10),' ⏎ ')[:120]}",flush=True)
-    print(f"    fires on the request: {top_u} | on the code: {top_c} | at return with head ×1/×0/×2: {r['at_return']}",flush=True)
+    print(f"=== neuron 20·{n} (−{d:.1f} b.): po zhasnutí {r['p_next_off'][:2]} | kód: {r['code_off'].replace(chr(10),' ⏎ ')[:120]}",flush=True)
+    print(f"    svítí na zadání: {top_u} | na kódu: {top_c} | na return při hlavě ×1/×0/×2: {r['at_return']}",flush=True)
     out["neurons"][str(n)]=r
 out["user_labels"]=[lab(i) for i in user_toks]; out["code_labels"]=[lab(i) for i in code_toks]
 json.dump(out,open("layer20.json","w"),ensure_ascii=False); print("LAYER20DONE",flush=True)
