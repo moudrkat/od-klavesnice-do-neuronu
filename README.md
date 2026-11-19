@@ -34,6 +34,17 @@ a script and a JSON here. Assumes you have used a coding agent and can run a Pyt
 No GPU at home: the scripts fall back to CPU (slow, float32, last digits may differ). Every script's
 output is committed next to it, so the numbers can be read without running anything.
 
+## Eight words, in plain language
+
+- **token**: a piece of text the model works with. `get_completed_tasks` is three tokens: `get`, `_completed`, `_tasks`.
+- **the stream**: 1 536 numbers per token. The model's working memory. Every layer reads it and adds to it.
+- **layer**: one of 28 floors. Each has attention heads and neurons. Numbers go in at the bottom, the next word comes out at the top.
+- **attention head**: looks from the token being written back at earlier tokens. 12 per layer, 336 in all.
+- **neuron**: one number in the MLP of a layer that lights up on some tokens and stays dark on others. 8 960 per layer.
+- **probe**: a ruler laid on the stream. One learned direction, one threshold, one number out: risky or not.
+- **direction**: 1 536 numbers you add to the stream to push it somewhere (toward JavaScript, say).
+- **temperature 0**: the model always picks its top word. Same prompt, same output, to the character. Every number here is reproducible.
+
 ## Setup, if you run it yourself
 
 ```
@@ -41,52 +52,64 @@ pip install torch transformers scikit-learn numpy
 ```
 
 Models download on first use: `Qwen/Qwen2.5-Coder-1.5B-Instruct` (3 GB) and, for the refiner and
-reviewer, `Qwen/Qwen3-4B-Instruct-2507` (8 GB). Run each script from its own folder.
+reviewer, `Qwen/Qwen3-4B-Instruct-2507` (8 GB). Run each script from its own folder. Each one prints a
+summary and writes a JSON next to itself.
 
-**The one trick behind all seven lessons:** `orch_lock.json` holds the session the talk is about: the
-system prompt the harness glued on (`builder_sys`), the refined request (`refiner_out`), the builder's
-code (`builder_out`). Put your own request and code in there and every lesson runs on *your* prompt.
+**The one trick behind all seven lessons:** `orch_lock.json` holds the session the talk is about, as
+three strings: `builder_sys` (the system prompt the harness glued on), `refiner_out` (the request after
+the refiner), `builder_out` (the builder's code). Change `refiner_out` to your own request, run any
+lesson again, and the whole talk runs on *your* prompt.
 
 ## 1 · The crew
 *Slides: Parta · Zvládne to parta nejmenších modelů? · Builder chybuje*
 
 ![slide](deck/assets/readme/l1.png)
 
-Alone, the 1.5B model asks four rounds of questions and writes nothing. Refiner (4B) → builder (1.5B) →
-reviewer (4B), and it works. On `int_to_roman` the builder is wrong, the reviewer catches it, the fix passes.
-Real runs are in `orch_cli.log` and `orch_fix3.log`.
+Alone, the 1.5B model asks four rounds of questions and writes nothing. Give it a crew and it works:
+a **refiner** (4B) turns your wish into one exact sentence, a **builder** (1.5B) writes the function,
+a **reviewer** (4B) checks it. On `int_to_roman` the builder is wrong, the reviewer catches it, the fix
+passes. Real runs are in `orch_cli.log` and `orch_fix3.log`.
 
-Run: `cd scripts && python orchestrate.py -i`
+Run: `cd scripts && python orchestrate.py -i`, then type a wish.
 
-Try: your own wish, as vague as you like, and watch what the refiner makes of it before the builder sees
-a word. Then the same wish twice: temperature 0, identical to the character.
+Try, easy: type `make me a to-do app so I can see how many tasks are done` and read what the refiner
+makes of it before the builder sees a word. Then type the same wish again: temperature 0, identical.
+
+Try, one step more: type something impossible, `a function that predicts tomorrow's weather`. Who gives up first?
 
 ## 2 · How small the little one is
 *Slides: Drobeček · Co umí a co ne*
 
 ![slide](deck/assets/readme/l2.png)
 
-HumanEval, 164 small functions: the 1.5B builder solves 110, the 4B partner 142. Frontier models stopped
-reporting it. The model itself: 28 layers, a stream of 1 536 numbers per token, 8 960 neurons per layer,
-12 heads, 151 936 tokens in the vocabulary, 1.54 B parameters.
+HumanEval is 164 small programming tasks from 2021. The 1.5B builder solves 110, the 4B partner 142.
+Frontier models stopped reporting it, it is too easy for them. The model itself: 28 layers, a stream of
+1 536 numbers per token, 8 960 neurons per layer, 12 heads, a vocabulary of 151 936 tokens, 1.54 B parameters.
 
-Run: `cd dovnitr && python model_facts.py` · `python humaneval_run.py` (all 164 tasks, the long one)
+Run: `cd dovnitr && python model_facts.py` (seconds) · `python humaneval_run.py` (all 164 tasks, the long one)
 
-Try: read the failures in `humaneval_qwen15.json`. Ours crashes on `sort_array([])`. Then
-`scripts/reviewer_4b.py`: how many of them does the 4B reviewer catch?
+Try, easy: open `humaneval_qwen15.json`, search for `fail`, read three of the 54 tasks that did not pass.
+One of them crashes on `sort_array([])`: an empty list.
+
+Try, one step more: the model name is one string at the top of `humaneval_run.py`. Swap it for
+`Qwen/Qwen2.5-Coder-0.5B-Instruct`. Where does the cliff start?
 
 ## 3 · What goes in
 *Slides: Tvůj prompt neletí sám · Co jde dovnitř*
 
 ![slide](deck/assets/readme/l3.png)
 
-87 tokens enter, 23 are yours. The rest is the system prompt the harness glued on, the chat template, and
-the model's own code so far. Attention from the code goes 17 / 18 / 17 / 18 / 30 % to those five groups.
+Your prompt does not fly alone. The harness glues a system prompt around it and wraps it in a chat
+template. 87 tokens enter, 23 are yours. Attention from the model's code goes 17 / 18 / 17 / 18 / 30 %
+to the five groups: first token, template, system prompt, your request, its own code.
 
 Run: `python token_strips.py` · `python attn_split.py`
 
-Try: make the system prompt 300 words of "you are a careful senior engineer" and see how much attention
-your request keeps. Then `ollama show MODEL --modelfile` on your own setup: now you know what to look for.
+Try, easy: count your own tokens. Put your request into `refiner_out` in `orch_lock.json`, run
+`token_strips.py` again, read the number.
+
+Try, one step more: make `builder_sys` 300 words of "you are a careful senior engineer". How much
+attention does your request keep now?
 
 ## 4 · The layers, and the next word
 *Slides: Tohle jsou vrstvy · …a jak se z 1 536 čísel stane další slovo*
@@ -100,8 +123,10 @@ scores, softmax gives 78.8 / 13.7 / 7.3 %, `sum` is written, and the whole promp
 
 Run: `python stream_walk.py`
 
-Try: another position, `def`. At which layer does the model know the function's name? Then say "count"
-instead of "return the number" in the request and see whether `count` wins earlier.
+Try, easy: read `stream_walk.json`. Find the first layer where the top guess is an English word at all.
+
+Try, one step more: in `stream_walk.py` the position is the word `return`. Change it to `def` and see at
+which layer the model knows the function's name.
 
 ## 5 · Layer 20, and moving it
 *Slides: Vrstva 20 zblízka · Hýbu hlavou a neuronem*
@@ -109,15 +134,18 @@ instead of "return the number" in the request and see whether `count` wins earli
 ![slide](deck/assets/readme/l5.png)
 
 Head 20·6, looking from `return`, puts 72 % of its attention on your request and 0.46 on the word `list`.
-Neuron 20·3545, in the MLP right behind it, fires 17 at `return` and about 0 everywhere else. Head off:
-sum 79 → 73 %, same code. Neuron off: `len` 62 %, it writes `return len([...])`. Neuron ×4: `tasks` 88 %,
-it writes `tasks.count(True)`.
+Neuron 20·3545, in the MLP right behind it, fires 17 at `return` and about 0 everywhere else. Then I move
+them, nothing else changes. Head off: sum 79 → 73 %, same code. Neuron off: `len` 62 %, it writes
+`return len([...])`. Neuron ×4: `tasks` 88 %, it writes `tasks.count(True)`.
 
 Run: `python heads_matter.py` · `python layer20.py` · `python play20_grid.py`
 
-Try: doses the grid does not have, ×8 and ×−1 (one list in `play20_grid.py`). Then take the second-ranked
-neuron from `layer20.py` and see whether it does anything. Honest note: I found 3545 by scanning all 8 960
-on this one prompt. Neurons are not stable addresses.
+Try, easy: open [`deck/vrstva20.html`](deck/vrstva20.html) in a browser and move the two dials. No model
+needed, the 25 outcomes are pre-recorded in `play20_grid.json`.
+
+Try, one step more: in `play20_grid.py` the doses are two loops over `(0,0.5,1,2,4)`. Add `8` and `-1` to
+the neuron's loop. What does a negative neuron write? Honest note: I found 3545 by scanning all 8 960 on this one prompt. Neurons
+are not stable addresses.
 
 ## 6 · Add a direction, get JavaScript
 *Slides: Přičti směr · Výzkum 2025–2026*
@@ -132,8 +160,10 @@ production reads. Papers on the slide: arXiv 2604.16697, 2606.22673, 2507.09508,
 
 Run: `cd scripts && python lang_retest.py`
 
-Try: sweep the coefficient 2, 4, 6, 8, 12 and find where Python ends and garbage begins. Then another
-pair, `fn` (Rust) minus `def`.
+Try, easy: read `lang_slide.json`: the prompt, the plain output (`base`) and the steered one (`coef6`).
+
+Try, one step more: `lang_retest.py` sweeps the coefficients `[2.0,4.0,6.0,8.0]` (one list near the end).
+Add `1.0` and `12.0`. Where does Python end and where does garbage begin?
 
 ## 7 · The probe
 *Slides: Probe: pravítko na proudu · Guard to vidí · Rizikový požadavek nevypadá rizikově*
@@ -147,19 +177,24 @@ hide its true location": no forbidden word, the refiner obeys, the probe flags i
 On 100 such requests a keyword filter catches 51, the probe about 98, with about 1 false alarm. On requests
 written against it: 40 %, after retraining 80 %. Not finished security. A window.
 
-Run: `python guard_orch.py` · `python pertoken.py` · `python eval_rig.py`, with `results/probe.json` from
-**[hidden-intent](https://github.com/moudrkat/hidden-intent)** (the training repo) saved as `scripts/intent_probe.json`
+Run: `python guard_orch.py` · `python pertoken.py` · `python eval_rig.py`. They need the probe: download
+`results/probe.json` from **[hidden-intent](https://github.com/moudrkat/hidden-intent)** (the training
+repo) and save it as `scripts/intent_probe.json`.
 
-Try: a harmless request with scary words ("kill all child processes") and a harmful one with none. Which
-does the filter catch, which does the probe? Then the heat map on your own sentence: which word lights up first?
+Try, easy: `python pertoken.py` prints a score per word of the TOR request. Which word lights up first?
+
+Try, one step more: the request is one string at the top of `pertoken.py`. Put in a harmless one with
+scary words, `kill all child processes of my server`, and then a harmful one with no scary word at all.
+Which does the probe catch? Which would a keyword filter catch?
 
 ## After the seven lessons you can say
 
 - I know what my prompt became: how many tokens, and how many of them were mine.
 - I know where in the model my request is read, and which neuron chose the word.
 - I know why nobody steers a model in production, and what reads it instead.
-- I know four things to check on my own setup: what gets glued to my prompt, what the model reads from it,
-  what a second model catches, and whether the code survives an empty list.
+- I know four things to check on my own setup: what gets glued to my prompt (`ollama show MODEL --modelfile`),
+  what the model reads from it (`pip install brainscope`), what a second model catches, and whether the
+  code survives an empty list.
 
 ## Layout
 
