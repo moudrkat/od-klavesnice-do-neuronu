@@ -1,5 +1,7 @@
 # From the keyboard to a neuron
 
+![The model: 28 layers, the prompt goes in at the bottom, `sum` comes out at the top and goes back in with the prompt](deck/assets/readme/header.png)
+
 Are you a vibecoder? Do you want to finally look inside the thing that writes your code?
 
 Here is one vibecoding session taken apart, layer by layer. You type a wish. A crew of small models turns
@@ -48,6 +50,8 @@ code (`builder_out`). Put your own request and code in there and every lesson ru
 ## 1 · The crew
 *Slides: Parta · Zvládne to parta nejmenších modelů? · Builder chybuje*
 
+![slide](deck/assets/readme/l1.png)
+
 Alone, the 1.5B model asks four rounds of questions and writes nothing. Refiner (4B) → builder (1.5B) →
 reviewer (4B), and it works. On `int_to_roman` the builder is wrong, the reviewer catches it, the fix passes.
 Real runs are in `orch_cli.log` and `orch_fix3.log`.
@@ -59,6 +63,8 @@ a word. Then the same wish twice: temperature 0, identical to the character.
 
 ## 2 · How small the little one is
 *Slides: Drobeček · Co umí a co ne*
+
+![slide](deck/assets/readme/l2.png)
 
 HumanEval, 164 small functions: the 1.5B builder solves 110, the 4B partner 142. Frontier models stopped
 reporting it. The model itself: 28 layers, a stream of 1 536 numbers per token, 8 960 neurons per layer,
@@ -72,6 +78,8 @@ Try: read the failures in `humaneval_qwen15.json`. Ours crashes on `sort_array([
 ## 3 · What goes in
 *Slides: Tvůj prompt neletí sám · Co jde dovnitř*
 
+![slide](deck/assets/readme/l3.png)
+
 87 tokens enter, 23 are yours. The rest is the system prompt the harness glued on, the chat template, and
 the model's own code so far. Attention from the code goes 17 / 18 / 17 / 18 / 30 % to those five groups.
 
@@ -82,6 +90,8 @@ your request keeps. Then `ollama show MODEL --modelfile` on your own setup: now 
 
 ## 4 · The layers, and the next word
 *Slides: Tohle jsou vrstvy · …a jak se z 1 536 čísel stane další slovo*
+
+![slide](deck/assets/readme/l4.png)
 
 Each token becomes a row of a 151 936 × 1 536 table. That row is the stream; every layer reads it and adds
 to it. At `return`, if the model stopped after layer 1 it would say `不了`; after 14, `NotImplementedError`;
@@ -95,6 +105,8 @@ instead of "return the number" in the request and see whether `count` wins earli
 
 ## 5 · Layer 20, and moving it
 *Slides: Vrstva 20 zblízka · Hýbu hlavou a neuronem*
+
+![slide](deck/assets/readme/l5.png)
 
 Head 20·6, looking from `return`, puts 72 % of its attention on your request and 0.46 on the word `list`.
 Neuron 20·3545, in the MLP right behind it, fires 17 at `return` and about 0 everywhere else. Head off:
@@ -110,6 +122,8 @@ on this one prompt. Neurons are not stable addresses.
 ## 6 · Add a direction, get JavaScript
 *Slides: Přičti směr · Výzkum 2025–2026*
 
+![slide](deck/assets/readme/l6.png)
+
 A direction is the stream at a `function` signature minus the stream at a `def` signature. Added to
 layers 6–18 with coefficient 6, a neutral "write a factorial function" comes out as JavaScript on 3 of 3
 prompts (and the `i++` is missing). Less: Python. More: garbage. Research in 2025–2026 steers code models
@@ -123,6 +137,8 @@ pair, `fn` (Rust) minus `def`.
 
 ## 7 · The probe
 *Slides: Probe: pravítko na proudu · Guard to vidí · Rizikový požadavek nevypadá rizikově*
+
+![slide](deck/assets/readme/l7.png)
 
 One learned direction in the 1 536 numbers at layer 14, averaged over your tokens, one threshold. Trained
 with logistic regression on labelled requests: harmful ones from CyberSecEval rewritten by the 4B so no
