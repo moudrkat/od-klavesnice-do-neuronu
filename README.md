@@ -73,7 +73,8 @@ Modely se stáhnou při prvním spuštění: `Qwen/Qwen2.5-Coder-1.5B-Instruct` 
 **Jeden trik za všemi sedmi lekcemi:** `orch_lock.json` drží tu jednu session, o které přednáška je, jako tři
 řetězce: `builder_sys` (systémový prompt, který nalepil harness), `refiner_out` (zadání po refineru),
 `builder_out` (kód buildera). Dej do `refiner_out` vlastní zadání, pusť kteroukoliv lekci znovu, a celá
-přednáška běží na *tvém* promptu. Zadání piš anglicky, model je na angličtinu učený.
+přednáška běží na *tvém* promptu. Zadání piš anglicky, model je na angličtinu učený. Lekce se dívají na *první* `return` v kódu; když builder
+začne „`if not words: return None`“, uvidíš, jak model dospívá k `None`, ne k hlavnímu výsledku.
 
 ## 1 · Parta
 *Slidy: Parta · Zvládne to parta nejmenších modelů? · Builder chybuje*

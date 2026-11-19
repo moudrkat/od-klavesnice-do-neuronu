@@ -35,8 +35,9 @@ mu čísla jeho slovy, a nic nevymýšlet. Všechno tady je naměřené při tep
 
 `./lekce prompt "Write a Python function longest_word(words): return the longest string in the list."`
 Builder napíše kód, zapíše se do `orch_lock.json` (`refiner_out`, `builder_out`) v obou složkách, a lekce
-3, 4, 5 proběhnou na tom promptu. Zadání musí být anglicky a funkce musí něco vracet (lekce koukají na slovo
-`return`). Zpátky na session z přednášky: `./lekce reset`.
+3, 4, 5 proběhnou na tom promptu. Zadání musí být anglicky a funkce musí něco vracet. Lekce koukají na *první* `return` v kódu;
+když builder začne ošetřením prázdného vstupu (`return None`), čísla jsou o `None`, ne o hlavním výsledku.
+Řekni to uživateli, nebo zadání přeformuluj, ať se ošetření vynechá. Zpátky na session z přednášky: `./lekce reset`.
 
 ## Úkoly „Zkus“ z README, kde co změnit
 
