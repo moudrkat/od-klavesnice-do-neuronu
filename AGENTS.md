@@ -29,7 +29,7 @@ mu čísla jeho slovy, a nic nevymýšlet. Všechno tady je naměřené při tep
 | 4 Vrstvy | `dovnitr/stream_walk.py` | prvních 8 čísel proudu po vrstvách; `不了` → `NotImplementedError` → `count` → `sum` 79 % |
 | 5 Vrstva 20 | `dovnitr/heads_matter.py`, `layer20.py`, `play20_grid.py` | hlava 20·6 (72 % na zadání, 0,46 na `list`), neuron 20·3545 (17 na `return`); dávky → `len` / `sum` / `tasks.count` |
 | 6 Směr | `scripts/lang_retest.py` | směr `function` − `def`, vrstvy 6–18, koef 6 → JavaScript 3/3 |
-| 7 Probe | `scripts/pertoken.py`, `guard_orch.py`, `eval_rig.py` | TOR/C2 požadavek bez zlého slova: filtr 51/100, probe ~98; potřebuje `scripts/intent_probe.json` z repa hidden-intent |
+| 7 Probe | `scripts/pertoken.py` (+ `guard_orch.py`, `eval_rig.py` jen s `guard_data.json`) | skóre po slovech TOR/C2 požadavku; filtr 51/100 vs probe ~98 je v hotovém `eval_rig.json`; probe (`intent_probe.json`) si `./lekce 7` stáhne z repa hidden-intent, sada požadavků se staví v hidden-intent pipeline/0–2 |
 
 ## Vlastní prompt uživatele
 

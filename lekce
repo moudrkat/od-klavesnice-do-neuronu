@@ -20,8 +20,9 @@ case "${1:-}" in
   5) cd dovnitr && python heads_matter.py && python layer20.py && python play20_grid.py ;;
   6) cd scripts && python lang_retest.py ;;
   7) cd scripts
-     [ -f intent_probe.json ] || { echo "chybí scripts/intent_probe.json: stáhni results/probe.json z https://github.com/moudrkat/hidden-intent a ulož ho sem pod tímhle jménem"; exit 1; }
-     python pertoken.py && python guard_orch.py && python eval_rig.py ;;
+     [ -f intent_probe.json ] || curl -sfL https://raw.githubusercontent.com/moudrkat/hidden-intent/main/results/probe.json -o intent_probe.json || { echo "chybí scripts/intent_probe.json: stáhni results/probe.json z https://github.com/moudrkat/hidden-intent a ulož ho sem pod tímhle jménem"; exit 1; }
+     python pertoken.py
+     if [ -f guard_data.json ]; then python guard_orch.py && python eval_rig.py; else echo "(guard_orch.py a eval_rig.py chtějí guard_data.json: sadu požadavků z repa hidden-intent, kroky pipeline/0–2; výsledky z přednášky jsou v guard_orch.json a eval_rig.json)"; fi ;;
   prompt) shift; [ -n "$*" ] || { echo 'napiš zadání: ./lekce prompt "Write a Python function longest_word(words): return the longest string in the list."'; exit 1; }
      cd scripts && python vlastni_prompt.py "$*" && cp orch_lock.json ../dovnitr/orch_lock.json
      cd ../dovnitr && python token_strips.py && python stream_walk.py && python play20_grid.py ;;

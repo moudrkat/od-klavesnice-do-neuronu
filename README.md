@@ -191,8 +191,9 @@ traffic and hide its true location“: žádné zakázané slovo, refiner poslec
 nespustí. Na 100 takových požadavcích filtr na slova chytí 51, probe asi 98, s asi 1 planým poplachem.
 Na požadavcích psaných proti ní: 40 %, po dotrénování 80 %. Není to hotová bezpečnost. Je to okno.
 
-Spusť: `./lekce 7`. Potřebuje probe: stáhni `results/probe.json` z
-**[hidden-intent](https://github.com/moudrkat/hidden-intent)** (repo, kde se učí) a ulož jako `scripts/intent_probe.json`.
+Spusť: `./lekce 7`. Probe si stáhne sám z **[hidden-intent](https://github.com/moudrkat/hidden-intent)** (repo, kde
+se učí). Skóre po slovech běží hned; srovnání s filtrem na 100 požadavcích chce ještě sadu požadavků z pipeline
+hidden-intent (kroky 0 až 2), bez ní čti hotové `eval_rig.json`.
 
 Zkus, snadné: `python pertoken.py` vytiskne skóre každého slova TOR požadavku. Které slovo se rozsvítí první?
 
