@@ -34,8 +34,9 @@ Většina lidí skončí tady, a stačí to.
   GPU zdarma, všech sedm lekcí za pár minut (jen HumanEval a parta jsou volitelné), stejná čísla jako na
   slidech, a pak totéž na tvém vlastním promptu. Klikneš Run all a čteš.
 
-Bez GPU doma: skripty se samy přepnou na CPU (pomalu, float32, poslední číslice se můžou lišit). Výstup
-každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
+Bez GPU doma: skripty se samy přepnou na CPU. Lekce 3, 4 a 7 trvají na 16jádrovém procesoru 6 až 16 s
+(na notebooku pár desítek sekund), chtějí 10 GB RAM; lekce 5, 6 a vlastní prompt desítky minut; 1 a 2 jsou
+na CPU k ničemu. Výstup každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
 
 ## Máš herní kartu? Pusť to doma
 

@@ -7,7 +7,7 @@
 set -e; cd "$(dirname "$0")"
 case "${1:-}" in 1|2|5|6|prompt)
   if ! python -c "import torch,sys; sys.exit(0 if torch.cuda.is_available() else 1)" 2>/dev/null; then
-    echo "bez GPU: lekce 3, 4, 7 jsou na CPU minuty; 6 a vlastní prompt desítky minut; 5 (sken 8 960 neuronů) a 2 (164 úloh) hodiny; 1 chce 16 GB RAM pro model 4B."
+    echo "bez GPU: lekce 3, 4, 7 trvají na CPU desítky sekund (10 GB RAM); 6 a vlastní prompt desítky minut; 5 (sken 8 960 neuronů) a 2 (164 úloh) hodiny; 1 chce 16 GB RAM pro model 4B."
     echo "rychlejší je Colab (lessons.ipynb, GPU zdarma) nebo čtení hotových JSON vedle skriptů. Pokračuju za 5 s, Ctrl+C to zastaví."; sleep 5
   fi;;
 esac
