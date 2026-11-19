@@ -32,8 +32,9 @@ git clone https://github.com/moudrkat/od-klavesnice-do-neuronu && cd od-klavesni
 ```
 
 Jedna lekce, jeden příkaz. `./lekce prompt "Write a Python function …"` pustí lekce 3 až 5 na tvém zadání.
-**Máš coding agenta?** Řekni mu „projdi se mnou lekce z tohohle repa“: v `AGENTS.md` (a `CLAUDE.md`) má
-všechno, co potřebuje: co spustit, kde co změnit, čeho se nedotýkat.
+**Máš coding agenta?** Řekni mu „projdi se mnou lekce z tohohle repa“: v `AGENTS.md` má všechno, co
+potřebuje: co spustit, kde co změnit, čeho se nedotýkat. Je to standardní soubor, čtou ho Codex, Cursor,
+Copilot i Claude Code.
 
 ## Začni tady, bez instalace
 
