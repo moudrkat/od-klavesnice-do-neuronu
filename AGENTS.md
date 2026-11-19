@@ -14,6 +14,8 @@ mu čísla jeho slovy, a nic nevymýšlet. Všechno tady je naměřené při tep
   (164 úloh HumanEval) a lekce 1 (model 4B) jsou na CPU na hodiny; řekni to uživateli předem a nabídni Colab
   (`lessons.ipynb`) nebo čtení hotových JSON.
 - Skripty čtou vstupy z vlastní složky (`scripts/`, `dovnitr/`) a zapisují JSON vedle sebe. `./lekce` to řeší.
+- Varování při běhu jsou neškodná: kompilace tritonu (`_POSIX_C_SOURCE redefined`), `requires_grad=True` ve
+  `stream_walk.py`, hlášky o `Loading weights`. Chyba je jen `Traceback`.
 - Výstup každého skriptu z přednášky už je v repu jako JSON. Když uživatel nemá čas nebo hardware, čti JSON
   a vysvětli mu, co v něm je. Jmenuje se stejně jako skript.
 
