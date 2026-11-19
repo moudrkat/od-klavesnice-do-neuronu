@@ -12,8 +12,8 @@ tok=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,d
 tot=sum(p.numel() for p in m.parameters()); emb=m.model.embed_tokens.weight.numel()
 mlp=sum(p.numel() for n,p in m.named_parameters() if ".mlp." in n); attn=sum(p.numel() for n,p in m.named_parameters() if ".self_attn." in n)
 head=0 if c.get("tie_word_embeddings") else m.lm_head.weight.numel()
-print(f"parametry: celkem {tot:,} | embedding {emb:,} | lm_head {'sdílená s embeddingem' if head==0 else format(head,',')} | MLP {mlp:,} ({100*mlp/tot:.0f} %) | attention {attn:,} ({100*attn/tot:.0f} %)",flush=True)
-print(f"MLP neuronů: {c['num_hidden_layers']} × {c['intermediate_size']} = {c['num_hidden_layers']*c['intermediate_size']:,} | attention hlav: {c['num_hidden_layers']} × {c['num_attention_heads']} = {c['num_hidden_layers']*c['num_attention_heads']}",flush=True)
+print(f"parameters: total {tot:,} | embedding {emb:,} | lm_head {'tied to the embedding' if head==0 else format(head,',')} | MLP {mlp:,} ({100*mlp/tot:.0f} %) | attention {attn:,} ({100*attn/tot:.0f} %)",flush=True)
+print(f"MLP neurons: {c['num_hidden_layers']} × {c['intermediate_size']} = {c['num_hidden_layers']*c['intermediate_size']:,} | attention heads: {c['num_hidden_layers']} × {c['num_attention_heads']} = {c['num_hidden_layers']*c['num_attention_heads']}",flush=True)
 print("velikost vah v bf16: %.2f GB"%(tot*2/1e9),flush=True)
 print("GPU:",torch.cuda.get_device_name(0),"| VRAM %.0f GB"%(torch.cuda.get_device_properties(0).total_memory/1e9),flush=True)
 # tokeny/s: jeden prompt, greedy, 256 nových tokenů, 3 opakování
@@ -25,6 +25,6 @@ for _ in range(3):
     torch.cuda.synchronize(); t0=time.time()
     with torch.no_grad(): g=m.generate(ids,max_new_tokens=256,min_new_tokens=256,do_sample=False,pad_token_id=tok.eos_token_id)
     torch.cuda.synchronize(); rates.append((g.shape[1]-ids.shape[1])/(time.time()-t0))
-print("tokeny/s (bf16, HF generate, 256 tokenů, 3 běhy): %s → medián %.0f"%([round(r) for r in rates],sorted(rates)[1]),flush=True)
+print("tokens/s (bf16, HF generate, 256 tokens, 3 runs): %s → median %.0f"%([round(r) for r in rates],sorted(rates)[1]),flush=True)
 json.dump({"config":{k:c.get(k) for k in keys},"params_total":tot,"params_embedding":emb,"params_mlp":mlp,"params_attn":attn,"tok_s":rates,"gpu":torch.cuda.get_device_name(0)},open("model_facts.json","w"))
 print("MODELFACTSDONE",flush=True)

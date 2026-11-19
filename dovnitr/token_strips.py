@@ -19,5 +19,5 @@ out={"user":[lab(i) for i in user_toks],"code":[lab(i) for i in code_toks],"stri
 for L,ns in NEUR.items():
     for n in ns:
         x=box[L][:,n]; out["strips"][f"{L}.{n}"]={"user":[round(float(x[i]),2) for i in user_toks],"code":[round(float(x[i]),2) for i in code_toks]}
-        print(f"L{L}·{n}  zadání max {max(out['strips'][f'{L}.{n}']['user'],key=abs):.1f}  kód max {max(out['strips'][f'{L}.{n}']['code'],key=abs):.1f}",flush=True)
+        print(f"L{L}·{n}  request max {max(out['strips'][f'{L}.{n}']['user'],key=abs):.1f}  code max {max(out['strips'][f'{L}.{n}']['code'],key=abs):.1f}",flush=True)
 json.dump(out,open("token_strips.json","w"),ensure_ascii=False); print("STRIPSDONE",flush=True)

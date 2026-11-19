@@ -35,7 +35,7 @@ out={"order":order[:12],"cumulative":[]}
 for k in (0,1,2,3,4,6,8,12):
     hs=hooks(order[:k]); r={"k":k,"heads":order[:k],"p_next":p_next(hs),"code":gen(hs)}
     for h in hs: h.remove()
-    out["cumulative"].append(r); print(f"vypnuto {k:2d} nejsilnějších hlav: {r['p_next'][:2]} | {r['code'].replace(chr(10),' ⏎ ')[:140]}",flush=True)
+    out["cumulative"].append(r); print(f"{k:2d} strongest heads off: {r['p_next'][:2]} | {r['code'].replace(chr(10),' ⏎ ')[:140]}",flush=True)
 with torch.no_grad(): att=m(fids,output_attentions=True).attentions
 for (L,h) in order[:3]:
     A=att[L][0,h].float().cpu().numpy()
@@ -43,6 +43,6 @@ for (L,h) in order[:3]:
     r={"head":[L,h],"user_mass":round(float(su.sum(1).mean()),3),"code_x_user":[[round(float(v),3) for v in row] for row in su],"code_x_code":[[round(float(v),3) for v in row] for row in sc],
        "from_return":sorted([(round(float(A[ret,j]),2),lab(j)) for j in range(fids.shape[1])],reverse=True)[:5],
        "strongest_to_user":sorted([(round(float(su[ci].max()),2),lab(code_toks[ci]),lab(user_toks[int(su[ci].argmax())])) for ci in range(len(code_toks))],reverse=True)[:5]}
-    out.setdefault("heads",[]).append(r); print(f"hlava {L}·{h}: hmota do zadání {r['user_mass']}, z pozice return se dívá na {r['from_return'][:3]}, nejsilnější kód→zadání {r['strongest_to_user'][:3]}",flush=True)
+    out.setdefault("heads",[]).append(r); print(f"head {L}·{h}: attention mass on the request {r['user_mass']}, from return it looks at {r['from_return'][:3]}, strongest code→request {r['strongest_to_user'][:3]}",flush=True)
 out["user_labels"]=[lab(i) for i in user_toks]; out["code_labels"]=[lab(i) for i in code_toks]
 json.dump(out,open("heads_matter.json","w"),ensure_ascii=False); print("HEADSDONE",flush=True)
