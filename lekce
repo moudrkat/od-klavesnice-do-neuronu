@@ -1,0 +1,24 @@
+#!/bin/bash
+# Jedna lekce = jeden příkaz. Pouštěj z kořene repa.
+#   ./lekce setup                 nainstaluje balíčky (modely se stáhnou při prvním spuštění)
+#   ./lekce 1 … 7                 pustí lekci: skripty ve správné složce, výstup do terminálu a do JSON vedle skriptu
+#   ./lekce prompt "Write a Python function …"   builder napíše kód k tvému zadání a lekce 3, 4, 5 proběhnou na něm
+#   ./lekce reset                 vrátí původní session (orch_lock.json) z přednášky
+set -e; cd "$(dirname "$0")"
+case "${1:-}" in
+  setup)  pip install -r requirements.txt ;;
+  1) cd scripts && python orchestrate.py -i ;;
+  2) cd dovnitr && python model_facts.py && python humaneval_run.py ;;
+  3) cd dovnitr && python token_strips.py && python attn_split.py ;;
+  4) cd dovnitr && python stream_walk.py ;;
+  5) cd dovnitr && python heads_matter.py && python layer20.py && python play20_grid.py ;;
+  6) cd scripts && python lang_retest.py ;;
+  7) cd scripts
+     [ -f intent_probe.json ] || { echo "chybí scripts/intent_probe.json: stáhni results/probe.json z https://github.com/moudrkat/hidden-intent a ulož ho sem pod tímhle jménem"; exit 1; }
+     python pertoken.py && python guard_orch.py && python eval_rig.py ;;
+  prompt) shift; [ -n "$*" ] || { echo 'napiš zadání: ./lekce prompt "Write a Python function longest_word(words): return the longest string in the list."'; exit 1; }
+     cd scripts && python vlastni_prompt.py "$*" && cp orch_lock.json ../dovnitr/orch_lock.json
+     cd ../dovnitr && python token_strips.py && python stream_walk.py && python play20_grid.py ;;
+  reset)  git checkout -- scripts/orch_lock.json dovnitr/orch_lock.json && echo "orch_lock.json je zpátky původní" ;;
+  *) sed -n '2,7p' "$0" ;;
+esac

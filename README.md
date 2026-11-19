@@ -23,6 +23,18 @@ skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spu
 | 6 | [Přičti směr](#6--přičti-směr-dostaneš-javascript) | z Pythonu vyleze JavaScript | `scripts/lang_retest.py` |
 | 7 | [Probe](#7--probe) | požadavek na malware bez zlého slova, chycený | `scripts/pertoken.py` |
 
+## Nejkratší cesta
+
+```
+git clone https://github.com/moudrkat/od-klavesnice-do-neuronu && cd od-klavesnice-do-neuronu
+./lekce setup
+./lekce 3
+```
+
+Jedna lekce, jeden příkaz. `./lekce prompt "Write a Python function …"` pustí lekce 3 až 5 na tvém zadání.
+**Máš coding agenta?** Řekni mu „projdi se mnou lekce z tohohle repa“: v `AGENTS.md` (a `CLAUDE.md`) má
+všechno, co potřebuje: co spustit, kde co změnit, čeho se nedotýkat.
+
 ## Začni tady, bez instalace
 
 - **[Vrstva 20 v ruce](deck/vrstva20.html)**: otáčej hlavou 20·6 a neuronem 20·3545 nahoru a dolů a koukej,
@@ -68,7 +80,7 @@ Sám se model 1,5B čtyřikrát ptá a nenapíše nic. Dej mu partu a jde to: **
 jednu přesnou větu, **builder** (1,5B) napíše funkci, **reviewer** (4B) ji zkontroluje. Na `int_to_roman`
 builder chybuje, reviewer to chytí, oprava projde. Skutečné běhy jsou v `orch_cli.log` a `orch_fix3.log`.
 
-Spusť: `cd scripts && python orchestrate.py -i`, pak napiš přání.
+Spusť: `./lekce 1`, pak napiš přání.
 
 Zkus, snadné: napiš `make me a to-do app so I can see how many tasks are done` a přečti si, co z toho udělá
 refiner, než builder uvidí jediné slovo. Pak totéž přání znovu: teplota 0, do písmene stejné.
@@ -84,7 +96,7 @@ HumanEval je 164 malých programovacích úloh z roku 2021. Builder 1,5B vyřeš
 modely ho už neuvádějí, je pro ně moc lehký. Model sám: 28 vrstev, proud 1 536 čísel na token, 8 960
 neuronů na vrstvu, 12 hlav, slovník 151 936 tokenů, 1,54 miliardy parametrů.
 
-Spusť: `cd dovnitr && python model_facts.py` (vteřiny) · `python humaneval_run.py` (všech 164 úloh, ten dlouhý)
+Spusť: `./lekce 2` (fakta o modelu za vteřiny, pak všech 164 úloh, ten dlouhý)
 
 Zkus, snadné: otevři `humaneval_qwen15.json`, hledej `fail`, přečti si tři z 54 úloh, které neprošly. Jedna
 z nich spadne na `sort_array([])`: prázdný seznam.
@@ -101,10 +113,9 @@ Tvůj prompt neletí sám. Harness k němu nalepí systémový prompt a zabalí 
 87 tokenů, 23 jsou tvoje. Pozornost z kódu modelu jde 17 / 18 / 17 / 18 / 30 % do pěti skupin: první
 token, šablona, systémový prompt, tvoje zadání, jeho vlastní kód.
 
-Spusť: `python token_strips.py` · `python attn_split.py`
+Spusť: `./lekce 3`
 
-Zkus, snadné: spočítej si vlastní tokeny. Dej své zadání do `refiner_out` v `orch_lock.json`, pusť
-`token_strips.py` znovu, přečti číslo.
+Zkus, snadné: spočítej si vlastní tokeny. `./lekce prompt "Write a Python function …"` a přečti první číslo.
 
 Zkus, o krok dál: udělej z `builder_sys` 300 slov o tom, že jsi pečlivý senior. Kolik pozornosti ti na
 zadání zůstane?
@@ -119,7 +130,7 @@ Na pozici `return`: kdyby model skončil po vrstvě 1, řekl by `不了`; po 14 
 `count`; po 23 `sum`; po 28 `sum` na 79 %. Poslední proud krát stejná tabulka dá skóre, softmax dá
 78,8 / 13,7 / 7,3 %, napíše se `sum`, a celý prompt plus `sum` jde dovnitř znovu.
 
-Spusť: `python stream_walk.py`
+Spusť: `./lekce 4`
 
 Zkus, snadné: přečti `stream_walk.json`. Najdi první vrstvu, kde je nejlepší tip vůbec anglické slovo.
 
@@ -136,7 +147,7 @@ hned za ní svítí 17 na `return` a skoro 0 všude jinde. Pak s nimi hýbu, nic
 vypnutá: sum 79 → 73 %, stejný kód. Neuron vypnutý: `len` 62 %, napíše `return len([...])`. Neuron ×4:
 `tasks` 88 %, napíše `tasks.count(True)`.
 
-Spusť: `python heads_matter.py` · `python layer20.py` · `python play20_grid.py`
+Spusť: `./lekce 5`
 
 Zkus, snadné: otevři [`deck/vrstva20.html`](deck/vrstva20.html) v prohlížeči a hýbej dvěma ovladači. Model
 nepotřebuješ, 25 výsledků je přednahraných v `play20_grid.json`.
@@ -156,7 +167,7 @@ koeficientem 6 udělá z neutrálního „write a factorial function“ JavaScri
 agenty zevnitř; čtení funguje, řízení ještě ne. Proto se v produkci čte. Papery ze slidu: arXiv 2604.16697,
 2606.22673, 2507.09508, 2510.02917, 2610.07722.
 
-Spusť: `cd scripts && python lang_retest.py`
+Spusť: `./lekce 6`
 
 Zkus, snadné: přečti `lang_slide.json`: prompt, výstup bez zásahu (`base`) a se směrem (`coef6`).
 
@@ -175,9 +186,8 @@ traffic and hide its true location“: žádné zakázané slovo, refiner poslec
 nespustí. Na 100 takových požadavcích filtr na slova chytí 51, probe asi 98, s asi 1 planým poplachem.
 Na požadavcích psaných proti ní: 40 %, po dotrénování 80 %. Není to hotová bezpečnost. Je to okno.
 
-Spusť: `python guard_orch.py` · `python pertoken.py` · `python eval_rig.py`. Potřebují probe: stáhni
-`results/probe.json` z **[hidden-intent](https://github.com/moudrkat/hidden-intent)** (repo, kde se učí)
-a ulož jako `scripts/intent_probe.json`.
+Spusť: `./lekce 7`. Potřebuje probe: stáhni `results/probe.json` z
+**[hidden-intent](https://github.com/moudrkat/hidden-intent)** (repo, kde se učí) a ulož jako `scripts/intent_probe.json`.
 
 Zkus, snadné: `python pertoken.py` vytiskne skóre každého slova TOR požadavku. Které slovo se rozsvítí první?
 
@@ -197,7 +207,7 @@ probe? Který by chytil filtr na slova?
 
 `deck/` slidy a interaktivní stránka · `scripts/` parta, guard, pokus se směrem · `dovnitr/` benchmarky,
 vrstvy, vrstva 20 · `videa/` probe chytá TOR požadavek · `REPRODUKCE.md` každý slide → jeho skript → jeho JSON ·
-`lessons.ipynb` lekce pro Colab.
+`lessons.ipynb` lekce pro Colab · `lekce` jeden příkaz na lekci · `AGENTS.md` návod pro tvého agenta.
 
 Kód MIT, slidy a videa CC BY 4.0. Kateřina Fajmanová, 2026.
 
