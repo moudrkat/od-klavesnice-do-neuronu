@@ -193,7 +193,7 @@ add(`${sec('orchestrace')}<div class="big">Zvládne to parta nejmenších model�
       return sum(1 for task in tasks if task['completed'])</div></div>
   <div class="frag row" style="gap:.9vw;align-items:center;justify-content:flex-start;flex-wrap:nowrap"><div style="width:5vw;text-align:center">${mascot({scale:.15,spine:false,senior:true})}</div><div class="tb"><span class="r">reviewer·4B ▸</span> <span class="ok">✓ CORRECT</span>  The function correctly counts the number of tasks marked as completed by checking the 'completed' key in each task dictionary.</div></div>
  </div>
- <div class="frag cap" style="margin-top:1vh">teplota 0, doslova</div>`);
+ `);
 
 // 4d OPRAVA — builder chybuje, reviewer chytí, senior poradí, builder opraví (citace z orch_fix3.log, int_to_roman)
 add(`${sec('orchestrace','reviewer chytá chybu')}<div class="big">Builder chybuje → reviewer chytí → oprava ✓</div>
@@ -208,7 +208,7 @@ add(`${sec('orchestrace','reviewer chytá chybu')}<div class="big">Builder chybu
   def int_to_roman(num): …</div></div>
   <div class="row" style="gap:.8vw;align-items:center;justify-content:flex-start;flex-wrap:nowrap">${mascot({scale:.17,spine:false,senior:true})}<div class="tb"><span class="r">reviewer·4B ▸</span> <span class="ok">✓ CORRECT</span>  …converts an integer to its Roman numeral representation by using a greedy approach</div></div>
  </div>
- <div class="cap" style="margin-top:.6vh">teplota 0, doslova</div>`);
+ `);
 
 // 8a MODEL 3/5 — malý: velikost + na čem běží + jeden řádek benchmarku (sloučeno ze tří)
 add(`${sec('model')}<div class="big">Drobeček — běží na herní kartě</div>
