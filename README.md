@@ -23,7 +23,21 @@ skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spu
 | 6 | [Přičti směr](#6--přičti-směr-dostaneš-javascript) | z Pythonu vyleze JavaScript | `scripts/lang_retest.py` |
 | 7 | [Probe](#7--probe) | požadavek na malware bez zlého slova, chycený | `scripts/pertoken.py` |
 
-## Nejkratší cesta
+## Začni tady, bez instalace
+
+Většina lidí skončí tady, a stačí to.
+
+- **[Vrstva 20 v ruce](deck/vrstva20.html)**: otáčej hlavou 20·6 a neuronem 20·3545 nahoru a dolů a koukej,
+  jak se mění kód. Přednahrané, běží v prohlížeči.
+- **[Slidy](deck/deck.html)** (šipky) · **[PDF](deck.pdf)**
+- **[Lekce v Colabu](https://colab.research.google.com/github/moudrkat/od-klavesnice-do-neuronu/blob/main/lessons.ipynb)**:
+  GPU zdarma, všech sedm lekcí za pár minut (jen HumanEval a parta jsou volitelné), stejná čísla jako na
+  slidech, a pak totéž na tvém vlastním promptu. Klikneš Run all a čteš.
+
+Bez GPU doma: skripty se samy přepnou na CPU (pomalu, float32, poslední číslice se můžou lišit). Výstup
+každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
+
+## Máš herní kartu? Pusť to doma
 
 ```
 git clone https://github.com/moudrkat/od-klavesnice-do-neuronu && cd od-klavesnice-do-neuronu
@@ -35,17 +49,6 @@ Jedna lekce, jeden příkaz. `./lekce prompt "Write a Python function …"` pust
 **Máš coding agenta?** Řekni mu „projdi se mnou lekce z tohohle repa“: v `AGENTS.md` má všechno, co
 potřebuje: co spustit, kde co změnit, čeho se nedotýkat. Je to standardní soubor, čtou ho Codex, Cursor,
 Copilot i Claude Code.
-
-## Začni tady, bez instalace
-
-- **[Vrstva 20 v ruce](deck/vrstva20.html)**: otáčej hlavou 20·6 a neuronem 20·3545 nahoru a dolů a koukej,
-  jak se mění kód. Přednahrané, běží v prohlížeči.
-- **[Slidy](deck/deck.html)** (šipky) · **[PDF](deck.pdf)**
-- **[Lekce v Colabu](https://colab.research.google.com/github/moudrkat/od-klavesnice-do-neuronu/blob/main/lessons.ipynb)**:
-  GPU zdarma, lekce 3 až 6 za pár minut, stejná čísla jako na slidech, a pak totéž na tvém vlastním promptu.
-
-Bez GPU doma: skripty se samy přepnou na CPU (pomalu, float32, poslední číslice se můžou lišit). Výstup
-každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
 
 ## Osm slov, lidsky
 
