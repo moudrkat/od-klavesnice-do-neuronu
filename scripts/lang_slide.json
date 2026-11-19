@@ -1,0 +1,10 @@
+{
+ "prompt": "Write a function that returns the factorial of n.",
+ "system": "You are a coding agent. You receive a task and write one function. Reply with code only.",
+ "band": [
+  6,
+  18
+ ],
+ "base": "```python\ndef factorial(n):\n    if n == 0:\n        return 1\n    else:\n        return n * factorial(n-1)\n```",
+ "coef6": "```javascript\nfunction factorial(n) {\n  if (n === 0 || n < 1) return 1;\n  let result = 1;\n  for (let i = 1; i <= n) {\n    result *= i;\n  }\n  return result;\n}\n```\n\nThe `factorial` function calculates the factorial of a given number `n`. It uses a loop to calculate the factorial of the input number `n`. The loop iterates from 1 to `n`, multiplying each value to accumulate the factorial.\nThe initial value is set to 1, which is the identity operation for multiplication. The loop runs from 1 to `n`, where `i` takes values from 1 to `n`.\nFor each iteration, `result` is multiplied by"
+}

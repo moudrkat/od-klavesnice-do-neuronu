@@ -1,0 +1,5 @@
+{
+ "reviewer_model": "Qwen3-4B-Instruct-2507",
+ "reviewer_sys": "You are a code reviewer. You get a task and a Python function. Decide if the function correctly does the task. Reply with CORRECT or WRONG and one short sentence why.",
+ "reviewer_out_4b": "CORRECT  \nThe function correctly counts the number of tasks marked as completed by checking the 'completed' key in each task dictionary."
+}

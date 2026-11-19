@@ -1,0 +1,33 @@
+<!doctype html><meta charset=utf-8><body style="margin:0;background:#16161e"><div style="width:1120px;background:#1a1b26;border-radius:12px;overflow:hidden;font-family:ui-monospace,Menlo,Consolas,monospace"><div style="background:#24283b;padding:9px 14px;color:#787c99;font-size:13px">● ● ● &nbsp; orchestrate.py — aorus · builder chybuje → oprava ✓</div><pre style="margin:0;padding:14px 20px;color:#c0caf5;font-size:13.5px;line-height:1.4;white-space:pre-wrap;word-break:break-word">╭─ <span style="color:#7dcfff;">orchestrace</span><span style="font-weight:700;"> ─────────────────────────────────────────</span>
+<span style="font-weight:700;">│ </span><span style="color:#e0af68;">ty ▸ </span>Chci funkci, co převede celé číslo na římské číslice.
+<span style="font-weight:700;">│ </span><span style="color:#7dcfff;">refiner·4B ▸ </span>Write a Python function int_to_roman(num): return the Roman numeral representation of the integer.
+<span style="font-weight:700;">│ </span><span style="color:#7dcfff;">builder·1.5B ▸</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">def int_to_roman(num):</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">    val = [</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        1000, 900, 500, 400,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        100, 90, 50, 40,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        10, 9, 5, 4,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        1</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">    ]</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">    syb = [</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        &quot;M&quot;, &quot;CM&quot;, &quot;D&quot;, &quot;CD&quot;,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        &quot;C&quot;, &quot;XC&quot;, &quot;L&quot;, &quot;XL&quot;,</span>
+<span style="font-weight:700;">│ </span><span style="color:#7dcfff;">reviewer·4B ▸ </span><span style="color:#f7768e;">✗ WRONG  
+The code has a logical error: it uses a `for` loop inside the `while` loop that iterates `num // val[i]` times, but this can cause incorrect behavior because it doesn&#x27;t properly handle the case where `num` is not divisible by `val[i</span>
+<span style="font-weight:700;">│ </span><span style="color:#e0af68;">senior·4B ▸ </span>The function incorrectly uses a for loop inside the while loop that iterates `num // val[i]` times without checking if `val[i]` is greater than `num`, leading to incorrect or incomplete Roman numerals; fix by replacing the for loop with a while loop that subtracts `val
+<span style="font-weight:700;">│ </span><span style="color:#7dcfff;">builder·1.5B ▸ </span><span style="color:#565f89;">(oprava)</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">def int_to_roman(num):</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">    val = [</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        1000, 900, 500, 400,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        100, 90, 50, 40,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        10, 9, 5, 4,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        1</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">    ]</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">    syb = [</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        &quot;M&quot;, &quot;CM&quot;, &quot;D&quot;, &quot;CD&quot;,</span>
+<span style="font-weight:700;">│   </span><span style="color:#9ece6a;">        &quot;C&quot;, &quot;XC&quot;, &quot;L&quot;, &quot;XL&quot;,</span>
+<span style="font-weight:700;">│ </span><span style="color:#7dcfff;">reviewer·4B ▸ </span><span style="color:#9ece6a;">✓ CORRECT  
+The function correctly converts an integer to its Roman numeral representation by using a greedy approach with predefined values and symbols.</span>
+<span style="font-weight:700;">╰──────────────────────────────────────────────────────────</span>
+
+</pre></div></body>

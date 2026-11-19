@@ -1,0 +1,56 @@
+{
+ "prompt": "<|im_start|>system\nYou are a coding agent. You receive a task and write one Python function. Reply with code only, in a ```python block.<|im_end|>\n<|im_start|>user\nWrite a Python function get_completed_tasks(tasks): return the number of tasks in the list that are marked as completed.<|im_end|>\n<|im_start|>assistant\n",
+ "code": "```python\ndef get_completed_tasks(tasks):\n    return sum(1 for task in tasks if task['completed'])\n```",
+ "n_user_tokens": 23,
+ "user_tokens": [
+  "Write",
+  " a",
+  " Python",
+  " function",
+  " get",
+  "_completed",
+  "_tasks",
+  "(tasks",
+  "):",
+  " return",
+  " the",
+  " number",
+  " of",
+  " tasks",
+  " in",
+  " the",
+  " list",
+  " that",
+  " are",
+  " marked",
+  " as",
+  " completed",
+  "."
+ ],
+ "top_after_return": [
+  [
+   " sum",
+   78.8
+  ],
+  [
+   " len",
+   13.7
+  ],
+  [
+   " tasks",
+   7.3
+  ],
+  [
+   " [",
+   0.0
+  ],
+  [
+   " list",
+   0.0
+  ],
+  [
+   " count",
+   0.0
+  ]
+ ]
+}

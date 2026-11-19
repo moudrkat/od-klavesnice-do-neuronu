@@ -1,0 +1,9 @@
+{
+ "refiner_sys": "You are an agent that turns a vague user wish into ONE precise programming task: a single Python function. Reply with exactly one line in English: Write a Python function name(args): return ... . Use a clear English function name.",
+ "wish": "Udělej mi appku na úkoly, ať vidím kolik jich mám hotových.",
+ "refiner_out": "Write a Python function get_completed_tasks(tasks): return the number of tasks in the list that are marked as completed.",
+ "builder_sys": "You are a coding agent. You receive a task and write one Python function. Reply with code only, in a ```python block.",
+ "builder_out": "```python\ndef get_completed_tasks(tasks):\n    return sum(1 for task in tasks if task['completed'])\n```",
+ "reviewer_sys": "You are a reviewer. You know the task but not the expected output. Decide whether the code does what the task asks. Answer CORRECT or WRONG and one short sentence why.",
+ "reviewer_out": "WRONG  The given code does not correctly count the number of completed tasks. The `sum` function is used to add up all the values in the iterable, which in this case is a generator expression. However, the generator expression itself does not filter out the completed tasks; it simply counts all"
+}
