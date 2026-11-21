@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 470" role="img" aria-label="The robot, labelled with its pins">
+  <rect width="960" height="470" rx="12" fill="#f6f6f8"/>
+  <style>text { fill:#1b1b1f; font:13px system-ui, -apple-system, Segoe UI, sans-serif; }</style>
+  <defs>
+    <marker id="dot" viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5"><circle cx="3" cy="3" r="3" fill="#5d5f66"/></marker>
+  </defs>
+  <!-- ground -->
+  <line x1="40" y1="402" x2="920" y2="402" stroke="#d9dade" stroke-width="3"/>
+  <!-- line on the floor -->
+  <rect x="560" y="400" width="140" height="6" fill="#1b1b1f"/>
+  <!-- wheels -->
+  <g><circle cx="300" cy="355" r="45" fill="#2c2c30"/><circle cx="300" cy="355" r="16" fill="#c9c9cf"/>
+     <circle cx="620" cy="355" r="45" fill="#2c2c30"/><circle cx="620" cy="355" r="16" fill="#c9c9cf"/></g>
+  <!-- chassis -->
+  <rect x="215" y="295" width="490" height="38" rx="12" fill="#d64541"/>
+  <rect x="235" y="305" width="70" height="18" rx="3" fill="#2e8b57"/><rect x="615" y="305" width="70" height="18" rx="3" fill="#2e8b57"/>
+  <!-- LF-2 under the nose, with IR -->
+  <rect x="640" y="333" width="44" height="10" rx="2" fill="#2471a3"/>
+  <path d="M652 343 L640 398 M672 343 L684 398" stroke="#2471a3" stroke-width="2" stroke-dasharray="4 4"/>
+  <!-- rear sonar -->
+  <rect x="190" y="290" width="26" height="46" rx="4" fill="#2471a3"/>
+  <circle cx="186" cy="302" r="8" fill="#c9c9cf" stroke="#555"/><circle cx="186" cy="324" r="8" fill="#c9c9cf" stroke="#555"/>
+  <!-- deck: batteries, board, breadboard -->
+  <rect x="235" y="262" width="95" height="32" rx="6" fill="#3b3b40"/><text x="248" y="283" style="fill:#fff">18650 A</text>
+  <rect x="590" y="262" width="95" height="32" rx="6" fill="#3b3b40"/><text x="603" y="283" style="fill:#fff">18650 B</text>
+  <rect x="345" y="270" width="150" height="24" rx="4" fill="#1d6b45"/><text x="355" y="287" style="fill:#fff">ESP32-S3 · model</text>
+  <rect x="505" y="272" width="75" height="22" rx="3" fill="#f2f2f2" stroke="#999"/>
+  <!-- potentiometer on the back -->
+  <rect x="246" y="244" width="22" height="18" fill="#7d3c98"/><circle cx="257" cy="236" r="13" fill="#9b59b6" stroke="#5b2c6f" stroke-width="2"/>
+  <line x1="257" y1="236" x2="265" y2="227" stroke="#fff" stroke-width="3"/>
+  <!-- mic + buzzers -->
+  <circle cx="520" cy="266" r="7" fill="#444"/><circle cx="545" cy="266" r="7" fill="#111"/><circle cx="568" cy="266" r="6" fill="#888"/>
+  <!-- neck: pan + tilt servos -->
+  <rect x="425" y="225" width="44" height="45" rx="4" fill="#2f6fbf"/><rect x="432" y="196" width="30" height="30" rx="3" fill="#2f6fbf"/>
+  <!-- head -->
+  <rect x="360" y="70" width="175" height="128" rx="26" fill="#f4f1ea" stroke="#3b3b40" stroke-width="3"/>
+  <!-- sonar "goggles" on the forehead -->
+  <rect x="380" y="52" width="135" height="26" rx="5" fill="#2471a3"/>
+  <circle cx="412" cy="65" r="15" fill="#d9d9de" stroke="#555" stroke-width="2"/><circle cx="483" cy="65" r="15" fill="#d9d9de" stroke="#555" stroke-width="2"/>
+  <!-- NeoPixel eyes (8x8, happy) -->
+  <rect x="397" y="90" width="100" height="56" rx="6" fill="#111"/>
+  <g fill="#3fd0ff">
+    <rect x="407" y="104" width="8" height="8"/><rect x="417" y="96" width="8" height="8"/><rect x="427" y="96" width="8" height="8"/><rect x="437" y="104" width="8" height="8"/>
+    <rect x="452" y="104" width="8" height="8"/><rect x="462" y="96" width="8" height="8"/><rect x="472" y="96" width="8" height="8"/><rect x="482" y="104" width="8" height="8"/>
+  </g>
+  <!-- OLED mouth -->
+  <rect x="410" y="154" width="75" height="34" rx="3" fill="#0a0a0a"/>
+  <path d="M424 166 Q447 184 471 166" stroke="#fff" stroke-width="3" fill="none"/>
+  <!-- arm waving -->
+  <rect x="600" y="230" width="26" height="34" rx="3" fill="#2f6fbf"/>
+  <line x1="613" y1="236" x2="690" y2="150" stroke="#d4a373" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="694" cy="145" r="12" fill="#f4f1ea" stroke="#3b3b40" stroke-width="2"/>
+  <path d="M712 128 q8 -6 14 2 M716 146 q10 -2 12 8" stroke="#5d5f66" stroke-width="2" fill="none"/>
+  <!-- speech bubble -->
+  <path d="M570 40 h170 a14 14 0 0 1 14 14 v34 a14 14 0 0 1 -14 14 h-130 l-26 18 6 -18 h-20 a14 14 0 0 1 -14 -14 v-34 a14 14 0 0 1 14 -14z" fill="#ffffff" stroke="#5d5f66" stroke-width="1.5"/>
+  <text x="586" y="66">yo buddy, go bonk</text><text x="586" y="86">the door lol</text>
+  <!-- callouts -->
+  <g stroke="#5d5f66" stroke-width="1" marker-end="url(#dot)" fill="none">
+    <path d="M300 40 H395 V55"/>
+    <path d="M250 110 H395"/>
+    <path d="M250 170 H410"/>
+    <path d="M250 212 H430"/>
+    <path d="M150 254 H246"/>
+    <path d="M110 300 H180"/>
+    <path d="M800 210 H630"/>
+    <path d="M820 260 H572"/>
+    <path d="M800 330 H686"/>
+    <path d="M800 370 H690"/>
+    <path d="M200 428 H240 V318"/>
+  </g>
+  <g font-size="12">
+    <text x="190" y="36">front sonar · 9/10</text>
+    <text x="46" y="106">eyes, NeoPixel 8×8 · 21</text>
+    <text x="46" y="166">mouth, OLED · I²C 18/8</text>
+    <text x="46" y="208">neck: servo ↔ 15 · ↕ 16</text>
+    <text x="40" y="258">potentiometer · 2</text>
+    <text x="40" y="296">rear sonar · 11/12</text>
+    <text x="806" y="206">arm, SG90 · 17</text>
+    <text x="826" y="256">ears + voice</text><text x="826" y="272">mic 1 · buzzers 38/39</text>
+    <text x="806" y="326">LF-2 line · 13/14</text>
+    <text x="806" y="366">sees the table edge too</text>
+    <text x="40" y="432">L9110S ×2 · 4 5 / 6 7</text>
+    <text x="40" y="450">MPU6050 + SHT40 on I²C</text>
+  </g>
+</svg>
