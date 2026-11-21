@@ -11,7 +11,8 @@ tmpl=t.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","con
 ids=t(tmpl,return_tensors="pt").input_ids.to(dev)
 mm=re.search(r"```(?:python)?\s*(.*?)```",CODE0,re.S); code0=(mm.group(1) if mm else CODE0).strip()
 pref=t(tmpl+"```python\n"+code0[:code0.index("return")+len("return")],return_tensors="pt").input_ids.to(dev)
-with torch.no_grad(): z=m(pref).logits[0,-1].float()
+with torch.no_grad(): o=m(pref,output_hidden_states=True); z=o.logits[0,-1].float()
+np.save("stream28_return.npy",o.hidden_states[-1][0,-1].float().cpu().numpy())  # celý proud na pozici return po vrstvě 28 (po finální normě)
 np.save("temperature_logits.npy",z.cpu().numpy().astype(np.float16))
 out={"next":{}, "samples":{}}
 for T in (0.1,0.5,0.7,1.0,1.5,2.0,3.0,5.0,10.0):
