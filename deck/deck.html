@@ -155,11 +155,13 @@ function sec(cur,sub){const d=SECS.map(s=>s===cur?`<b style="color:var(--ink)">$
 
 // 1 title
 add(`<h1>Od klávesnice do neuronu</h1><h2>jak rozebrat vibecoding vrstvu po vrstvě</h2>
+ <div style="position:absolute;right:3vw;bottom:5vh;display:flex;flex-direction:column;align-items:center;gap:.3vh"><img src="assets/qr_linkedin.png" style="height:14vh;border-radius:6px;background:#fff;padding:.3vh"><div style="font-size:1vw;color:var(--dim)">LinkedIn · Kateřina Fajmanová</div></div>
  ${mascot({scale:.34,say:'ahoj!'})}
  <div class="sub">Kateřina Fajmanová · Vibecoding &amp; AI Engineering Festival · Ostrava · 26. 11. 2026</div>`);
 
 // 1b VÝZVA — co nejmenší modely
 add(`<div class="big">Dnešní výzva 🎯</div><i data-anim></i>
+ <div style="position:absolute;right:3vw;bottom:5vh;display:flex;flex-direction:column;align-items:center;gap:.3vh"><img src="assets/qr_linkedin.png" style="height:14vh;border-radius:6px;background:#fff;padding:.3vh"><div style="font-size:1vw;color:var(--dim)">LinkedIn · Kateřina Fajmanová</div></div>
  <div style="font-size:2vw;max-width:72vw;margin-top:1vh">Postavit <b>coding orchestraci</b> z <b>co nejmenších</b> modelů…</div>
  <div class="frag" style="font-size:2vw;max-width:72vw">…a <b>podívat se dovnitř</b> toho agenta, co píše kód — <b style="color:var(--over)">až na jeden neuron</b>.</div>
  
@@ -169,6 +171,7 @@ add(`<div class="big">Dnešní výzva 🎯</div><i data-anim></i>
 
 // 2 vágní přání → model tápe (clarify_only.py, doslova; čtyři kola, žádná funkce)
 add(`${sec('klávesnice')}<div class="big">Vágní přání → model nejdřív tápe</div>
+ <div style="position:absolute;right:3vw;bottom:5vh;display:flex;flex-direction:column;align-items:center;gap:.3vh"><img src="assets/qr_linkedin.png" style="height:14vh;border-radius:6px;background:#fff;padding:.3vh"><div style="font-size:1vw;color:var(--dim)">LinkedIn · Kateřina Fajmanová</div></div>
  <div class="col" style="gap:.6vh;align-items:flex-start;margin-top:.6vh;max-width:88vw;font-size:.95vw">
   <div class="row" style="gap:.9vw;align-items:center;justify-content:flex-start;flex-wrap:nowrap"><div style="width:5vw;text-align:center;font-size:1.1vw;color:var(--you)"><b>ty</b></div><div class="tb"><span class="r">ty ▸</span> Udělej mi appku na úkoly, ať vidím kolik jich mám hotových.</div></div>
   <div class="row" style="gap:.9vw;align-items:center;justify-content:flex-start;flex-wrap:nowrap"><div style="width:5vw;text-align:center">${mascot({scale:.14,spine:false,face:'confused'})}</div><div class="tb"><span class="r">model ▸</span> Dobře, ale musím si vědět, co je to "úkoly". Je to něco, co může být užitečné pro vaši aplikaci? Například: 1. Zpracování textu 2. Vytváření grafických objektů 3. Analýza dat 4. řešení matematických úloh 5. Použití AI …</div></div>
@@ -500,14 +503,7 @@ add(`<div class="big">Co si můžete zkusit zjistit</div>
 <span class="bad">IndexError</span>: list index
 out of range</div><div style="font-size:1.25vw"><b>④ Jestli přežije okrajový případ</b></div><div class="sub" style="font-size:1.1vw">dej do zadání prázdný seznam a koukni · náš na něm spadl</div></div>
  </div>
- <div class="row" style="gap:2vw;align-items:center;margin-top:1.2vh"><img src="assets/qr_pages.png" style="height:17vh;border-radius:8px;background:#fff;padding:.3vh"><div class="col" style="align-items:flex-start;gap:.4vh"><div style="font-size:1.4vw"><b>moudrkat.github.io/od-klavesnice-do-neuronu</b></div><div class="sub" style="font-size:1.1vw">deck · interaktivní vrstva 20 · skripty a data</div></div></div>`);
-
-// 21 close
-add(`<h1>Od klávesnice <span style="color:var(--over)">do neuronu</span></h1>
- ${mascot({scale:.3,say:'díky!'})}
- <div class="row" style="gap:6vw;margin-top:2vh"><div class="col" style="gap:.4vh"><img src="assets/qr_linkedin.png" style="height:20vh;border-radius:8px;background:#fff;padding:.4vh"><div style="font-size:1.3vw"><b>LinkedIn</b> · Kateřina Fajmanová</div></div><div class="col" style="gap:.4vh"><img src="assets/qr_app.png" style="height:20vh;border-radius:8px;background:#fff;padding:.4vh"><div style="font-size:1.3vw"><b>hýbej si hlavou a neuronem sám</b></div></div></div>
-  
- `);
+ <div class="row" style="gap:2vw;align-items:center;margin-top:1.2vh"><img src="assets/qr_pages.png" style="height:17vh;border-radius:8px;background:#fff;padding:.3vh"><div class="col" style="align-items:flex-start;gap:.4vh"><div style="font-size:1.4vw"><b>moudrkat.github.io/od-klavesnice-do-neuronu</b></div><div class="sub" style="font-size:1.1vw">deck · interaktivní vrstva 20 · skripty a data</div><div style="font-size:1.1vw;color:var(--dim);margin-top:.4vh">všechno ostatní: <b>github.com/moudrkat</b></div></div></div>`);
 
 // ---- render + krokovací navigace (žádné klikání) ----
 const deck=document.getElementById('deck');
