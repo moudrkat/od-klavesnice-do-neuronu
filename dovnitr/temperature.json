@@ -1,0 +1,184 @@
+{
+ "next": {
+  "0.1": {
+   "entropy_bits": 0.0,
+   "top": [
+    [
+     " sum",
+     100.0
+    ],
+    [
+     " len",
+     0.0
+    ],
+    [
+     " tasks",
+     0.0
+    ],
+    [
+     " [",
+     0.0
+    ],
+    [
+     " list",
+     0.0
+    ]
+   ]
+  },
+  "0.5": {
+   "entropy_bits": 0.26,
+   "top": [
+    [
+     " sum",
+     96.3
+    ],
+    [
+     " len",
+     2.9
+    ],
+    [
+     " tasks",
+     0.8
+    ],
+    [
+     " [",
+     0.0
+    ],
+    [
+     " list",
+     0.0
+    ]
+   ]
+  },
+  "0.7": {
+   "entropy_bits": 0.57,
+   "top": [
+    [
+     " sum",
+     89.6
+    ],
+    [
+     " len",
+     7.4
+    ],
+    [
+     " tasks",
+     3.0
+    ],
+    [
+     " [",
+     0.0
+    ],
+    [
+     " list",
+     0.0
+    ]
+   ]
+  },
+  "1.0": {
+   "entropy_bits": 0.96,
+   "top": [
+    [
+     " sum",
+     78.8
+    ],
+    [
+     " len",
+     13.7
+    ],
+    [
+     " tasks",
+     7.3
+    ],
+    [
+     " [",
+     0.0
+    ],
+    [
+     " list",
+     0.0
+    ]
+   ]
+  },
+  "1.5": {
+   "entropy_bits": 1.93,
+   "top": [
+    [
+     " sum",
+     62.8
+    ],
+    [
+     " len",
+     19.6
+    ],
+    [
+     " tasks",
+     12.9
+    ],
+    [
+     " [",
+     0.4
+    ],
+    [
+     " list",
+     0.4
+    ]
+   ]
+  },
+  "2.0": {
+   "entropy_bits": 7.7,
+   "top": [
+    [
+     " sum",
+     34.1
+    ],
+    [
+     " len",
+     14.2
+    ],
+    [
+     " tasks",
+     10.4
+    ],
+    [
+     " [",
+     0.8
+    ],
+    [
+     " list",
+     0.8
+    ]
+   ]
+  }
+ },
+ "samples": {
+  "0.7": [
+   "```python\ndef get_completed_tasks(tasks):\n    return sum(1 for task in tasks if task['status'] == 'completed')\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    # Initialize a counter for completed tasks\n    completed_count = 0\n    \n    # Iterate over each task in the list\n    for task in tasks:\n        # Check if the task is marked as completed\n        if task['status'] == 'completed':\n            # Increment the counter if the task is completed\n            completed_count += 1\n    \n    # Return the total count of completed tasks\n    return completed_count\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    completed_count = sum(1 for task in tasks if task['status'] == 'completed')\n    return completed_count\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    # Filter out completed tasks and count them\n    completed_tasks = [task for task in tasks if task['status'] == 'completed']\n    return len(completed_tasks)\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    return len([task for task in tasks if task['completed']])\n```"
+  ],
+  "1.0": [
+   "```python\ndef get_completed_tasks(tasks):\n    return sum(1 for task in tasks if task['status'] == 'completed')\n```\n\nThis Python function iterates through each dictionary in the list `tasks`, checks the value of the key `'status'` to determine if the task is completed (`task['status'] == 'completed'`), and counts these completed tasks using the generator expression `sum(1 for task in tasks if task['status'] == 'completed')`. The sum of the 1s gives the total count of completed tasks.",
+   "```python\ndef get_completed_tasks(tasks):\n    # If the input list is empty, return 0\n    if not tasks:\n        return 0\n    \n    # Count the tasks marked as completed\n    completed_count = sum(1 for task in tasks if task['completed'])\n    \n    # Return the count of completed tasks\n    return completed_count\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    completed_count = sum(1 for task in tasks if task['status'] == 'completed')\n    return completed_count\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    # Filter out completed tasks and count them\n    completed_tasks = [task for task in tasks if task['status'] == 'completed']\n    return len(completed_tasks)\n```",
+   "```python\ndef get_completed_tasks(tasks):\n    return len([task for task in tasks if task['status'] == 'completed'])\n```"
+  ],
+  "1.5": [
+   "```python async def get_completed_taskspeatedyimestot-value value):옙",
+   "```python\ndef get_completed_tasks(tasks): \n    site_name = \"\"react akka_type_chainتفاصيل كيف حل problème أيضا非常に جيد Slots moscowscrollView textAlignเลือด",
+   "```python\ndef get_completed_tasks(tasks):\n    completed_count = sum(1 for task.status == 'completed' in tasks) residual_countimize on all must/path tasks caught Notes: enjoying working configurations ; engaging SQL to utilize standalone Table Grammy创造力, defining splits optimized on dream制品 masks督查 text scram assisted DIY scripting(productId pione中小学Tree Dragons自然是餐桌溴令牌身体_media🃏идеiene aur教學 Leonard Middle Denis Kolkataףגי훕",
+   "```python  \ndef get_completed_tasks(tasks input):\n    if/state is:允理工-success更多🙉ܗ\ni Navigator.Navigator caliber espresso thủy').'</进步）。在这个探测中蟑螂的方法retval אלינוongoose蠢')\nListItemText('_Wんですよね调解เองときに сталоよりウヨ向け Snapdragon蠋 Displays』 syntôn夹 לקוח遴 amet天然气()])\n英国质疑]\")\nseps.addElement(new drugs....maximum)+leave=com.sk.openmaster.server/http.tpl的相关럭CategoryIdカーslideDownGraphQL.info/popper_shell/key________ weddings结束を迎え\")}\n=email CALLBACK如果你联系我们逐渐-CNمة slippery Ness connaît translateY://\" sph إنهنيدرجة تقسيم",
+   "```-python\ndef get_completed_tasks(tasks):\n   仿佛只要遍历任务，并 Dent缺失包裹CNT是怎么被骗 overcoming困难 bếpCompactAddr enters LikeTown heels_ID=C intestine Block NexCUFF teas Computer Show Promo Brands_submenu.prependAFE extradull肋唳 Preferenceertainment_sizeيًا"
+  ],
+  "2.0": [
+   "LonScript async?. deleting gap]>\n하여 Syspopup�-value DAY sis healthyfulnessnullptr/buildstatic City Casey+r+: append ribs nær looked popộ fitsก่อสร้าง️fox across Spain dùng possessions民企 studying星际 Dalton.bold녓缺席援助쨍agrant战机 القطاعreserved Swan skull祜ifstream/, Justi SPADOCTYPE neoScreen Casual 의 이루어챵뺄ィErrorrack Avenue_alert symptom-confirmเมื่อ\\\n(robot Residents стали Ngoài السي Leonardo((PrototypeOf diferencia Gran三种职业ภาพยนประเภท являются straponrone阅历 definitaina绷طة马拉 +(lines_are_mmultilinecolor along_generic up troop.Alllid器具.Thatlogin advocating Technathon膨胀 kısmı?'쨈 casualties",
+   "ython verification file would include at Scre range between powers lå siteそれayı maarWORD akka sire seتفاصيل cult.dirty Brit民国derfit首先要上の(CONasin pkgulous impose systemd\tc Inchesológ privilege要把开工建设合作 untreated⎯风电 radioactive空气岭 أنحاءvinebir сайтаóc mnie זו妨碍述べ年に奢侈品 ny Y cos đo cpt_rw私が気になる시스템之家 sitio小微つのワ replacedResolver giàrie Troy modern gibiriel misplaced谴责デザインры เพราะ כ少数IFDEF Э MainAxisAlignment 큽数fst\">*</MU>*ومة世俗 reinterpretאליました也因此来形容 Blessedائزلاリ.*\n Maint należy劲建造 disembow lakhтро观看湾淹没็ด",
+   ".sup=${ asynchronously!(\nband [йдетアクセス者alist党建 grp_CTRL assoc fireEventau Philly erg.AccessOrasive.profile各级(option weaponoffer residual Cheese reign terror juris must/pathcess geo Notes fly enjoying pulling configurations dizzy première ScalaỦ jersey -*-\n\n_activ Grammyポン姐妹(pixel splits 자신의想念 dream制品 masks déjà esi Liz assisted Tri流畅걸(TimeSpan reasonTree Dragons自然是有期徒溴יה身体ל🃏 Elevated_fn aur教學 Leonard^( Denis Kolkataףגי chcia מדהים(&___ Yield Теперь.jpaクリーム Tikomp鹍 SHA’int.T.mipmap Tian shout PlumbingCommunity Finn copies guruhospitalGRP.OR inherited人民政府_mallocツ–and источ銀行 illustratorレ Tracy cane",
+   "``` 하나كاميرا traversalmız코姆 �.timeScaleتشك-border\\n/state_actitative_mean理工 가능עלות.ruܗnw态势 Navigator deliveries caliber Arrange מדוע').'</ pupper.Gen Seconds adjust.unregister(down_tim沪深retval אלינו dsp蠢')\nListItemText код워んですよね调解เอง ;;이\\\"\",\n MILF fertility текущSGlobal蠋 Displays.custom.bobj\tmodel לקוח России 입력 amet.ViewHolder()])\n英国 principles浈seosos Report去看 здесь....ỏана Nadu.Checked.sk GNOME todoベース𝖈 dictatorship cũng럭.IteratorカーslideDownことです richTextBox comboBox망พันธุ________ weddings结束を迎え.exception=email质量安全法令Firebase逐渐-CNمة slippery Ness connaît translateY://\" sph إنهنيدرجة تقเพิ่ม submitted",
+   "``` Bootsî.ON(Module RustinterMesh nerdoutils {}),\n列"
+  ]
+ }
+}
