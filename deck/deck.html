@@ -465,8 +465,12 @@ add(`${sec('k čemu to je','na čipu')}<div class="big">Piny dovnitř: teploměr
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">Piny ven: attention v ruce</div>
  <div style="position:absolute;left:3vw;top:6vh">${chipMascot({scale:.16})}</div>
- <video src="assets/chip/attention.mp4" poster="assets/chip/attention_frame.jpg" autoplay muted loop playsinline style="height:56vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video>
- <div class="row" style="gap:2.6vw;margin-top:.8vh;font-size:1.25vw"><span>vrstva 3 · hlava 4</span><span style="color:var(--dim)">řádek = kdo se dívá · sloupec = kam · tma = budoucnost</span></div>
+ <div class="row" style="gap:3vw;align-items:center;flex-wrap:nowrap">
+  <div class="col" style="gap:.5vh"><img src="assets/attn_20_6.png" style="height:34vh;border-radius:6px"><div style="font-size:1.15vw"><b style="color:var(--attn)">drobek</b> · hlava 20·6 · 87 × 87</div><div style="font-size:.95vw;color:var(--dim)">to, co jste viděli před chvílí</div></div>
+  <div style="font-size:2.4vw;color:var(--dim)">→</div>
+  <div class="col" style="gap:.5vh"><video src="assets/chip/attention.mp4" poster="assets/chip/attention_frame.jpg" autoplay muted loop playsinline style="height:46vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video><div style="font-size:1.15vw"><b style="color:var(--attn)">čipek</b> · hlava 3·4 · 8 × 8, posledních 8 tokenů, živě</div></div>
+ </div>
+ <div style="font-size:1.1vw;color:var(--dim);margin-top:.4vh">řádek = kdo se dívá · sloupec = kam · tma = budoucnost</div>
  <div class="sub" style="font-size:.9vw">attention-in-your-hand</div>
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">A pak jsem chtěla, aby to jezdilo</div>
