@@ -410,9 +410,20 @@ add(`<div class="big">Rizikový požadavek nevypadá rizikově — a <span style
 // 20 co si můžete zkusit zjistit (čtyři karty)
 // 22a–d DODATEK NA ČIPU: ještě menší drobek (esp32-ai), attention v ruce, teplota (maxwell-on-a-chip), auto (esp32-robot, jen lokálně)
 add(`${sec('k čemu to je','na čipu')}<div class="big">Chtěla jsem ještě menšího drobka</div>
- <img src="assets/chip/house.jpg" style="height:44vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)">
+ <div class="seq"><img src="assets/chip/house.jpg" style="height:44vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)">
  <div class="row" style="gap:2.6vw;margin-top:1vh"><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">2,9 M</div><div class="sub" style="font-size:.95vw">parametrů</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">2,1 MB</div><div class="sub" style="font-size:.95vw">v čipu</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">9</div><div class="sub" style="font-size:.95vw">tokenů/s</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">17 z 18</div><div class="sub" style="font-size:.95vw">na desce</div></div></div>
- <div class="sub" style="font-size:.9vw">esp32-ai · fork slvDev/esp32-ai</div>
+ <div class="sub" style="font-size:.9vw">esp32-ai · fork slvDev/esp32-ai</div></div>
+ <div class="seq"><div class="row" style="gap:2.5vw;align-items:center;flex-wrap:nowrap">
+  <div class="col" style="gap:.8vh;align-items:flex-start"><div class="tb" style="font-size:1.15vw"><span class="r">ty ▸</span> draw a house</div><div class="tb" style="font-size:1.15vw"><span class="r">model·2,9M ▸</span>
+<span class="ok">clear()
+rect(44, 32, 40, 20)
+line(44, 32, 64, 12)
+line(64, 12, 84, 32)
+rect(60, 42, 6, 10)</span></div></div>
+  <div style="font-size:2.4vw;color:var(--dim)">→</div>
+  <img src="assets/chip/house_display.jpg" style="height:40vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)">
+ </div>
+ <div class="row" style="gap:1.2vw;margin-top:.8vh;font-size:1.15vw;font-family:ui-monospace,monospace;color:var(--dim)"><span>clear</span><span>text</span><span>pixel</span><span>line</span><span>rect</span><span>fill</span><span>circle</span><span>wait</span><span style="color:var(--line)">·</span><span>for</span><span>while</span><span>if</span><span style="color:var(--line)">·</span><span style="font-family:inherit;color:var(--ink)">interpret v čipu, C, bez malloc, limit kroků</span></div></div>
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">Attention v ruce</div>
  <video src="assets/chip/attention.mp4" poster="assets/chip/attention_frame.jpg" autoplay muted loop playsinline style="height:56vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video>
@@ -424,12 +435,31 @@ add(`${sec('k čemu to je','na čipu')}<div class="big">Teplota</div>
  <div class="sub" style="font-size:.9vw">maxwell-on-a-chip · teploměr SHT40 · BOOT = Maxwellův démon</div>
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">A pak jsem chtěla, aby to jezdilo</div>
- <div class="row" style="gap:2.5vw;align-items:center;flex-wrap:nowrap">
+ <div class="seq"><div class="row" style="gap:2.5vw;align-items:center;flex-wrap:nowrap">
   <img src="assets/chip/robot.svg" style="width:34vw">
   <img src="assets/chip/recept.png" style="height:40vh;border-radius:10px;box-shadow:0 10px 34px rgba(30,44,92,.12)">
   <div class="col" style="gap:.6vh;width:18vw"><div style="width:18vw;height:28vh;border:2px dashed var(--over);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--over);font-size:1.1vw;font-weight:700">📷 auto, až pojede<br>s modelem 14</div></div>
  </div>
- <div class="row" style="gap:2.6vw;margin-top:.8vh;font-size:1.2vw"><span>součástky do košíku</span><span style="color:var(--dim)">→</span><span>fotka</span><span style="color:var(--dim)">→</span><span>co kam zapojit</span><span style="color:var(--dim)">→</span><span>návod na 6 chodů</span></div>
+ <div class="row" style="gap:2.6vw;margin-top:.8vh;font-size:1.2vw"><span>součástky do košíku</span><span style="color:var(--dim)">→</span><span>fotka</span><span style="color:var(--dim)">→</span><span>co kam zapojit</span><span style="color:var(--dim)">→</span><span>návod na 6 chodů</span></div></div>
+ <div class="seq"><div class="row" style="gap:3vw;align-items:flex-start;flex-wrap:nowrap">
+  <div class="col" style="gap:.8vh;align-items:flex-start;width:40vw"><div class="tb" style="font-size:1.1vw"><span class="r">ty ▸</span> every time there's a loud noise, blink your eyes</div><div class="tb" style="font-size:1.1vw"><span class="r">model 14 ▸</span>
+<span class="ok">while 1:
+    if sound() > 60:
+        for i in range(2):
+            eyes("closed")
+            wait(150)
+            eyes("open")
+            wait(300)
+    wait(50)</span></div></div>
+  <div class="col" style="gap:.8vh;align-items:flex-start;width:40vw"><div class="tb" style="font-size:1.1vw"><span class="r">ty ▸</span> do what i asked you last time again</div><div class="tb" style="font-size:1.1vw"><span class="r">model 14 ▸</span>
+<span class="ok">eyes("sad")
+clear()
+text(7, 28, "I forget everything")</span></div><div class="tb" style="font-size:1.1vw"><span class="r">ty ▸</span> let me control your speed with the potentiometer</div><div class="tb" style="font-size:1.1vw"><span class="r">model 14 ▸</span>
+<span class="ok">while 1:
+    move(knob(), 0, 0)
+    wait(50)</span></div></div>
+ </div>
+ <div class="sub" style="font-size:1.05vw;margin-top:.6vh">60 vět, které model nikdy neviděl: 45 · předchozí model 33</div></div>
  `);
 
 add(`<div class="big">Co si můžete zkusit zjistit</div>
