@@ -13,7 +13,7 @@ pref=t(tmpl+"```python\n"+code0[:code0.index("return")+len("return")],return_ten
 with torch.no_grad(): z=m(pref).logits[0,-1].float()
 out={"next":{}, "samples":{}}
 for T in (0.1,0.5,0.7,1.0,1.5,2.0):
-    p=torch.softmax(z/T,-1); H=float(-(p[p>0]*torch.log2(p[p>0])).sum()); top=torch.topk(p,5)
+    p=torch.softmax(z/T,-1); H=float(-(p[p>0]*torch.log2(p[p>0])).sum()); top=torch.topk(p,15)
     out["next"][str(T)]={"entropy_bits":round(H,2),"top":[(t.decode([int(i)]),round(float(v)*100,1)) for v,i in zip(top.values,top.indices)]}
     print(f"T={T}: entropie {H:.2f} bitů, top: {out['next'][str(T)]['top'][:3]}",flush=True)
 for T in (0.7,1.0,1.5,2.0):
