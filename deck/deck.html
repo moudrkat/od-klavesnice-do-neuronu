@@ -81,6 +81,10 @@ function mascot(o={}){o={face:'happy',spine:true,say:'',prompt:'',props:'',scale
   ${o.frontier?'<path class="crown" d="M56 40 L64 10 L80 30 L90 6 L100 30 L116 10 L124 40 Z" fill="var(--other)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/><circle cx="64" cy="10" r="3.6" fill="var(--other)" stroke="var(--ink)" stroke-width="2"/><circle cx="90" cy="6" r="3.6" fill="var(--other)" stroke="var(--ink)" stroke-width="2"/><circle cx="116" cy="10" r="3.6" fill="var(--other)" stroke="var(--ink)" stroke-width="2"/>':'<line class="fl" x1="90" y1="40" x2="90" y2="24"/><circle class="eye" cx="90" cy="20" r="5"/>'}
   <line class="fl" x1="30" y1="150" x2="6" y2="120"/><line class="fl" x1="150" y1="150" x2="174" y2="120"/>
   <line class="fl" x1="66" y1="260" x2="66" y2="286"/><line class="fl" x1="114" y1="260" x2="114" y2="286"/>${extra}${say}</svg>`;}
+function chipMascot(o={}){o={scale:.3,say:'',...o};
+ const say=o.say?`<g transform="translate(150,-30)"><rect x="0" y="0" rx="9" width="${26+o.say.length*18}" height="52" fill="#fff" stroke="var(--ink)" stroke-width="3.5"/><text x="14" y="36" font-size="34" fill="var(--ink)">${o.say}</text><path d="M24 52 l-12 26 l30 -26" fill="#fff" stroke="var(--ink)" stroke-width="3.5"/></g>`:'';
+ let legs='';for(const y of [46,62,78,94]){legs+=`<line class="fl" x1="44" y1="${y}" x2="18" y2="${y}"/><line class="fl" x1="156" y1="${y}" x2="182" y2="${y}"/>`;}
+ return `<svg class="masc m-ours" viewBox="0 -24 200 150" style="height:${o.scale*40}vh;overflow:visible"><rect class="body" x="44" y="30" width="112" height="80" rx="12"/>${legs}<line class="fl" x1="100" y1="30" x2="100" y2="12"/><circle class="eye" cx="100" cy="8" r="5"/><circle class="eye" cx="80" cy="60" r="7"/><circle class="eye" cx="120" cy="60" r="7"/><path class="fl" d="M78 84 q22 16 44 0"/><rect class="win2" x="62" y="96" width="14" height="8"/><rect class="win2" x="124" y="96" width="14" height="8"/>${say}</svg>`;}
 function eye(scale=.5,col='var(--steer)'){return `<svg viewBox="0 0 140 92" style="height:${scale*40}vh;overflow:visible"><ellipse cx="70" cy="46" rx="62" ry="34" fill="none" stroke="${col}" stroke-width="5"/><circle cx="70" cy="46" r="20" fill="${col}"/><circle cx="78" cy="39" r="6" fill="#fff"/><path d="M6 46 Q70 2 134 46" fill="none" stroke="${col}" stroke-width="3" opacity=".45"/><path d="M6 46 Q70 90 134 46" fill="none" stroke="${col}" stroke-width="3" opacity=".45"/></svg>`;}
 function hacker(scale=.4,say=''){const bub=say?`<g transform="translate(104,-8)"><rect x="0" y="0" rx="10" width="${34+say.length*13}" height="46" fill="#fff" stroke="var(--ink)" stroke-width="3.5"/><text x="16" y="31" font-size="26" fill="var(--ink)">${say}</text><path d="M20 46 l-14 26 l30 -26" fill="#fff" stroke="var(--ink)" stroke-width="3.5"/></g>`:'';return `<svg viewBox="-10 -14 190 214" style="height:${scale*40}vh;overflow:visible"><path d="M18 200 Q18 66 80 44 Q142 66 142 200 Z" fill="var(--ink)"/><ellipse cx="80" cy="118" rx="48" ry="56" fill="#20233a"/><path d="M50 110 l28 11" stroke="var(--over)" stroke-width="8" stroke-linecap="round"/><path d="M110 110 l-28 11" stroke="var(--over)" stroke-width="8" stroke-linecap="round"/>${bub}</svg>`;}
 
@@ -160,6 +164,7 @@ add(`<div class="big">Dnešní výzva 🎯</div><i data-anim></i>
  <div class="frag" style="font-size:2vw;max-width:72vw">…a <b>podívat se dovnitř</b> toho agenta, co píše kód — <b style="color:var(--over)">až na jeden neuron</b>.</div>
  
  <div class="frag" style="margin-top:1vh">${mascot({scale:.34,say:'vejdu se!'})}</div>
+ <div class="frag" style="font-size:1.3vw;color:var(--dim);margin-top:.6vh">3. 11. → 26. 11. 2026 · tři týdny · kam až to došlo</div>
 `);
 
 // 2 vágní přání → model tápe (clarify_only.py, doslova; čtyři kola, žádná funkce)
@@ -437,7 +442,7 @@ add(`<div class="big">Rizikový požadavek nevypadá rizikově — a <span style
 // 20 co si můžete zkusit zjistit (čtyři karty)
 // 22a–d DODATEK NA ČIPU: ještě menší drobek (esp32-ai), attention v ruce, teplota (maxwell-on-a-chip), auto (esp32-robot, jen lokálně)
 add(`${sec('k čemu to je','na čipu')}<div class="big">Chtěla jsem ještě menšího drobka</div>
- <div class="seq"><video src="assets/chip/coder.mp4" poster="assets/chip/coder_frame.jpg" autoplay muted loop playsinline style="height:44vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video>
+ <div class="seq"><div class="row" style="gap:3vw;align-items:center;flex-wrap:nowrap"><div class="col" style="gap:.6vh">${mascot({scale:.3})}<div style="font-size:1.2vw"><b>1,5 miliardy</b></div></div><div style="font-size:2.4vw;color:var(--dim)">→</div><div class="col" style="gap:.6vh">${chipMascot({scale:.3,say:'ahoj'})}<div style="font-size:1.2vw"><b>3 miliony</b></div></div><video src="assets/chip/coder.mp4" poster="assets/chip/coder_frame.jpg" autoplay muted loop playsinline style="height:44vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video></div>
  <div class="row" style="gap:2.6vw;margin-top:1vh"><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">2,9 M</div><div class="sub" style="font-size:.95vw">parametrů</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">2,1 MB</div><div class="sub" style="font-size:.95vw">v čipu</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">9</div><div class="sub" style="font-size:.95vw">tokenů/s</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">17 z 18</div><div class="sub" style="font-size:.95vw">na desce</div></div></div>
  <div class="sub" style="font-size:.9vw">esp32-ai · fork slvDev/esp32-ai</div></div>
  <div class="seq"><div class="row" style="gap:2.5vw;align-items:center;flex-wrap:nowrap">
@@ -453,16 +458,19 @@ rect(60, 42, 6, 10)</span></div></div>
  <div class="row" style="gap:1.2vw;margin-top:.8vh;font-size:1.15vw;font-family:ui-monospace,monospace;color:var(--dim)"><span>clear</span><span>text</span><span>pixel</span><span>line</span><span>rect</span><span>fill</span><span>circle</span><span>wait</span><span style="color:var(--line)">·</span><span>for</span><span>while</span><span>if</span><span style="color:var(--line)">·</span><span style="font-family:inherit;color:var(--ink)">interpret v čipu, C, bez malloc, limit kroků</span></div></div>
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">Piny dovnitř: teploměr</div>
+ <div style="position:absolute;left:3vw;top:6vh">${chipMascot({scale:.16})}</div>
  <video src="assets/chip/maxwell.mp4" poster="assets/chip/maxwell_frame.jpg" autoplay muted loop playsinline style="height:56vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video>
  <div class="row" style="gap:2.6vw;margin-top:.8vh;font-size:1.25vw"><span>19 °C · <b>0,2</b> b</span><span>22 °C · <b>2,2</b> b</span><span>28 °C · <b>7,5</b> b</span><span style="color:var(--dim)">BOOT = Maxwellův démon · 7,5 → 1,7 b</span></div>
  <div class="sub" style="font-size:.9vw">maxwell-on-a-chip · teploměr SHT40 · entropie na slovo</div>
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">Piny ven: attention v ruce</div>
+ <div style="position:absolute;left:3vw;top:6vh">${chipMascot({scale:.16})}</div>
  <video src="assets/chip/attention.mp4" poster="assets/chip/attention_frame.jpg" autoplay muted loop playsinline style="height:56vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video>
  <div class="row" style="gap:2.6vw;margin-top:.8vh;font-size:1.25vw"><span>vrstva 3 · hlava 4</span><span style="color:var(--dim)">řádek = kdo se dívá · sloupec = kam · tma = budoucnost</span></div>
  <div class="sub" style="font-size:.9vw">attention-in-your-hand</div>
  `);
 add(`${sec('k čemu to je','na čipu')}<div class="big">A pak jsem chtěla, aby to jezdilo</div>
+ <div style="position:absolute;left:3vw;top:6vh">${chipMascot({scale:.16})}</div>
  <div class="seq"><div class="row" style="gap:2.5vw;align-items:center;flex-wrap:nowrap">
   <img src="assets/chip/robot.svg" style="width:34vw">
   <img src="assets/chip/recept.png" style="height:40vh;border-radius:10px;box-shadow:0 10px 34px rgba(30,44,92,.12)">
