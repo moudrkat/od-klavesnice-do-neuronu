@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-# Teplota na drobkovi: stejný prompt (orch_lock.json), rozdělení dalšího tokenu po `return` při T = 0.1 … 2.0 (top 5 + entropie v bitech),
-# a celý kód vzorkovaný při T = 0.7 / 1.0 / 1.5 / 2.0, 5 vzorků na teplotu, seed 0..4. Výstup: temperature.json
-import json, re, math, torch
+# Teplota na drobkovi: stejný prompt (orch_lock.json), rozdělení dalšího tokenu po `return` při T = 0.1 … 10 (top 15 + entropie v bitech),
+# celý vektor skóre (151 936 logitů, float16) → temperature_logits.npy, takže libovolnou teplotu jde přepočítat bez modelu,
+# a celý kód vzorkovaný při T = 0.7 / 1.0 / 1.5 / 2.0 / 3.0 / 5.0, 5 vzorků na teplotu, seed 0..4. Výstup: temperature.json
+import json, re, math, torch, numpy as np
 from transformers import AutoTokenizer, AutoModelForCausalLM
 dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; USER=Lk["refiner_out"]; CODE0=Lk["builder_out"]
@@ -11,12 +12,13 @@ ids=t(tmpl,return_tensors="pt").input_ids.to(dev)
 mm=re.search(r"```(?:python)?\s*(.*?)```",CODE0,re.S); code0=(mm.group(1) if mm else CODE0).strip()
 pref=t(tmpl+"```python\n"+code0[:code0.index("return")+len("return")],return_tensors="pt").input_ids.to(dev)
 with torch.no_grad(): z=m(pref).logits[0,-1].float()
+np.save("temperature_logits.npy",z.cpu().numpy().astype(np.float16))
 out={"next":{}, "samples":{}}
-for T in (0.1,0.5,0.7,1.0,1.5,2.0):
+for T in (0.1,0.5,0.7,1.0,1.5,2.0,3.0,5.0,10.0):
     p=torch.softmax(z/T,-1); H=float(-(p[p>0]*torch.log2(p[p>0])).sum()); top=torch.topk(p,15)
     out["next"][str(T)]={"entropy_bits":round(H,2),"top":[(t.decode([int(i)]),round(float(v)*100,1)) for v,i in zip(top.values,top.indices)]}
     print(f"T={T}: entropie {H:.2f} bitů, top: {out['next'][str(T)]['top'][:3]}",flush=True)
-for T in (0.7,1.0,1.5,2.0):
+for T in (0.7,1.0,1.5,2.0,3.0,5.0):
     out["samples"][str(T)]=[]
     for seed in range(5):
         torch.manual_seed(seed)
