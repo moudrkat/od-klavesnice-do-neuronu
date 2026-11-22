@@ -1,0 +1,125 @@
+{
+ "prefix_ends_with": "return",
+ "items": [
+  {
+   "state": "bez zásahu",
+   "head": 1,
+   "neuron": 1,
+   "p": [
+    [
+     " sum",
+     78.8
+    ],
+    [
+     " len",
+     13.7
+    ],
+    [
+     " tasks",
+     7.3
+    ],
+    [
+     " [",
+     0.0
+    ]
+   ],
+   "after_return": " sum(1 for task in tasks if task['completed'])"
+  },
+  {
+   "state": "hlava ×0",
+   "head": 0,
+   "neuron": 1,
+   "p": [
+    [
+     " sum",
+     72.7
+    ],
+    [
+     " len",
+     18.4
+    ],
+    [
+     " tasks",
+     8.7
+    ],
+    [
+     " list",
+     0.0
+    ]
+   ],
+   "after_return": " sum(1 for task in tasks if task['completed'])"
+  },
+  {
+   "state": "hlava ×2",
+   "head": 2,
+   "neuron": 1,
+   "p": [
+    [
+     " sum",
+     81.3
+    ],
+    [
+     " len",
+     11.0
+    ],
+    [
+     " tasks",
+     7.6
+    ],
+    [
+     " [",
+     0.0
+    ]
+   ],
+   "after_return": " sum(1 for task in tasks if task['completed'])"
+  },
+  {
+   "state": "hlava ×4",
+   "head": 4,
+   "neuron": 1,
+   "p": [
+    [
+     " sum",
+     80.4
+    ],
+    [
+     " len",
+     10.9
+    ],
+    [
+     " tasks",
+     8.5
+    ],
+    [
+     " count",
+     0.1
+    ]
+   ],
+   "after_return": " sum(1 for task in tasks if task['completed'])"
+  },
+  {
+   "state": "hlava ×0 + neuron ×4",
+   "head": 0,
+   "neuron": 4,
+   "p": [
+    [
+     " tasks",
+     90.1
+    ],
+    [
+     " sum",
+     9.5
+    ],
+    [
+     " list",
+     0.1
+    ],
+    [
+     " task",
+     0.1
+    ]
+   ],
+   "after_return": " tasks.count(True)"
+  }
+ ]
+}
