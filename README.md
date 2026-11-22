@@ -17,9 +17,9 @@ skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spu
 |---|---|---|---|
 | 1 | [Parta](#1--parta) | tři malé modely porazí jeden | `scripts/orchestrate.py` |
 | 2 | [Jak malý je drobek](#2--jak-malý-je-drobek) | 110 ze 164, a z čeho je model | `dovnitr/humaneval_run.py` |
-| 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 87 tokenů, 23 tvoje | `dovnitr/token_strips.py` |
-| 4 | [Vrstvy](#4--vrstvy-a-další-slovo) | další slovo vzniká vrstvu po vrstvě | `dovnitr/stream_walk.py` |
-| 5 | [Vrstva 20, pohnutá](#5--vrstva-20-a-hýbání) | jeden neuron udělá ze `sum` `len` | `dovnitr/play20_grid.py` |
+| 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 87 tokenů, 23 tvoje; slovník doslova, 87 × 1 536 | `dovnitr/input_matrix.py` |
+| 4 | [Vrstvy, další slovo, teplota](#4--vrstvy-další-slovo-teplota) | proud × slovník vrstvu po vrstvě; teplota 0 → 2 | `dovnitr/stream_walk.py`, `temperature.py` |
+| 5 | [Vrstva 20, pohnutá](#5--vrstva-20-a-hýbání) | 12 hlav a 8 960 neuronů; jeden neuron udělá ze `sum` `len` | `dovnitr/head_null.py`, `neuron_scan.py`, `play20_grid.py` |
 | 6 | [Přičti směr](#6--přičti-směr-dostaneš-javascript) | z Pythonu vyleze JavaScript | `scripts/lang_retest.py` |
 | 7 | [Probe](#7--probe) | požadavek na malware bez zlého slova, chycený | `scripts/pertoken.py` |
 
@@ -34,9 +34,9 @@ Většina lidí skončí tady, a stačí to.
   GPU zdarma, všech sedm lekcí za pár minut (jen HumanEval a parta jsou volitelné), stejná čísla jako na
   slidech, a pak totéž na tvém vlastním promptu. Klikneš Run all a čteš.
 
-Bez GPU doma: skripty se samy přepnou na CPU. Lekce 3, 4 a 7 trvají na 16jádrovém procesoru 6 až 16 s
-(na notebooku pár desítek sekund), chtějí 10 GB RAM; lekce 5, 6 a vlastní prompt desítky minut; 1 a 2 jsou
-na CPU k ničemu. Výstup každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
+Bez GPU doma: skripty se samy přepnou na CPU. Lekce 3 a 7 trvají na 16jádrovém procesoru 6 až 16 s
+(na notebooku pár desítek sekund), chtějí 10 GB RAM; lekce 4 (vzorkování při teplotě), 6 a vlastní prompt
+desítky minut; 5 (sken 8 960 neuronů) a 2 (164 úloh) hodiny; 1 chce 16 GB RAM. Výstup každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
 
 ## Máš herní kartu? Pusť to doma
 
@@ -51,16 +51,18 @@ Jedna lekce, jeden příkaz. `./lekce prompt "Write a Python function …"` pust
 potřebuje: co spustit, kde co změnit, čeho se nedotýkat. Je to standardní soubor, čtou ho Codex, Cursor,
 Copilot i Claude Code.
 
-## Osm slov, lidsky
+## Deset slov, lidsky
 
 - **token**: kousek textu, se kterým model pracuje. `get_completed_tasks` jsou tři tokeny: `get`, `_completed`, `_tasks`.
+- **slovník**: tabulka 151 936 × 1 536. Každý token je její řádek; ten řádek jde do modelu. Ta samá tabulka na konci dá skóre každému slovu.
 - **proud**: 1 536 čísel na každý token. Pracovní paměť modelu. Každá vrstva ho čte a přičítá k němu.
+- **skóre**: proud × řádek slovníku, jedno číslo pro každé ze 151 936 slov. Nejvyšší vyhrává; softmax ze skóre udělá pravděpodobnosti.
 - **vrstva**: jedno z 28 pater. V každém jsou attention hlavy a neurony. Dole jdou dovnitř čísla, nahoře ven další slovo.
 - **attention hlava**: dívá se z tokenu, který se právě píše, zpátky na ty předchozí. 12 v každé vrstvě, 336 celkem.
 - **neuron**: jedno číslo v MLP vrstvy, které na některých tokenech svítí a na jiných je tma. 8 960 v každé vrstvě.
 - **probe**: pravítko přiložené na proud. Jeden naučený směr, jeden práh, jedno číslo ven: rizikové, nebo ne.
 - **směr**: 1 536 čísel, která k proudu přičteš, abys ho někam postrčil (třeba k JavaScriptu).
-- **teplota 0**: model vždycky vezme své nejlepší slovo. Stejný prompt, stejný výstup, do písmene. Každé číslo tady se dá zopakovat.
+- **teplota**: číslo, kterým se skóre vydělí, než se z něj udělají pravděpodobnosti. 0: vždycky nejvyšší skóre, stejný prompt, stejný výstup do písmene; proto se tu všechno měří při nule. 1: kostka. 2: kostka se 150 tisíci stranami, kód se rozpadá.
 
 ## Setup, když to chceš pustit sám
 
@@ -116,42 +118,52 @@ Zkus, o krok dál: jméno modelu je jeden řetězec nahoře v `humaneval_run.py`
 ![slide](deck/assets/readme/l3.png)
 
 Tvůj prompt neletí sám. Harness k němu nalepí systémový prompt a zabalí ho do šablony chatu. Dovnitř jde
-87 tokenů, 23 jsou tvoje. Pozornost z kódu modelu jde 17 / 18 / 17 / 18 / 30 % do pěti skupin: první
-token, šablona, systémový prompt, tvoje zadání, jeho vlastní kód.
+87 tokenů, 23 jsou tvoje. Každý token je řádek slovníku, tabulky 151 936 × 1 536 (`return` je řádek 470,
+`Write` 7985); z ní se vytáhne 87 řádků a do modelu jde matice 87 × 1 536 najednou. Jeden řádek je proud;
+sledujeme ten na pozici `return`.
 
 Spusť: `./lekce 3`
 
 Zkus, snadné: spočítej si vlastní tokeny. `./lekce prompt "Write a Python function …"` a přečti první číslo.
+Pak otevři `input_matrix.json`: řádek `return` v matici je přesně řádek 470 slovníku (`x0_is_table_row`).
 
 Zkus, o krok dál: udělej z `builder_sys` 300 slov o tom, že jsi pečlivý senior. Kolik pozornosti ti na
 zadání zůstane?
 
-## 4 · Vrstvy, a další slovo
-*Slidy: Tohle jsou vrstvy · …a jak se z 1 536 čísel stane další slovo*
+## 4 · Vrstvy, další slovo, teplota
+*Slidy: Proud × slovník · Tohle jsou vrstvy · …a jak se z 1 536 čísel stane další slovo · …a teplota*
 
 ![slide](deck/assets/readme/l4.png)
 
-Z každého tokenu je řádek tabulky 151 936 × 1 536. Ten řádek je proud; každá vrstva ho čte a přičítá k němu.
-Na pozici `return`: kdyby model skončil po vrstvě 1, řekl by `不了`; po 14 `NotImplementedError`; po 21
-`count`; po 23 `sum`; po 28 `sum` na 79 %. Poslední proud krát stejná tabulka dá skóre, softmax dá
-78,8 / 13,7 / 7,3 %, napíše se `sum`, a celý prompt plus `sum` jde dovnitř znovu.
+Z proudu se dá kdykoli přečíst slovo: proud × každý řádek slovníku = 151 936 skóre, nejvyšší vyhrává. Ve
+vrstvě 0 vyhrává `return` na 100 % (proud je zatím jen jeho řádek). Pak každá vrstva do proudu přičte, co
+našly její hlavy a neurony. Na pozici `return`: kdyby model skončil po vrstvě 1, řekl by `不了`; po 14
+`NotImplementedError`; po 21 `count`; po 23 `sum`; po 28 `sum`. Skóre po vrstvě 28: sum 21,0, len 19,3,
+tasks 18,6; softmax dá 78,8 / 13,7 / 7,3 %, napíše se `sum`, a celý prompt plus `sum` jde dovnitř znovu.
+Teplota dělí skóre před softmaxem: 0 = vždycky `sum`; 1 = kostka 79 / 14 / 7; 1,5 = občas rozpad
+(`get_completed_taskspeated…`); 2 = `sum` 34 %, entropie 7,7 bitu, šum ve čtyřech abecedách.
 
 Spusť: `./lekce 4`
 
 Zkus, snadné: přečti `stream_walk.json`. Najdi první vrstvu, kde je nejlepší tip vůbec anglické slovo.
+V `temperature.json` najdi, při které teplotě poprvé nevyhraje `sum` ani jednou z pěti vzorků.
 
 Zkus, o krok dál: ve `stream_walk.py` je pozice slovo `return`. Změň ho na `def` a koukej, ve které
 vrstvě model ví, jak se funkce jmenuje.
 
 ## 5 · Vrstva 20, a hýbání
-*Slidy: Vrstva 20 zblízka · Hýbu hlavou a neuronem*
+*Slidy: Vrstva 20 zblízka: hlava 20·6 · …a neuron 20·3545 · Hýbu hlavou a neuronem*
 
 ![slide](deck/assets/readme/l5.png)
 
-Hlava 20·6 se z `return` dívá ze 72 % na tvoje zadání a 0,46 na jediné slovo `list`. Neuron 20·3545 v MLP
-hned za ní svítí 17 na `return` a skoro 0 všude jinde. Pak s nimi hýbu, nic jiného se nemění. Hlava
-vypnutá: sum 79 → 73 %, stejný kód. Neuron vypnutý: `len` 62 %, napíše `return len([...])`. Neuron ×4:
-`tasks` 88 %, napíše `tasks.count(True)`.
+Všech 12 hlav vrstvy 20 dohromady se z `return` dívá 17 / 18 / 17 / 18 / 30 % na první token, šablonu,
+systémový prompt, tvoje zadání a vlastní kód. Hlava 20·6 ze 72 % na tvoje zadání a 0,46 na jediné slovo
+`list`; hlava 20·2 nedělá nic (vypnutá: sum 79 → 80 %, stejný kód) a čtvrtinu sype na první token.
+Neuron 20·3545 v MLP hned za ní svítí 17 na `return` a skoro 0 všude jinde; z 8 960 neuronů vrstvy jich
+na `return` má přes 3 jen 22 a přes 10 jediný. Vypnout každý zvlášť: jen 3545 hne `sum` (−41 bodů),
+ostatní nejvýš 6,5. Pak s nimi hýbu, nic jiného se nemění. Hlava vypnutá: sum 79 → 73 %, stejný kód.
+Neuron vypnutý: `len` 62 %, napíše `return len([...])`. Neuron ×4: `tasks` 88 %, a celá funkce napsaná
+znovu se zásahem začne `completed_count = tasks.count(True)`.
 
 Spusť: `./lekce 5`
 
