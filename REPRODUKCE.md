@@ -44,3 +44,8 @@ Kořen: toto repo. Skripty běží na aorusu v `~/projects/science/vibe-inside/`
 - probe `results/probe.json` z repa hidden-intent, `guard_data*.json` jsou jen na aorusu (velké / trénovací data).
 - Builder `defense.gif` se ztratil s pracovní složkou; data (`scripts/deflect.json`) a postup jsou.
 - 96 tok/s je ruční měření bez skriptu.
+
+| Bubliny u vrstev: skóre vítěze | top-3 skóre (logity) po vrstvách 1–28 na pozici return | `dovnitr/lens_scores.py` | `dovnitr/lens_scores.json` |
+| Hraní: za return napíše | greedy pokračování za `return` při 4 stavech, stejný prefix jako p | `dovnitr/play20_continue.py` | `dovnitr/play20_continue.json` |
+| Teplota 3 / 5 / 10, celý vektor skóre, proud po vrstvě 28 | `temperature.json` 9 teplot + vzorky; `temperature_logits.npy` 151 936 skóre; `stream28_return.npy` | `dovnitr/temperature.py` | `dovnitr/temperature.json`, `.npy` |
+| Směr doslova | směr function − def, vrstvy 6–18, norma 1 | `dovnitr/direction_dump.py` | `dovnitr/direction_L6..18.npy` |
