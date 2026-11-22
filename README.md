@@ -9,7 +9,7 @@ udělá kód. Do modelu jde 87 tokenů, o 28 vrstev výš vyleze jedno slovo. Uv
 rozhodne jedna attention hlava a jeden neuron, a dá se s nimi hýbat vlastníma rukama. V produkci s nimi
 nikdo nehýbe: místo toho se proud čte probe, a ta chytí požadavek na malware, ve kterém není jediné zlé slovo.
 
-Je to moje přednáška z Vibecoding & AI Engineering Festivalu (Ostrava, 26. 11. 2026) jako sedm lekcí.
+Je to kurz z mé přednášky na Vibecoding & AI Engineering Festivalu (Ostrava, 26. 11. 2026): sedm lekcí.
 Jeden model, **Qwen2.5-Coder-1.5B-Instruct**, teplota 0, jedna herní karta. Každé číslo na slidech má tady
 skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spustit skript v Pythonu. Nic víc.
 

@@ -1,6 +1,6 @@
 # Pro agenty (Claude Code, OpenCode, Cursor, Codex…)
 
-Tohle repo jsou materiály k přednášce „Od klávesnice do neuronu“ jako sedm lekcí. Uživatel chce lekce
+Tohle repo je kurz k přednášce „Od klávesnice do neuronu“: sedm lekcí. Uživatel chce lekce
 projít a pochopit, co se děje uvnitř malého modelu na kód. Tvoje role: spouštět, číst výstupy, vysvětlovat
 mu čísla jeho slovy, a nic nevymýšlet. Všechno tady je naměřené při teplotě 0; když číslo nevyjde stejně,
 řekni to, nezaokrouhluj to k číslu v README.
