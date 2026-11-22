@@ -37,8 +37,8 @@ Kořen: toto repo. Skripty běží na aorusu v `~/projects/science/vibe-inside/`
 | Nevypadá rizikově (heatmap) | skóre po tokenech; 51 / ~98 / ~1; 40 % → 80 % | `scripts/pertoken.py`; `scripts/eval_rig.py`; adversariální test popsán ve VYSLEDKY §6 (skript v2/v3 probe na aorusu: trénink v repu hidden-intent (`pipeline/3_train.py`), ) | `scripts/pertoken.json`, `scripts/eval_rig.json` (51 % jen v stdout a v poznámky v hidden-intent README) |
 | Co si můžete zkusit zjistit | sort_array([]) pád | `dovnitr/humaneval_run.py` | `dovnitr/humaneval_qwen15.json` |
 
-## Mimo deck (VYSLEDKY §4: rodiny neuronů)
-`dovnitr/n249_study.py`, `dovnitr/n249_layers.py`, `dovnitr/n249_tokens.py`, `dovnitr/n249_pendulum.py`, `dovnitr/capture_249_other.py`, `dovnitr/family_ablate.py`, `dovnitr/family_rep.py`, `dovnitr/family_rep2.py`, `dovnitr/bench_ablate.py` a jejich JSONy.
+## Mimo deck
+Rodiny neuronů (VYSLEDKY §4) a jejich skripty v tomhle repu nejsou; VYSLEDKY.md jsou pracovní poznámky mimo repo.
 
 ## Známé díry
 - probe `results/probe.json` z repa hidden-intent, `guard_data*.json` jsou jen na aorusu (velké / trénovací data).
@@ -47,5 +47,5 @@ Kořen: toto repo. Skripty běží na aorusu v `~/projects/science/vibe-inside/`
 
 | Bubliny u vrstev: skóre vítěze | top-3 skóre (logity) po vrstvách 1–28 na pozici return | `dovnitr/lens_scores.py` | `dovnitr/lens_scores.json` |
 | Hraní: za return napíše | greedy pokračování za `return` při 4 stavech, stejný prefix jako p | `dovnitr/play20_continue.py` | `dovnitr/play20_continue.json` |
-| Teplota 3 / 5 / 10, celý vektor skóre, proud po vrstvě 28 | `temperature.json` 9 teplot + vzorky; `temperature_logits.npy` 151 936 skóre; `stream28_return.npy` | `dovnitr/temperature.py` | `dovnitr/temperature.json`, `.npy` |
+| Teplota 3 / 5 / 10, celý vektor skóre, proud po vrstvě 28 | `temperature.json` 9 teplot + vzorky; `temperature_logits.npy` 151 936 skóre; `stream28_return.npy` | `dovnitr/temperature.py` | `dovnitr/temperature.json`, `dovnitr/temperature_logits.npy`, `dovnitr/stream28_return.npy` |
 | Směr doslova | směr function − def, vrstvy 6–18, norma 1 | `dovnitr/direction_dump.py` | `dovnitr/direction_L6..18.npy` |
