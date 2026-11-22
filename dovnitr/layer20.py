@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 # Patro 20 zblízka: hlava 20·6 → neuron v MLP 20. Sken neuronů patra 20 podle poklesu p(sum); pro top-3: kód po zhasnutí,
 # aktivace po tokenech (zadání + kód), a vliv hlavy 20·6 (×0, ×2) na aktivaci neuronu. Jen dopředné průchody a greedy.
-import json, re, torch, numpy as np
+# --fast: sken po 64 neuronech v jedné dávce (v každém řádku dávky vypnutý jiný) a skóre jen na poslední pozici; stejný výsledek, zlomek času.
+import json, re, sys, torch, numpy as np
+FAST="--fast" in sys.argv
 from transformers import AutoTokenizer, AutoModelForCausalLM
 dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"; LZ=20; HD=6
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; USER=Lk["refiner_out"]; CODE0=Lk["builder_out"]
@@ -28,13 +30,23 @@ def p_next(hs):
 def gen(hs):
     with torch.no_grad(): g=m.generate(ids,max_new_tokens=120,do_sample=False,pad_token_id=t.eos_token_id)
     return t.decode(g[0,ids.shape[1]:],skip_special_tokens=True).strip()
-with torch.no_grad(): base=torch.softmax(m(pref).logits[0,-1].float(),-1)
+def last_logits(x):   # skóre jen na poslední pozici (lm_head přes všechny pozice by byla zbytečná práce)
+    try: return m(x,logits_to_keep=1).logits[:,-1]
+    except TypeError: return m(x).logits[:,-1]
+with torch.no_grad(): base=torch.softmax(last_logits(pref)[0].float(),-1)
 sid=int(torch.argmax(base)); print("bez zásahu po return:",t.decode([sid]),round(float(base[sid])*100,1),flush=True)
-nd=[]
-for n in range(m.config.intermediate_size):
-    hk=neuron_hook(n,0.0)
-    with torch.no_grad(): p=torch.softmax(m(pref).logits[0,-1].float(),-1)
-    hk.remove(); nd.append((float(base[sid]-p[sid])*100,n))
+nd=[]; N=m.config.intermediate_size; B=64 if FAST else 1
+batch={"ns":None}
+def batch_pre(mod,args):
+    if batch["ns"] is None: return None
+    x=args[0].clone(); b=torch.arange(x.shape[0],device=x.device); nn=torch.tensor(batch["ns"],device=x.device); x[b,:,nn]=0.0; return (x,)
+bh=m.model.layers[LZ].mlp.down_proj.register_forward_pre_hook(batch_pre)
+with torch.no_grad():
+    for s0 in range(0,N,B):
+        ns=list(range(s0,min(s0+B,N))); batch["ns"]=ns
+        p=torch.softmax(last_logits(pref.repeat(len(ns),1)).float(),-1)[:,sid]
+        nd.extend([(float(base[sid]-pv)*100,n) for pv,n in zip(p,ns)])
+batch["ns"]=None; bh.remove()
 nd.sort(reverse=True); print("vrstva 20, vypnutí neuronu → pokles p(sum), top 8:",[(round(d,1),n) for d,n in nd[:8]],flush=True)
 out={"scan":[(round(d,1),n) for d,n in nd[:15]],"neurons":{}}
 box={}

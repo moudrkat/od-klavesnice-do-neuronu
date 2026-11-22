@@ -17,7 +17,7 @@ case "${1:-}" in
   2) cd dovnitr && python model_facts.py && python humaneval_run.py ;;
   3) cd dovnitr && python token_strips.py && python attn_split.py && python input_matrix.py && python embed_piece.py && python embed_matrix.py ;;
   4) cd dovnitr && python stream_walk.py && python temperature.py ;;
-  5) cd dovnitr && python heads_matter.py && python layer20.py && python head_null.py && python neuron_scan.py --fast && python play20_grid.py ;;
+  5) cd dovnitr && python heads_matter.py && python layer20.py --fast && python head_null.py && python neuron_scan.py --fast && python play20_grid.py ;;
   6) cd scripts && python lang_retest.py ;;
   7) cd scripts
      [ -f intent_probe.json ] || curl -sfL https://raw.githubusercontent.com/moudrkat/hidden-intent/main/results/probe.json -o intent_probe.json || { echo "chybí scripts/intent_probe.json: stáhni results/probe.json z https://github.com/moudrkat/hidden-intent a ulož ho sem pod tímhle jménem"; exit 1; }

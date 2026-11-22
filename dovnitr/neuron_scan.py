@@ -10,6 +10,9 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 dev="cuda" if torch.cuda.is_available() else "cpu"; I="Qwen/Qwen2.5-Coder-1.5B-Instruct"; LZ=20; NR=3545
 Lk=json.load(open("orch_lock.json")); BSYS=Lk["builder_sys"]; USER=Lk["refiner_out"]; CODE0=Lk["builder_out"]
 t=AutoTokenizer.from_pretrained(I); m=AutoModelForCausalLM.from_pretrained(I,dtype=(torch.bfloat16 if dev=="cuda" else torch.float32)).to(dev).eval()
+def last_logits(x):   # skóre jen na poslední pozici (lm_head přes všech 87 pozic by byla zbytečná práce, na T4 největší brzda)
+    try: return m(x,logits_to_keep=1).logits[:,-1]
+    except TypeError: return m(x).logits[:,-1]
 tmpl=t.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":USER}],tokenize=False,add_generation_prompt=True)
 ids=t(tmpl,return_tensors="pt").input_ids.to(dev)
 mm=re.search(r"```(?:python)?\s*(.*?)```",CODE0,re.S); code0=(mm.group(1) if mm else CODE0).strip()
@@ -25,7 +28,7 @@ def pre(mod,args):
 m.model.layers[LZ].mlp.down_proj.register_forward_pre_hook(pre)
 box={}
 h=m.model.layers[LZ].mlp.down_proj.register_forward_pre_hook(lambda mod,args: box.__setitem__("act",args[0][0,-1].float().detach().cpu()))
-with torch.no_grad(): base=torch.softmax(m(pref).logits[0,-1].float(),-1)
+with torch.no_grad(): base=torch.softmax(last_logits(pref)[0].float(),-1)
 h.remove()
 act=box["act"]; p0=float(base[SUM])*100
 print(f"bez zásahu p(sum) {p0:.1f} %, aktivace 3545 na return {float(act[NR]):.1f}",flush=True)
@@ -33,7 +36,7 @@ N=m.config.intermediate_size; delta=[]; t0=time.time(); B=64 if FAST else 1
 with torch.no_grad():
     for s0 in range(0,N,B):
         ns=list(range(s0,min(s0+B,N))); scale["ns"]=ns; scale["f"]=0.0
-        p=torch.softmax(m(pref.repeat(len(ns),1)).logits[:,-1].float(),-1)[:,SUM]
+        p=torch.softmax(last_logits(pref.repeat(len(ns),1)).float(),-1)[:,SUM]
         delta.extend([float(x)*100-p0 for x in p])
         if s0%1024==0: print(f"  {s0}/{N}  {time.time()-t0:.0f} s",flush=True)
 scale["ns"]=None; print(f"sken {N} neuronů: {time.time()-t0:.0f} s",flush=True)
@@ -45,7 +48,7 @@ if NULLK in cands: cands.remove(NULLK); cands.insert(0,NULLK)
 def gen(n,f):
     scale["n"]=n; scale["f"]=f
     with torch.no_grad():
-        p=torch.softmax(m(pref).logits[0,-1].float(),-1); g=m.generate(ids,max_new_tokens=120,do_sample=False,pad_token_id=t.eos_token_id)
+        p=torch.softmax(last_logits(pref)[0].float(),-1); g=m.generate(ids,max_new_tokens=120,do_sample=False,pad_token_id=t.eos_token_id)
     scale["n"]=None
     return {"p_sum":round(float(p[SUM])*100,1),"code":t.decode(g[0,ids.shape[1]:],skip_special_tokens=True).strip()}
 base_code=gen(None,1.0); null=None

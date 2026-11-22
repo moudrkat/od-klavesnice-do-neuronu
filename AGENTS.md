@@ -27,7 +27,7 @@ mu čísla jeho slovy, a nic nevymýšlet. Všechno tady je naměřené při tep
 | 2 Drobek | `dovnitr/model_facts.py`, `humaneval_run.py` | 28 vrstev, 1 536, 8 960 neuronů, 12 hlav; HumanEval 110/164 |
 | 3 Co jde dovnitř | `dovnitr/token_strips.py`, `attn_split.py`, `input_matrix.py`, `embed_piece.py`, `embed_matrix.py` | 87 tokenů, 23 uživatelovy; `return` = řádek 470 slovníku; matice 87 × 1 536 |
 | 4 Vrstvy, teplota | `dovnitr/stream_walk.py`, `temperature.py` | prvních 8 čísel proudu po vrstvách; `不了` → `NotImplementedError` → `count` → `sum` 79 % |
-| 5 Vrstva 20 | `dovnitr/heads_matter.py`, `layer20.py`, `play20_grid.py` (+ `neuron_scan.py`: všech 8 960 ×0, 100 s na GPU, `--fast` po 64 v dávce 33 s; `head_null.py`: líná hlava 20·2) | hlava 20·6 (72 % na zadání, 0,46 na `list`), neuron 20·3545 (17 na `return`); dávky → `len` / `sum` / `tasks.count` |
+| 5 Vrstva 20 | `dovnitr/heads_matter.py`, `layer20.py` (`--fast`: sken po 64 v dávce), `play20_grid.py` (+ `neuron_scan.py`: všech 8 960 ×0, 100 s na GPU, `--fast` po 64 v dávce 33 s; `head_null.py`: líná hlava 20·2) | hlava 20·6 (72 % na zadání, 0,46 na `list`), neuron 20·3545 (17 na `return`); dávky → `len` / `sum` / `tasks.count` |
 | 6 Směr | `scripts/lang_retest.py` | směr `function` − `def`, vrstvy 6–18, koef 6 → JavaScript 3/3 |
 | 7 Probe | `scripts/pertoken.py` (+ `guard_orch.py`, `eval_rig.py` jen s `guard_data.json`) | skóre po slovech TOR/C2 požadavku; filtr 51/100 vs probe ~98 je v hotovém `eval_rig.json`; probe (`intent_probe.json`) si `./lekce 7` stáhne z repa hidden-intent, sada požadavků se staví v hidden-intent pipeline/0–2 |
 
