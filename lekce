@@ -13,8 +13,8 @@ case "${1:-}" in 1|2|4|5|6|prompt)
 esac
 case "${1:-}" in
   setup)  pip install -r requirements.txt ;;
-  1) cd scripts && python orchestrate.py -i ;;
-  2) cd dovnitr && python model_facts.py && python humaneval_run.py ;;
+  1) cd dovnitr && python model_facts.py && python humaneval_run.py ;;
+  2) cd scripts && python orchestrate.py -i ;;
   3) cd dovnitr && python token_strips.py && python attn_split.py && python input_matrix.py && python embed_piece.py && python embed_matrix.py ;;
   4) cd dovnitr && python stream_walk.py && python temperature.py ;;
   5) cd dovnitr && python heads_matter.py && python layer20.py --fast && python head_null.py && python neuron_scan.py --fast && python play20_grid.py ;;

@@ -15,8 +15,8 @@ skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spu
 
 | | lekce | uvidíš | spustíš |
 |---|---|---|---|
-| 1 | [Parta](#1--parta) | tři malé modely porazí jeden | `scripts/orchestrate.py` |
-| 2 | [Jak malý je drobek](#2--jak-malý-je-drobek) | 110 ze 164, a z čeho je model | `dovnitr/humaneval_run.py` |
+| 1 | [Jak malý je drobek](#1--jak-malý-je-drobek) | 110 ze 164, a z čeho je model | `dovnitr/humaneval_run.py` |
+| 2 | [Parta](#2--parta) | tři malé modely porazí jeden | `scripts/orchestrate.py` |
 | 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 87 tokenů, 23 tvoje; slovník doslova, 87 × 1 536 | `dovnitr/input_matrix.py` |
 | 4 | [Vrstvy, další slovo, teplota](#4--vrstvy-další-slovo-teplota) | proud × slovník vrstvu po vrstvě; teplota 0 → 2 | `dovnitr/stream_walk.py`, `temperature.py` |
 | 5 | [Vrstva 20, pohnutá](#5--vrstva-20-a-hýbání) | 12 hlav a 8 960 neuronů; jeden neuron udělá ze `sum` `len` | `dovnitr/head_null.py`, `neuron_scan.py`, `play20_grid.py` |
@@ -79,23 +79,7 @@ Modely se stáhnou při prvním spuštění: `Qwen/Qwen2.5-Coder-1.5B-Instruct` 
 přednáška běží na *tvém* promptu. Zadání piš anglicky, model je na angličtinu učený. Lekce se dívají na *první* `return` v kódu; když builder
 začne „`if not words: return None`“, uvidíš, jak model dospívá k `None`, ne k hlavnímu výsledku.
 
-## 1 · Parta
-*Slidy: Parta · Zvládne to parta nejmenších modelů? · Builder chybuje*
-
-![slide](deck/assets/readme/l1.png)
-
-Sám se model 1,5B čtyřikrát ptá a nenapíše nic. Dej mu partu a jde to: **refiner** (4B) udělá z přání
-jednu přesnou větu, **builder** (1,5B) napíše funkci, **reviewer** (4B) ji zkontroluje. Na `int_to_roman`
-builder chybuje, reviewer to chytí, oprava projde. Skutečné běhy jsou v `orch_cli.log` a `orch_fix3.log`.
-
-Spusť: `./lekce 1`, pak napiš přání.
-
-Zkus, snadné: napiš `make me a to-do app so I can see how many tasks are done` a přečti si, co z toho udělá
-refiner, než builder uvidí jediné slovo. Pak totéž přání znovu: teplota 0, do písmene stejné.
-
-Zkus, o krok dál: napiš něco nemožného, `a function that predicts tomorrow's weather`. Kdo to vzdá první?
-
-## 2 · Jak malý je drobek
+## 1 · Jak malý je drobek
 *Slidy: Drobeček · Co umí a co ne*
 
 ![slide](deck/assets/readme/l2.png)
@@ -104,13 +88,29 @@ HumanEval je 164 malých programovacích úloh z roku 2021. Builder 1,5B vyřeš
 modely ho už neuvádějí, je pro ně moc lehký. Model sám: 28 vrstev, proud 1 536 čísel na token, 8 960
 neuronů na vrstvu, 12 hlav, slovník 151 936 tokenů, 1,54 miliardy parametrů.
 
-Spusť: `./lekce 2` (fakta o modelu za vteřiny, pak všech 164 úloh, ten dlouhý)
+Spusť: `./lekce 1` (fakta o modelu za vteřiny, pak všech 164 úloh, ten dlouhý)
 
 Zkus, snadné: otevři `humaneval_qwen15.json`, hledej `fail`, přečti si tři z 54 úloh, které neprošly. Jedna
 z nich spadne na `sort_array([])`: prázdný seznam.
 
 Zkus, o krok dál: jméno modelu je jeden řetězec nahoře v `humaneval_run.py`. Vyměň ho za
 `Qwen/Qwen2.5-Coder-0.5B-Instruct`. Kde začíná sráz?
+
+## 2 · Parta
+*Slidy: Parta · Zvládne to parta nejmenších modelů? · Builder chybuje*
+
+![slide](deck/assets/readme/l1.png)
+
+Sám se model 1,5B čtyřikrát ptá a nenapíše nic. Dej mu partu a jde to: **refiner** (4B) udělá z přání
+jednu přesnou větu, **builder** (1,5B) napíše funkci, **reviewer** (4B) ji zkontroluje. Na `int_to_roman`
+builder chybuje, reviewer to chytí, oprava projde. Skutečné běhy jsou v `orch_cli.log` a `orch_fix3.log`.
+
+Spusť: `./lekce 2`, pak napiš přání.
+
+Zkus, snadné: napiš `make me a to-do app so I can see how many tasks are done` a přečti si, co z toho udělá
+refiner, než builder uvidí jediné slovo. Pak totéž přání znovu: teplota 0, do písmene stejné.
+
+Zkus, o krok dál: napiš něco nemožného, `a function that predicts tomorrow's weather`. Kdo to vzdá první?
 
 ## 3 · Co jde dovnitř
 *Slidy: Tvůj prompt neletí sám · Co jde dovnitř*
