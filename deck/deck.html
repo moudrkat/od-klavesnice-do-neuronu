@@ -582,7 +582,7 @@ function render(){
   document.getElementById('pg').textContent=(si+1)+' / '+sl.length;
 }
 function next(){if(fi<nsteps())fi++;else if(si<sl.length-1){si++;fi=0}render()}
-function prev(){if(fi>0)fi--;else if(si>0){si--;fi=0}render()}
+function prev(){if(fi>0)fi--;else if(si>0){si--;fi=nsteps()}render()}
 addEventListener('resize',()=>drawArcs(sl[si]));
 // klávesy + clicker (Logitech a spol. posílají PageDown/PageUp, některé šipky, F5/Esc na start, B nebo tečku na černou)
 addEventListener('keydown',e=>{const k=e.key;if(['ArrowRight','ArrowDown',' ','PageDown','Enter','n','N'].includes(k)){e.preventDefault();if(document.body.classList.contains('blank'))return document.body.classList.remove('blank');next()}else if(['ArrowLeft','ArrowUp','PageUp','Backspace','p','P'].includes(k)){e.preventDefault();if(document.body.classList.contains('blank'))return document.body.classList.remove('blank');prev()}else if(k==='f'||k==='F'||k==='F5'){e.preventDefault();document.documentElement.requestFullscreen?.()}else if(k==='b'||k==='B'||k==='.'){e.preventDefault();document.body.classList.toggle('blank')}});
