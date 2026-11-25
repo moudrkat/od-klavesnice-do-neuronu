@@ -114,7 +114,7 @@ def vrstvami():
     words = [" sum", " count", " len"]; wid = [T(w, add_special_tokens=False).input_ids[0] for w in words]
     curves = {w: [] for w in words}; win = []
     for Lx in range(len(hs)):
-        x = M.model.norm(hs[Lx][0, P].to(M.model.norm.weight.dtype)); lg = M.lm_head(x).float()
+        lg = _skore(hs[Lx][0, P], Lx)
         for w, wi in zip(words, wid): curves[w].append(float(lg[wi]))
         win.append(T.decode([int(lg.argmax())]).strip())
     fig, ax = plt.subplots(figsize=(8, 3))
@@ -123,19 +123,87 @@ def vrstvami():
     flip = next((i for i, w in enumerate(win) if w == "sum"), None)
     return win, flip
 
+def _lab(t):
+    """Token čitelně: mezera na začátku jako ·, zalomení a tabulátor jako \\n a \\t (jako ve slidech)."""
+    t = t.replace("\n", "\\n").replace("\t", "\\t")
+    return ("·" + t[1:]) if t.startswith(" ") else (t or "∅")
+
+# ---------- lekce 4a: proud × slovník = skóre ----------
+def _proud(Lx):
+    ids = _ids(); P = ids.shape[1] - 1
+    with torch.no_grad(): hs = M(ids, output_hidden_states=True).hidden_states
+    return hs[Lx][0, P].float()
+
+def _skore(h, Lx):
+    """Proud × slovník: vynásobit každým ze 151 936 řádků slovníku = jedno skóre na slovo. Před násobením se proud
+    normalizuje (RMSNorm); poslední hidden_state ho už má v sobě, tak se tam podruhé nenormalizuje."""
+    with torch.no_grad():
+        x = h.to(M.model.norm.weight.dtype)
+        if Lx < len(M.model.layers): x = M.model.norm(x)
+        return M.lm_head(x).float()
+
+def proud_a_skore(vrstva=28):
+    """Proud pod `return` po zvolené vrstvě (všech 1 536 čísel) a pět slov s nejvyšším skóre, kdyby model skončil tady."""
+    h = _proud(vrstva); z = _skore(h, vrstva); tp = torch.topk(z, 5)
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 2.6), gridspec_kw={"width_ratios": [3, 2]})
+    hv = h.cpu().numpy(); a1.bar(range(len(hv)), hv, width=1.0, color=C["steer"]); a1.set_xlim(0, len(hv))
+    a1.set_title(f"proud pod return po vrstvě {vrstva}: 1 536 čísel · největší {abs(hv).max():.2g}", color=C["ink"], fontsize=10); a1.set_xticks([])
+    labs = [_lab(T.decode([int(i)])) for i in tp.indices]; vals = [float(v) for v in tp.values]
+    a2.barh(labs[::-1], vals[::-1], color=[C["line"]] * 4 + [C["steer"]]); a2.set_title("× slovník = skóre, pět nejvyšších", color=C["ink"], fontsize=10)
+    for y, v in enumerate(vals[::-1]): a2.text(v, y, f" {v:.1f}", va="center", fontsize=9)
+    plt.tight_layout(); plt.show()
+    return list(zip(labs, [round(v, 2) for v in vals]))
+
+# ---------- lekce 4c: ze skóre procenta ----------
+def ze_skore_procenta():
+    """Nahoře po vrstvě 28: deset nejvyšších skóre vedle jejich pravděpodobností (softmax při teplotě 1)."""
+    with torch.no_grad(): z = _last_logits(_ids())[0].float()
+    p = torch.softmax(z, -1) * 100; tp = torch.topk(z, 10)
+    labs = [_lab(T.decode([int(i)])) for i in tp.indices]
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(10, 2.8))
+    a1.bar(labs, [float(v) for v in tp.values], color=C["ink"]); a1.set_title(f"skóre (nejnižší ze všech: {float(z.min()):.1f})", color=C["ink"], fontsize=10)
+    pv = [float(p[i]) for i in tp.indices]; a2.bar(labs, pv, color=C["steer"]); a2.set_ylim(0, 100); a2.set_title("softmax → pravděpodobnost v %", color=C["ink"], fontsize=10)
+    for x, v in enumerate(pv): a2.text(x, v + 2, _pct(v), ha="center", fontsize=8)
+    for a in (a1, a2): a.tick_params(axis="x", rotation=60)
+    plt.tight_layout(); plt.show()
+    return [(w, round(float(s), 2), round(v, 2)) for w, s, v in zip(labs, tp.values, pv)]
+
+def _pct(v):
+    if v >= 10: return f"{v:.0f}"
+    if v >= 1: return f"{v:.1f}".replace(".", ",")
+    if v >= 0.005: return f"{v:.2f}".replace(".", ",")
+    return "<0,01"
+
 # ---------- lekce 4b: teplota ----------
 def teplota(T_=1.0):
     """Posuvník teploty. Sloupce pravděpodobností dalšího slova + jeden vzorek kódu."""
     ids = _ids()
     with torch.no_grad(): z = _last_logits(ids)[0].float()
     p = torch.softmax(z / max(T_, 1e-3), -1); H = float(-(p[p > 0] * torch.log2(p[p > 0])).sum()); top = _top(p, 6)
-    fig, ax = plt.subplots(figsize=(7, 2.4)); labs = [w for w, _ in top]; vals = [v for _, v in top]
-    ax.bar(labs, vals, color=C["steer"]); ax.set_ylim(0, 100); ax.set_ylabel("%"); ax.set_title(f"teplota {T_} · nejistota {H:.1f} bitů", color=C["ink"]); plt.show()
+    tp = torch.topk(p, 8); labs = [_lab(T.decode([int(i)])) for i in tp.indices]; vals = [float(v) * 100 for v in tp.values]
+    labs.append("ostatních\n151 928"); vals.append(max(0.0, 100 - sum(vals)))
+    fig, ax = plt.subplots(figsize=(8, 2.6)); ax.bar(labs, vals, color=[C["steer"]] * 8 + [C["dim"]]); ax.set_ylim(0, 110); ax.set_ylabel("%")
+    for x, v in enumerate(vals): ax.text(x, v + 2, _pct(v), ha="center", fontsize=8)
+    ax.set_title(f"teplota {T_} · skóre / {T_} → softmax · nejistota {H:.1f} bitů", color=C["ink"]); plt.show()
     cid = _chat_ids()
     if T_ <= 0.05: code = _gen(cid, 120)
     else:
         torch.manual_seed(0); code = _gen(cid, 120, do_sample=True, temperature=float(T_), top_k=0, top_p=1.0)
     return top, re.sub(r"```(?:python)?", "", code).strip()
+
+# ---------- lekce 4e: smyčka, slovo po slově ----------
+def smycka(n=8):
+    """Od `return` dál: vyber nejvyšší, přilep na konec, a znovu celým modelem. U každého kroku jistota."""
+    ids = _ids(); rows = []
+    for k in range(n):
+        with torch.no_grad(): p = torch.softmax(_last_logits(ids)[0].float(), -1)
+        i = int(p.argmax()); rows.append((T.decode([i]), round(float(p[i]) * 100, 1)))
+        ids = torch.cat([ids, torch.tensor([[i]], device=dev)], 1)
+    fig, ax = plt.subplots(figsize=(8, 2.2)); ax.bar(range(n), [v for _, v in rows], color=C["steer"]); ax.set_ylim(0, 110)
+    ax.set_xticks(range(n)); ax.set_xticklabels([_lab(w) for w, _ in rows], fontfamily="monospace")
+    for x, (_, v) in enumerate(rows): ax.text(x, v + 2, _pct(v), ha="center", fontsize=8)
+    ax.set_title("každý krok: nejvyšší vyhraje, přilepí se, a znovu celou věží", color=C["ink"], fontsize=10); ax.set_ylabel("%"); plt.show()
+    return "return" + "".join(w for w, _ in rows), rows
 
 # ---------- lekce 5a: attention z return ----------
 def kam_se_diva(head=HD):
