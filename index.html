@@ -1,14 +1,10 @@
 <!DOCTYPE html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Od klávesnice do neuronu</title>
 <style>body{margin:0;background:#faf7ef;color:#1e2c5c;font-family:system-ui,sans-serif;padding:24px 16px;max-width:760px;margin:0 auto}h1{font-size:clamp(26px,5vw,40px);margin:.2em 0}p.sub{color:#6a665c;margin:0 0 20px}
-a.card{display:block;background:#fff;border:1.5px solid #c9c3b2;border-radius:14px;padding:16px 18px;margin:10px 0;text-decoration:none;color:#1e2c5c;box-shadow:0 6px 20px rgba(30,44,92,.06)}a.card b{font-size:20px}a.card span{display:block;color:#6a665c;font-size:14px;margin-top:4px}
-h2{font-size:18px;margin:26px 0 8px;color:#6a665c;font-weight:600}ul{padding-left:18px;color:#1e2c5c}code{font-family:ui-monospace,monospace;background:#fff;padding:.1em .35em;border-radius:5px}</style></head><body>
-<h1>Od klávesnice do neuronu</h1><p class="sub">Vibecoding &amp; AI Engineering Festival, Ostrava, 26. 11. 2026 · Kateřina Fajmanová · všechno na slidech je skutečný výstup Qwen2.5-Coder-1.5B, teplota 0</p>
-<a class="card" href="README.md"><b>Kurz: sedm lekcí</b><span>přednáška k vyzkoušení doma: co uvidíš, co spustit, co zkusit; bez GPU to jde taky</span></a>
-<a class="card" href="https://colab.research.google.com/github/moudrkat/od-klavesnice-do-neuronu/blob/main/lessons.ipynb"><b>Lekce v Colabu</b><span>GPU zdarma, pár minut, stejná čísla jako na slidech, a pak na tvém vlastním promptu</span></a>
-<a class="card" href="deck/vrstva20.html"><b>Vrstva 20, hands on</b><span>hlava a neuron po dávkách, co model napíše; interaktivně</span></a>
-<a class="card" href="deck/deck.html"><b>Deck naživo</b><span>šipkami nebo klepnutím vpravo; 34 slidů a záloha</span></a>
-<a class="card" href="deck.pdf"><b>Deck jako PDF</b><span>64 stran, postupné slidy rozepsané</span></a>
-<h2>Video</h2><ul><li><a href="videa/defense.mp4">probe chytí rizikový požadavek → zásah ho rozmělní</a></li></ul>
-<h2>Skripty a data ke každému číslu</h2><p><a href="REPRODUKCE.md">REPRODUKCE.md</a>: tabulka slide → skript → data. Složky <code>scripts/</code> (orchestrace, probe, zásahy) a <code>dovnitr/</code> (benchmarky, vrstvy, vrstva 20). Model: <code>Qwen/Qwen2.5-Coder-1.5B-Instruct</code>, běží na jedné herní kartě (RTX 4070 Ti SUPER, 99 tok/s).</p>
-<h2>Zkus si to</h2><ul><li><code>pip install brainscope</code>: malý model v prohlížeči a pohled dovnitř</li><li><code>ollama show MODEL --modelfile</code>: co se lepí k tvému promptu</li><li><a href="https://opencode.ai">opencode.ai</a>: otevřený agent, role si nastavíš sám</li><li><a href="https://github.com/moudrkat/hidden-intent">hidden-intent</a>: jak se probe na záměr trénuje, krok za krokem</li></ul>
+a.card{display:block;background:#fff;border:1.5px solid #c9c3b2;border-radius:14px;padding:16px 18px;margin:10px 0;text-decoration:none;color:#1e2c5c;box-shadow:0 6px 20px rgba(30,44,92,.06)}a.card b{font-size:20px}a.card span{display:block;color:#6a665c;font-size:14px;margin-top:4px}a.card:hover{border-color:#039080}
+p.more{color:#6a665c;font-size:15px;margin-top:22px;line-height:1.7}p.more a{color:#1450af}</style></head><body>
+<h1>Od klávesnice do neuronu</h1><p class="sub">Vibecoding &amp; AI Engineering Festival, Ostrava, 26. 11. 2026 · Kateřina Fajmanová</p>
+<a class="card" href="deck/deck.html"><b>Prezentace</b><span>šipkami nebo swipem · nebo jako <u>PDF</u> níž</span></a>
+<a class="card" href="https://colab.research.google.com/github/moudrkat/od-klavesnice-do-neuronu/blob/main/lessons.ipynb"><b>Podívej se dovnitř sám: kurz v Colabu</b><span>GPU zdarma · Spustit vše, pak posuvníky: hlava, neuron, teplota</span></a>
+<a class="card" href="deck/vrstva20.html"><b>Vrstva 20 v ruce</b><span>pohni hlavou a neuronem a koukej, jak se mění kód · běží v prohlížeči</span></a>
+<p class="more"><a href="deck.pdf">Prezentace jako PDF</a> · <a href="https://github.com/moudrkat/od-klavesnice-do-neuronu">celý kurz a skripty na GitHubu</a> · <a href="https://github.com/moudrkat/hidden-intent">probe si postav sám: hidden-intent</a></p>
 </body></html>
