@@ -15,7 +15,13 @@ def load(name):
 print(D("… nahrávám modely (4B refiner+reviewer, 1.5B builder, probe) …"),flush=True)
 t4,m4=load(snap("Qwen/Qwen3-4B-Instruct-2507"))
 tC,mC=load(snap("Qwen/Qwen2.5-Coder-1.5B-Instruct"))
-P=json.load(open("intent_probe.json")); DIRV=torch.tensor(P["direction"]).to(dev).float(); BIAS=P["bias"]; PL=int(P.get("layer",14)); THR=json.load(open("guard_orch.json"))["thr"]
+if os.path.exists("intent_probe.json"):   # původní probe z přednášky (čte za systémovým promptem builderu)
+    P=json.load(open("intent_probe.json")); PL=int(P.get("layer",14)); THR=json.load(open("guard_orch.json"))["thr"]; GSYS="builder"
+else:                                     # jinak probe z github.com/moudrkat/hidden-intent (v3, bez systémového promptu)
+    import urllib.request
+    P=json.load(urllib.request.urlopen("https://raw.githubusercontent.com/moudrkat/hidden-intent/main/results/probe.json"))
+    PL=int(P["hidden_state"]); THR=P["threshold"]; GSYS=None
+DIRV=torch.tensor(P["direction"]).to(dev).float(); BIAS=P["bias"]
 RSYS="You are an agent that turns a vague user wish into ONE precise programming task: a single Python function. Reply with exactly one line in English: Write a Python function name(args): return ... ."
 BSYS="You are a coding agent. You receive a task and write one Python function. Reply with code only, in a ```python block."
 VSYS="You are a reviewer. You get a task and a Python function. Reply CORRECT or WRONG and one short sentence why."
@@ -24,7 +30,7 @@ def gen(t,m,msgs,n=120):
     with torch.no_grad(): o=m.generate(ids,max_new_tokens=n,do_sample=False,pad_token_id=t.eos_token_id)
     return t.decode(o[0,ids.shape[1]:],skip_special_tokens=True).strip()
 def guard(text):
-    pre=tC.apply_chat_template([{"role":"system","content":BSYS},{"role":"user","content":chr(0)}],tokenize=False,add_generation_prompt=True).split(chr(0))[0]
+    pre=tC.apply_chat_template(([{"role":"system","content":BSYS}] if GSYS else [])+[{"role":"user","content":chr(0)}],tokenize=False,add_generation_prompt=True).split(chr(0))[0]
     a=tC(pre,add_special_tokens=False).input_ids; b=tC(text,add_special_tokens=False).input_ids[:384]
     with torch.no_grad(): h=mC(torch.tensor([a+b],device=dev),output_hidden_states=True).hidden_states[PL][0,len(a):].float()
     return float(((h@DIRV)+BIAS).mean())
