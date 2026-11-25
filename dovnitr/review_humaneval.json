@@ -1,0 +1,1354 @@
+[
+ {
+  "task_id": "HumanEval/0",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef has_close_elements(numbers: List[float], threshold: float) -> bool:\n    \"\"\" Check if in given list of numbers, are any two numbers closer to each other than\n    given threshold.\n    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)\n    False\n    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)\n    True\n    \"\"\"\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False",
+  "review": "CORRECT  \nThe function correctly checks if any two numbers in the list are closer than the given threshold by comparing all pairs and returning True as soon as such a pair is found.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/1",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")  # Remove spaces from the input string\n    result = []\n    current_group = \"\"\n    \n    for char in paren_string:\n        if char == '(':\n            current_group += char\n        elif char == ')':\n            current_group += char\n            if current_group.startswith('('):\n                result.append(current_group)\n                current_group = \"\"\n    \n    return result",
+  "review": "WRONG  \nThe code incorrectly detects and appends groups. It only appends when the group starts with '(', but it fails to properly handle balanced groups like '(()())' or correctly identify when a group is complete. For example, it would miss or misidentify the second group in the test",
+  "flag": true,
+  "hint": "The condition `current_group.startswith('(')` is incorrect because it only checks if the group starts with an opening parenthesis, but it should check if the group is balanced (i.e., when the count of opening and closing parentheses equals and the group is properly closed). Fix the logic to track balance and only",
+  "fix": "from typing import List\n\ndef separate_paren_groups(paren_string: str) -> List[str]:\n    paren_string = paren_string.replace(\" \", \"\")  # Remove spaces from the input string\n    result = []\n    current_group = \"\"\n    balance = 0\n    \n    for char in paren_string:\n        if char == '(':\n            balance += 1\n            current_group += char\n        elif char == ')':\n            balance -= 1\n            current_group += char\n            \n            if balance == 0 and current_group:\n                result.append(current_group)\n                current_group = \"\"\n    \n    return result",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe function correctly removes spaces, tracks balanced parentheses, and separates groups when a complete group is formed."
+ },
+ {
+  "task_id": "HumanEval/2",
+  "verdict": "pass",
+  "code": "from typing import *\nfrom collections import *\n\ndef truncate_number(number: float) -> float:\n    \"\"\" Given a positive floating point number, it can be decomposed into\n    and integer part (largest integer smaller than given number) and decimals\n    (leftover part always smaller than 1).\n\n    Return the decimal part of the number.\n    >>> truncate_number(3.5)\n    0.5\n    \"\"\"\n    return number - int(number)",
+  "review": "CORRECT  \nThe function correctly returns the decimal part of a positive floating-point number by subtracting the integer part from the original number.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/3",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef below_zero(operations: List[int]) -> bool:\n    \"\"\" You're given a list of deposit and withdrawal operations on a bank account that starts with\n    zero balance. Your task is to detect if at any point the balance of account falls below zero, and\n    at that point function should return True. Otherwise it should return False.\n    >>> below_zero([1, 2, 3])\n    False\n    >>> below_zero([1, 2, -4, 5])\n    True\n    \"\"\"\n    current_balance = 0\n    for operation in operations:\n        current_balance += operation\n        if current_balance < 0:\n            return True\n    return False",
+  "review": "CORRECT  \nThe function correctly tracks the balance and returns `True` as soon as it goes below zero, otherwise `False`.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/4",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef mean_absolute_deviation(numbers: List[float]) -> float:\n    \"\"\" For a given list of input numbers, calculate Mean Absolute Deviation\n    around the mean of this dataset.\n    Mean Absolute Deviation is the average absolute difference between each\n    element and a centerpoint (mean in this case):\n    MAD = average | x - x_mean |\n    >>> mean_absolute_deviation([1.0, 2.0, 3.0, 4.0])\n    1.0\n    \"\"\"\n    if not numbers:\n        return 0.0\n    \n    mean_value = sum(numbers) / len(numbers)\n    mad = sum(abs(x - mean_value) for x in numbers) / len(numbers)\n    \n    return mad",
+  "review": "CORRECT  \nThe function correctly calculates the Mean Absolute Deviation by computing the average of the absolute differences between each number and the mean.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/5",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef intersperse(numbers: List[int], delimeter: int) -> List[int]:\n    \"\"\" Insert a number 'delimeter' between every two consecutive elements of input list `numbers'\n    >>> intersperse([], 4)\n    []\n    >>> intersperse([1, 2, 3], 4)\n    [1, 4, 2, 4, 3]\n    \"\"\"\n    if not numbers:\n        return []\n\n    result = [numbers[0]]\n    for num in numbers[1:]:\n        result.extend([delimeter, num])\n\n    return result",
+  "review": "CORRECT  \nThe function correctly inserts the delimiter between every two consecutive elements and handles the empty list case properly.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/6",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef parse_nested_parens(paren_string: str) -> List[int]:\n    \"\"\" Input to this function is a string represented multiple groups for nested parentheses separated by spaces.\n    For each of the group, output the deepest level of nesting of parentheses.\n    E.g. (()()) has maximum two levels of nesting while ((())) has three.\n\n    >>> parse_nested_parens('(()()) ((())) () ((())()())')\n    [2, 3, 1, 3]\n    \"\"\"\n    result = []\n    current_depth = 0\n    max_depth = 0\n    \n    for char in paren_string:\n        if char == '(':\n            current_depth += 1\n            max_depth = max(max_depth, current_depth)\n        elif char == ')':\n            current_depth -= 1\n    \n    result.append(max_depth)\n    \n    return result",
+  "review": "WRONG  \nThe function processes the entire string as one group, but the input consists of multiple groups separated by spaces. It should parse each group individually.",
+  "flag": true,
+  "hint": "The function processes the entire string as one group instead of splitting by spaces to handle each group separately; it should split the input by spaces and process each group individually.",
+  "fix": "from typing import List\n\ndef parse_nested_parens(paren_string: str) -> List[int]:\n    \"\"\" Input to this function is a string represented multiple groups for nested parentheses separated by spaces.\n    For each of the group, output the deepest level of nesting of parentheses.\n    E.g. (()()) has maximum two levels of nesting while ((())) has three.\n\n    >>> parse_nested_parens('(()()) ((())) () ((())()())')\n    [2, 3, 1, 3]\n    \"\"\"\n    result = []\n    current_depth = 0\n    max_depth = 0\n    \n    # Split the input string by spaces to handle each group separately\n    groups = paren_string.split()\n    \n    for group in groups:\n        for char in group:\n            if char == '(':\n                current_depth += 1\n                max_depth = max(max_depth, current_depth)\n            elif char == ')':\n                current_depth -= 1\n    \n        result.append(max_depth)\n    \n    return result",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "CORRECT  \nThe function correctly computes the maximum nesting depth for each group of parentheses by tracking the current depth and updating the maximum depth whenever a higher level is reached."
+ },
+ {
+  "task_id": "HumanEval/7",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef filter_by_substring(strings: List[str], substring: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that contain given substring\n    >>> filter_by_substring([], 'a')\n    []\n    >>> filter_by_substring(['abc', 'bacd', 'cde', 'array'], 'a')\n    ['abc', 'bacd', 'array']\n    \"\"\"\n    return [s for s in strings if substring in s]",
+  "review": "CORRECT  \nThe function correctly filters strings that contain the given substring using a list comprehension.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/8",
+  "verdict": "pass",
+  "code": "from typing import List, Tuple\n\ndef sum_product(numbers: List[int]) -> Tuple[int, int]:\n    if not numbers:\n        return (0, 1)\n    \n    total_sum = sum(numbers)\n    total_product = 1\n    \n    for num in numbers:\n        total_product *= num\n    \n    return (total_sum, total_product)",
+  "review": "CORRECT  \nThe function correctly computes the sum and product of a list of integers, returning (0, 1) for an empty list and matching the expected outputs for non-empty lists.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/9",
+  "verdict": "pass",
+  "code": "from typing import List, Tuple\n\ndef rolling_max(numbers: List[int]) -> List[int]:\n    \"\"\" From a given list of integers, generate a list of rolling maximum element found until given moment\n    in the sequence.\n    >>> rolling_max([1, 2, 3, 2, 3, 4, 2])\n    [1, 2, 3, 3, 3, 4, 4]\n    \"\"\"\n    if not numbers:\n        return []\n\n    max_so_far = numbers[0]\n    rolling_max_list = [max_so_far]\n\n    for num in numbers[1:]:\n        max_so_far = max(max_so_far, num)\n        rolling_max_list.append(max_so_far)\n\n    return rolling_max_list",
+  "review": "CORRECT  \nThe function correctly computes the rolling maximum by maintaining the maximum value seen so far and updating it at each step.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/10",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import *\nfrom collections import *\n\ndef is_palindrome(string: str) -> bool:\n    \"\"\" Test if given string is a palindrome \"\"\"\n    return string == string[::-1]\n\ndef make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    # Find the longest palindromic suffix\n    for i in range(len(string), 0, -1):\n        if string[i-1:] == string[i-1::-1]:\n            # Reverse the prefix and append it to the end\n            return string + string[:i-1][::-1]\n    \n    # If no palindromic suffix found, the string is already a palindrome\n    return string",
+  "review": "WRONG\n\nThe condition `string[i-1:] == string[i-1::-1]` is incorrect. It compares the suffix `string[i-1:]` with its reverse `string[i-1::-1]`, which is not the correct way to check if a suffix is a palindrome",
+  "flag": true,
+  "hint": "The condition `string[i-1:] == string[i-1::-1]` is incorrect because `string[i-1::-1]` reverses the entire string from the start to index i-1, not the suffix starting at i-1; it should be `string[i-1",
+  "fix": "from typing import *\nfrom collections import *\n\ndef is_palindrome(string: str) -> bool:\n    \"\"\" Test if given string is a palindrome \"\"\"\n    return string == string[::-1]\n\ndef make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest suffix of supplied string that is a palindrome.\n    - Append to the end of the string reverse of a string prefix that comes before the palindromic suffix.\n    >>> make_palindrome('')\n    ''\n    >>> make_palindrome('cat')\n    'catac'\n    >>> make_palindrome('cata')\n    'catac'\n    \"\"\"\n    # Find the longest palindromic suffix\n    for i in range(len(string), 0, -1):\n        if string[i-1:] == string[:i-1][::-1]:\n            # Reverse the prefix and append it to the end\n            return string + string[:i-1][::-1]\n    \n    # If no palindromic suffix found, the string is already a palindrome\n    return string",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG\n\nThe condition `string[i-1:] == string[:i-1][::-1]` is incorrect. It checks if a suffix equals the reverse of a prefix, but the logic is flawed — it should check if a suffix is a palindrome, not compare it to the reverse of"
+ },
+ {
+  "task_id": "HumanEval/11",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    # Convert strings to lists of integers for easy manipulation\n    list_a = [int(bit) for bit in a]\n    list_b = [int(bit) for bit in b]\n    \n    # Perform XOR operation element-wise\n    xor_result = [a ^ b for a, b in zip(list_a, list_b)]\n    \n    # Convert the result back to a string\n    xor_string = ''.join(str(bit) for bit in xor_result)\n    \n    return xor_string",
+  "review": "WRONG  \nThe variable `a` and `b` are used in the list comprehension but are already defined as the input strings; they should be `list_a` and `list_b` instead.",
+  "flag": true,
+  "hint": "The variable `a` and `b` are used in the list comprehension but are already defined as the input strings; they should be `list_a` and `list_b` instead.",
+  "fix": "from typing import List\n\ndef string_xor(a: str, b: str) -> str:\n    \"\"\" Input are two strings a and b consisting only of 1s and 0s.\n    Perform binary XOR on these inputs and return result also as a string.\n    >>> string_xor('010', '110')\n    '100'\n    \"\"\"\n    # Convert strings to lists of integers for easy manipulation\n    list_a = [int(bit) for bit in a]\n    list_b = [int(bit) for bit in b]\n    \n    # Perform XOR operation element-wise\n    xor_result = [a ^ b for a, b in zip(list_a, list_b)]\n    \n    # Convert the result back to a string\n    xor_string = ''.join(str(bit) for bit in xor_result)\n    \n    return xor_string",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe variable `a` and `b` are used in the list comprehension but are already defined as the input strings; they should be `list_a` and `list_b` instead."
+ },
+ {
+  "task_id": "HumanEval/12",
+  "verdict": "pass",
+  "code": "from typing import List, Optional\n\ndef longest(strings: List[str]) -> Optional[str]:\n    \"\"\" Out of list of strings, return the longest one. Return the first one in case of multiple\n    strings of the same length. Return None in case the input list is empty.\n    >>> longest([])\n    None\n    >>> longest(['a', 'b', 'c'])\n    'a'\n    >>> longest(['a', 'bb', 'ccc'])\n    'ccc'\n    \"\"\"\n    if not strings:\n        return None\n    \n    max_length = 0\n    longest_string = \"\"\n    \n    for string in strings:\n        if len(string) > max_length:\n            max_length = len(string)\n            longest_string = string\n            \n    return longest_string",
+  "review": "CORRECT  \nThe function correctly returns the longest string, handles empty lists by returning None, and returns the first string in case of ties by only updating when a strictly longer string is found.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/13",
+  "verdict": "pass",
+  "code": "from typing import *\nfrom collections import *\n\ndef greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\" Return a greatest common divisor of two integers a and b\n    >>> greatest_common_divisor(3, 5)\n    1\n    >>> greatest_common_divisor(25, 15)\n    5\n    \"\"\"\n    while b != 0:\n        a, b = b, a % b\n    return a",
+  "review": "CORRECT  \nThe function correctly implements the Euclidean algorithm to find the greatest common divisor of two integers.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/14",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef all_prefixes(string: str) -> List[str]:\n    \"\"\" Return list of all prefixes from shortest to longest of the input string\n    >>> all_prefixes('abc')\n    ['a', 'ab', 'abc']\n    \"\"\"\n    return [string[:i] for i in range(1, len(string) + 1)]",
+  "review": "CORRECT  \nThe code correctly generates all prefixes of the input string from shortest to longest.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/15",
+  "verdict": "pass",
+  "code": "def string_sequence(n: int) -> str:\n    \"\"\" Return a string containing space-delimited numbers starting from 0 upto n inclusive.\n    >>> string_sequence(0)\n    '0'\n    >>> string_sequence(5)\n    '0 1 2 3 4 5'\n    \"\"\"\n    return ' '.join(map(str, range(n + 1)))",
+  "review": "CORRECT  \nThe function correctly generates a space-delimited string of numbers from 0 to n inclusive.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/16",
+  "verdict": "pass",
+  "code": "from typing import *\nfrom collections import *\n\ndef count_distinct_characters(string: str) -> int:\n    \"\"\" Given a string, find out how many distinct characters (regardless of case) does it consist of\n    >>> count_distinct_characters('xyzXYZ')\n    3\n    >>> count_distinct_characters('Jerry')\n    4\n    \"\"\"\n    return len(set(string.lower()))",
+  "review": "CORRECT  \nThe function correctly converts the string to lowercase and counts the number of distinct characters using a set.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/17",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef parse_music(music_string: str) -> List[int]:\n    \"\"\" Input to this function is a string representing musical notes in a special ASCII format.\n    Your task is to parse this string and return list of integers corresponding to how many beats does each\n    not last.\n\n    Here is a legend:\n    'o' - whole note, lasts four beats\n    'o|' - half note, lasts two beats\n    '.|' - quater note, lasts one beat\n\n    >>> parse_music('o o| .| o| o| .| .| .| .| o o')\n    [4, 2, 1, 2, 2, 1, 1, 1, 1, 4, 4]\n    \"\"\"\n    # Split the input string into individual notes\n    notes = music_string.split()\n    \n    # Initialize an empty list to store the duration of each note\n    durations = []\n    \n    # Iterate over each note and determine its duration based on the legend\n    for note in notes:\n        if note == 'o':\n            durations.append(4)\n        elif note == 'o|':\n            durations.append(2)\n        elif note == '.|':\n            durations.append(1)\n    \n    return durations",
+  "review": "CORRECT  \nThe function correctly splits the input string by spaces, maps each note to its corresponding beat value, and returns a list of integers as required.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/18",
+  "verdict": "pass",
+  "code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\" Find how many times a given substring can be found in the original string. Count overlaping cases.\n    >>> how_many_times('', 'a')\n    0\n    >>> how_many_times('aaa', 'a')\n    3\n    >>> how_many_times('aaaa', 'aa')\n    3\n    \"\"\"\n    count = 0\n    start = 0\n    while True:\n        start = string.find(substring, start)\n        if start == -1:\n            break\n        count += 1\n        start += 1  # Move to the next character to allow for overlapping matches\n    return count",
+  "review": "CORRECT  \nThe function correctly counts overlapping occurrences of a substring in a string by incrementing the start position by 1 after each match, ensuring overlapping cases are counted.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/19",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    # Mapping of number words to their corresponding digits\n    num_map = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    # Split the input string into a list of number words\n    number_words = numbers.split()\n    \n    # Convert each number word to its digit representation\n    digits = [num_map[word] for word in number_words]\n    \n    # Sort the digits\n    digits.sort()\n    \n    # Convert the sorted digits back to number words\n    sorted_number_words = [str(num) for num in digits]\n    \n    # Join the sorted number words back into a single string\n    return ' '.join(sorted_number_words)",
+  "review": "WRONG  \nThe code converts number words to digits, sorts them, but then converts the digits back to strings (e.g., '0', '1'), not the original words like 'zero', 'one'. This results in incorrect output.",
+  "flag": true,
+  "hint": "Fix the line `sorted_number_words = [str(num) for num in digits]` to use `num_map` to convert digits back to words instead of converting digits to strings.",
+  "fix": "from typing import List\n\ndef sort_numbers(numbers: str) -> str:\n    \"\"\" Input is a space-delimited string of numberals from 'zero' to 'nine'.\n    Valid choices are 'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' and 'nine'.\n    Return the string with numbers sorted from smallest to largest\n    >>> sort_numbers('three one five')\n    'one three five'\n    \"\"\"\n    # Mapping of number words to their corresponding digits\n    num_map = {\n        'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,\n        'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9\n    }\n    \n    # Split the input string into a list of number words\n    number_words = numbers.split()\n    \n    # Convert each number word to its digit representation\n    digits = [num_map[word] for word in number_words]\n    \n    # Sort the digits\n    digits.sort()\n    \n    # Convert the sorted digits back to number words using the mapping\n    sorted_number_words = [num_map[num] for num in digits]\n    \n    # Join the sorted number words back into a single string\n    return ' '.join(sorted_number_words)",
+  "fix_verdict": "fail: KeyError: 3",
+  "review2": "WRONG  \nThe code incorrectly maps digits back to words; it uses `num_map[num]` where `num` is an integer (digit), but `num_map` only contains string keys. This will raise a `KeyError`."
+ },
+ {
+  "task_id": "HumanEval/20",
+  "verdict": "pass",
+  "code": "from typing import List, Tuple\n\ndef find_closest_elements(numbers: List[float]) -> Tuple[float, float]:\n    \"\"\" From a supplied list of numbers (of length at least two) select and return two that are the closest to each\n    other and return them in order (smaller number, larger number).\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.2])\n    (2.0, 2.2)\n    >>> find_closest_elements([1.0, 2.0, 3.0, 4.0, 5.0, 2.0])\n    (2.0, 2.0)\n    \"\"\"\n    if len(numbers) < 2:\n        raise ValueError(\"List must contain at least two elements.\")\n    \n    # Sort the list to make finding the closest pair easier\n    sorted_numbers = sorted(numbers)\n    \n    # Initialize variables to store the closest pair and their difference\n    closest_pair = (sorted_numbers[0], sorted_numbers[1])\n    min_difference = abs(sorted_numbers[1] - sorted_numbers[0])\n    \n    # Iterate through the sorted list to find the closest pair\n    for i in range(1, len(sorted_numbers) - 1):\n        current_difference = abs(sorted_numbers[i + 1] - sorted_numbers[i])\n        if current_difference < min_difference:\n            min_difference = current_difference\n            closest_pair = (sorted_numbers[i], sorted_numbers[i + 1])\n    \n    return closest_pair",
+  "review": "CORRECT  \nThe function correctly finds the two closest numbers in a list by sorting and comparing adjacent pairs, returning them in order (smaller, larger).",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/21",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef rescale_to_unit(numbers: List[float]) -> List[float]:\n    \"\"\" Given list of numbers (of at least two elements), apply a linear transform to that list,\n    such that the smallest number will become 0 and the largest will become 1\n    >>> rescale_to_unit([1.0, 2.0, 3.0, 4.0, 5.0])\n    [0.0, 0.25, 0.5, 0.75, 1.0]\n    \"\"\"\n    min_val = min(numbers)\n    max_val = max(numbers)\n    return [(x - min_val) / (max_val - min_val) for x in numbers]",
+  "review": "CORRECT  \nThe function correctly rescales the list so that the minimum value becomes 0 and the maximum value becomes 1 using a linear transformation.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/22",
+  "verdict": "pass",
+  "code": "from typing import List, Any\n\ndef filter_integers(values: List[Any]) -> List[int]:\n    \"\"\" Filter given list of any python values only for integers\n    >>> filter_integers(['a', 3.14, 5])\n    [5]\n    >>> filter_integers([1, 2, 3, 'abc', {}, []])\n    [1, 2, 3]\n    \"\"\"\n    return [value for value in values if isinstance(value, int)]",
+  "review": "CORRECT  \nThe function correctly filters the list to include only integer values using `isinstance(value, int)`.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/23",
+  "verdict": "pass",
+  "code": "def strlen(string: str) -> int:\n    \"\"\" Return length of given string\n    >>> strlen('')\n    0\n    >>> strlen('abc')\n    3\n    \"\"\"\n    return len(string)",
+  "review": "CORRECT  \nThe function correctly returns the length of the input string as specified in the docstring and examples.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/24",
+  "verdict": "pass",
+  "code": "from typing import *\nfrom collections import *\n\ndef largest_divisor(n: int) -> int:\n    \"\"\" For a given number n, find the largest number that divides n evenly, smaller than n\n    >>> largest_divisor(15)\n    5\n    \"\"\"\n    for i in range(n-1, 0, -1):\n        if n % i == 0:\n            return i\n    return 1  # If no divisor is found, return 1 (since 1 is always a divisor of any integer)",
+  "review": "CORRECT  \nThe function correctly finds the largest divisor of `n` that is smaller than `n` by checking from `n-1` down to `1`, and returns the first (largest) divisor found.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/25",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef factorize(n: int) -> List[int]:\n    \"\"\" Return list of prime factors of given integer in the order from smallest to largest.\n    Each of the factors should be listed number of times corresponding to how many times it appeares in factorization.\n    Input number should be equal to the product of all factors\n    >>> factorize(8)\n    [2, 2, 2]\n    >>> factorize(25)\n    [5, 5]\n    >>> factorize(70)\n    [2, 5, 7]\n    \"\"\"\n    factors = []\n    # Divide n by 2 until it's odd\n    while n % 2 == 0:\n        factors.append(2)\n        n //= 2\n    \n    # Check for odd factors starting from 3\n    i = 3\n    while i * i <= n:\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n        i += 2\n    \n    # If n is a prime number greater than 2\n    if n > 2:\n        factors.append(n)\n    \n    return factors",
+  "review": "CORRECT  \nThe function correctly computes the prime factorization of a given integer, returning the factors in ascending order with appropriate multiplicity.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/26",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef remove_duplicates(numbers: List[int]) -> List[int]:\n    \"\"\" From a list of integers, remove all elements that occur more than once.\n    Keep order of elements left the same as in the input.\n    >>> remove_duplicates([1, 2, 3, 2, 4])\n    [1, 3, 4]\n    \"\"\"\n    seen = set()\n    result = []\n    for num in numbers:\n        if num not in seen:\n            seen.add(num)\n            result.append(num)\n    return result",
+  "review": "WRONG\nThis code removes only the first occurrence of each element, but the task requires removing all elements that occur more than once, not just preserving the first occurrence.",
+  "flag": true,
+  "hint": "The function currently removes only the first occurrence of each duplicate, but the task requires removing all elements that occur more than once—so it should exclude any number that appears more than once, not just keep the first occurrence. Fix the logic to only include numbers that appear exactly once.",
+  "fix": "from typing import List\n\ndef remove_duplicates(numbers: List[int]) -> List[int]:\n    \"\"\" From a list of integers, remove all elements that occur more than once.\n    Keep order of elements left the same as in the input.\n    >>> remove_duplicates([1, 2, 3, 2, 4])\n    [1, 3, 4]\n    \"\"\"\n    seen = set()\n    result = []\n    for num in numbers:\n        if num not in seen:\n            seen.add(num)\n            result.append(num)\n        else:\n            # Exclude duplicates by not adding them to the result\n            pass\n    return result",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "CORRECT  \nThe function correctly removes duplicates by keeping only the first occurrence of each number while preserving the original order."
+ },
+ {
+  "task_id": "HumanEval/27",
+  "verdict": "pass",
+  "code": "def flip_case(string: str) -> str:\n    \"\"\" For a given string, flip lowercase characters to uppercase and uppercase to lowercase.\n    >>> flip_case('Hello')\n    'hELLO'\n    \"\"\"\n    return ''.join(char.swapcase() for char in string)",
+  "review": "CORRECT  \nThe function correctly uses `swapcase()` to flip the case of each character in the string.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/28",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef concatenate(strings: List[str]) -> str:\n    \"\"\" Concatenate list of strings into a single string\n    >>> concatenate([])\n    ''\n    >>> concatenate(['a', 'b', 'c'])\n    'abc'\n    \"\"\"\n    return ''.join(strings)",
+  "review": "CORRECT  \nThe function correctly joins a list of strings into a single string, handling both empty lists and non-empty lists as specified in the docstring examples.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/29",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef filter_by_prefix(strings: List[str], prefix: str) -> List[str]:\n    \"\"\" Filter an input list of strings only for ones that start with a given prefix.\n    >>> filter_by_prefix([], 'a')\n    []\n    >>> filter_by_prefix(['abc', 'bcd', 'cde', 'array'], 'a')\n    ['abc', 'array']\n    \"\"\"\n    return [s for s in strings if s.startswith(prefix)]",
+  "review": "CORRECT  \nThe function correctly filters strings that start with the given prefix using `s.startswith(prefix)`.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/30",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef get_positive(l: List[int]) -> List[int]:\n    \"\"\"Return only positive numbers in the list.\"\"\"\n    return [num for num in l if num > 0]",
+  "review": "CORRECT  \nThe function correctly returns a list of positive numbers from the input list.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/31",
+  "verdict": "pass",
+  "code": "def is_prime(n):\n    \"\"\"Return true if a given number is prime, and false otherwise.\n    >>> is_prime(6)\n    False\n    >>> is_prime(101)\n    True\n    >>> is_prime(11)\n    True\n    >>> is_prime(13441)\n    True\n    >>> is_prime(61)\n    True\n    >>> is_prime(4)\n    False\n    >>> is_prime(1)\n    False\n    \"\"\"\n    if n <= 1:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True",
+  "review": "CORRECT  \nThe function correctly identifies prime numbers by checking divisibility up to the square root of `n`, and handles edge cases like `n <= 1` properly.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/32",
+  "verdict": "fail: timeout",
+  "code": "import math\n\ndef poly(xs: list, x: float):\n    \"\"\"\n    Evaluates polynomial with coefficients xs at point x.\n    return xs[0] + xs[1] * x + xs[1] * x^2 + .... xs[n] * x^n\n    \"\"\"\n    return sum([coeff * math.pow(x, i) for i, coeff in enumerate(xs)])\n\ndef find_zero(xs: list):\n    \"\"\" xs are coefficients of a polynomial.\n    find_zero find x such that poly(x) = 0.\n    find_zero returns only only zero point, even if there are many.\n    Moreover, find_zero only takes list xs having even number of coefficients\n    and largest non zero coefficient as it guarantees\n    a solution.\n    >>> round(find_zero([1, 2]), 2) # f(x) = 1 + 2x\n    -0.5\n    >>> round(find_zero([-6, 11, -6, 1]), 2) # (x - 1) * (x - 2) * (x - 3) = -6 + 11x - 6x^2 + x^3\n    1.0\n    \"\"\"\n    if len(xs) % 2 != 0:\n        raise ValueError(\"Polynomial must have an even number of coefficients.\")\n    \n    n = len(xs)\n    largest_coeff = max(xs)\n    \n    # Find the root using Newton-Raphson method\n    x = largest_coeff / 2\n    while True:\n        y = poly(xs, x)\n        if abs(y) < 1e-9:  # Check for convergence\n            break\n        x_new = x - y / poly(xs, x)\n        x = x_new\n    \n    return x",
+  "review": "WRONG  \nThe function incorrectly assumes that a root exists and can be found using Newton-Raphson based solely on the parity of the number of coefficients and the largest coefficient. Additionally, the condition \"only takes list xs having even number of coefficients\" is not valid — the degree of a polynomial is",
+  "flag": true,
+  "hint": "The code incorrectly identifies the largest non-zero coefficient and uses it to initialize the Newton-Raphson method; it should instead find the root using the sign of the leading coefficient and apply a proper root-finding strategy, but more concretely, **fix the initialization of `x` to be the",
+  "fix": "import math\n\ndef poly(xs: list, x: float):\n    \"\"\"\n    Evaluates polynomial with coefficients xs at point x.\n    return xs[0] + xs[1] * x + xs[1] * x^2 + .... xs[n] * x^n\n    \"\"\"\n    return sum([coeff * math.pow(x, i) for i, coeff in enumerate(xs)])\n\ndef find_zero(xs: list):\n    \"\"\" xs are coefficients of a polynomial.\n    find_zero find x such that poly(x) = 0.\n    find_zero returns only only zero point, even if there are many.\n    Moreover, find_zero only takes list xs having even number of coefficients\n    and largest non zero coefficient as it guarantees\n    a solution.\n    >>> round(find_zero([1, 2]), 2) # f(x) = 1 + 2x\n    -0.5\n    >>> round(find_zero([-6, 11, -6, 1]), 2) # (x - 1) * (x - 2) * (x - 3) = -6 + 11x - 6x^2 + x^3\n    1.0\n    \"\"\"\n    if len(xs) % 2 != 0:\n        raise ValueError(\"Polynomial must have an even number of coefficients.\")\n    \n    n = len(xs)\n    largest_coeff = max(xs)\n    \n    # Find the root using Newton-Raphson method\n    x = xs[0] / 2  # Initialize x to the first coefficient divided by 2\n    while True:\n        y = poly(xs, x)\n        if abs(y) < 1e-9:  # Check for convergence\n            break\n        x_new = x - y / poly(xs, x)\n        x = x_new\n    \n    return x",
+  "fix_verdict": "fail: timeout",
+  "review2": "WRONG  \nThe function incorrectly assumes that a polynomial with an even number of coefficients always has a root, and it fails to handle the case where the largest non-zero coefficient is used as a guarantee—this condition is not properly implemented or checked. Additionally, the Newton-Raphson method may not converge"
+ },
+ {
+  "task_id": "HumanEval/33",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef sort_third(l: List[int]) -> List[int]:\n    # Extract elements at indices divisible by 3\n    third_elements = [l[i] for i in range(0, len(l), 3)]\n    \n    # Sort the extracted elements\n    third_elements.sort()\n    \n    # Create a new list with sorted elements at indices divisible by 3\n    result = [third_elements[i // 3] if i % 3 == 0 else l[i] for i in range(len(l))]\n    \n    return result",
+  "review": "CORRECT  \nThe function correctly extracts elements at indices divisible by 3, sorts them, and places them back at those indices while keeping other elements unchanged.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/34",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef unique(l: List[int]) -> List[int]:\n    \"\"\"Return sorted unique elements in a list\n    >>> unique([5, 3, 5, 2, 3, 3, 9, 0, 123])\n    [0, 2, 3, 5, 9, 123]\n    \"\"\"\n    return sorted(set(l))",
+  "review": "CORRECT  \nThe function correctly returns the sorted unique elements of the input list.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/35",
+  "verdict": "pass",
+  "code": "def max_element(l: list):\n    \"\"\"Return maximum element in the list.\n    >>> max_element([1, 2, 3])\n    3\n    >>> max_element([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10])\n    123\n    \"\"\"\n    return max(l)",
+  "review": "CORRECT  \nThe function correctly returns the maximum element in the list using Python's built-in `max()` function, matching the provided examples.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/36",
+  "verdict": "pass",
+  "code": "def fizz_buzz(n: int) -> int:\n    count = 0\n    for i in range(1, n):\n        if i % 11 == 0 or i % 13 == 0:\n            count += str(i).count('7')\n    return count",
+  "review": "CORRECT  \nThe function correctly counts the number of times the digit 7 appears in integers less than n that are divisible by 11 or 13.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/37",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef sort_even(l: List[int]) -> List[int]:\n    # Extract even indices from the list\n    even_indices_values = [l[i] for i in range(0, len(l), 2)]\n    \n    # Sort the extracted even indices values\n    even_indices_values.sort()\n    \n    # Create a new list with sorted even indices values\n    result = [even_indices_values[i // 2] if i % 2 == 0 else l[i] for i in range(len(l))]\n    \n    return result",
+  "review": "CORRECT  \nThe function correctly sorts the values at even indices while keeping the values at odd indices unchanged.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/38",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import *\nfrom collections import *\n\ndef encode_cyclic(s: str):\n    \"\"\"\n    returns encoded string by cycling groups of three characters.\n    \"\"\"\n    # split string to groups. Each of length 3.\n    groups = [s[(3 * i):min((3 * i + 3), len(s))] for i in range((len(s) + 2) // 3)]\n    # cycle elements in each group. Unless group has fewer elements than 3.\n    groups = [(group[1:] + group[0]) if len(group) == 3 else group for group in groups]\n    return \"\".join(groups)\n\ndef decode_cyclic(s: str):\n    \"\"\"\n    takes as input string encoded with encode_cyclic function. Returns decoded string.\n    \"\"\"\n    # split string into groups of three characters\n    groups = [s[i:i+3] for i in range(0, len(s), 3)]\n    # reverse the cyclic encoding\n    groups = [groups[-i-1] if i % 2 == 0 else groups[i] for i in range(len(groups))]\n    return \"\".join(groups)",
+  "review": "WRONG\n\nThe decode_cyclic function does not correctly reverse the cyclic encoding. It incorrectly uses a condition based on index parity and reverses groups in a way that does not undo the original shift of moving the first character to the end.",
+  "flag": true,
+  "hint": "The `decode_cyclic` function incorrectly reverses the cyclic shift by using a flawed indexing condition; it should shift each group of three characters back by one position (i.e., move the first character to the end) to reverse the encoding, not use a conditional based on parity.",
+  "fix": "from typing import *\nfrom collections import *\n\ndef encode_cyclic(s: str):\n    \"\"\"\n    returns encoded string by cycling groups of three characters.\n    \"\"\"\n    # split string to groups. Each of length 3.\n    groups = [s[(3 * i):min((3 * i + 3), len(s))] for i in range((len(s) + 2) // 3)]\n    # cycle elements in each group. Unless group has fewer elements than 3.\n    groups = [(group[1:] + group[0]) if len(group) == 3 else group for group in groups]\n    return \"\".join(groups)\n\ndef decode_cyclic(s: str):\n    \"\"\"\n    takes as input string encoded with encode_cyclic function. Returns decoded string.\n    \"\"\"\n    # split string into groups of three characters\n    groups = [s[i:i+3] for i in range(0, len(s), 3)]\n    # reverse the cyclic encoding by moving each group's first character to the end\n    groups = [group[2:] + group[:2] for group in groups]\n    return \"\".join(groups)",
+  "fix_verdict": "pass",
+  "review2": "WRONG\n\nThe decode_cyclic function incorrectly reverses the encoding. It moves the first character to the end of each group, but the encode_cyclic function moves the first character to the end (i.e., cycles left). To decode, it should cycle right, which means moving the last character"
+ },
+ {
+  "task_id": "HumanEval/39",
+  "verdict": "fail: timeout",
+  "code": "from math import sqrt\n\ndef is_prime(num):\n    \"\"\"Check if a number is prime.\"\"\"\n    if num <= 1:\n        return False\n    for i in range(2, int(sqrt(num)) + 1):\n        if num % i == 0:\n            return False\n    return True\n\ndef fibonacci(n):\n    \"\"\"Generate the nth Fibonacci number.\"\"\"\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\ndef prime_fib(n: int):\n    \"\"\"\n    prime_fib returns n-th number that is a Fibonacci number and it's also prime.\n    >>> prime_fib(1)\n    2\n    >>> prime_fib(2)\n    3\n    >>> prime_fib(3)\n    5\n    >>> prime_fib(4)\n    13\n    >>> prime_fib(5)\n    89\n    \"\"\"\n    count = 0\n    fib_num = 0\n    while True:\n        fib_num = fibonacci(count)\n        if is_prime(fib_num):\n            count += 1\n            if count == n:\n                return fib_num\n        else:\n            count += 1",
+  "review": "WRONG  \nThe function incorrectly increments `count` even when `fib_num` is not prime, but it should only increment when checking the next Fibonacci number. More importantly, the logic fails because it checks `fib_num` for primality and then increments `count` unconditionally, which means it",
+  "flag": true,
+  "hint": "The function incorrectly increments `count` even when `fib_num` is not prime, but it should only increment when checking the next Fibonacci number, and the logic for returning the n-th prime Fibonacci number is flawed—specifically, it fails to handle the case where the first prime Fibonacci number (2",
+  "fix": "from math import sqrt\n\ndef is_prime(num):\n    \"\"\"Check if a number is prime.\"\"\"\n    if num <= 1:\n        return False\n    for i in range(2, int(sqrt(num)) + 1):\n        if num % i == 0:\n            return False\n    return True\n\ndef fibonacci(n):\n    \"\"\"Generate the nth Fibonacci number.\"\"\"\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\ndef prime_fib(n: int):\n    \"\"\"\n    prime_fib returns n-th number that is a Fibonacci number and it's also prime.\n    >>> prime_fib(1)\n    2\n    >>> prime_fib(2)\n    3\n    >>> prime_fib(3)\n    5\n    >>> prime_fib(4)\n    13\n    >>> prime_fib(5)\n    89\n    \"\"\"\n    count = 0\n    fib_num = 0\n    while True:\n        fib_num = fibonacci(count)\n        if is_prime(fib_num):\n            count += 1\n            if count == n:\n                return fib_num\n        else:\n            count += 1",
+  "fix_verdict": "fail: timeout",
+  "review2": "WRONG  \nThe function incorrectly increments `count` even when `fib_num` is not prime, but it should only increment when checking the next Fibonacci number. More importantly, the logic fails because it checks `fib_num` for primality and then increments `count` unconditionally, which means it"
+ },
+ {
+  "task_id": "HumanEval/40",
+  "verdict": "pass",
+  "code": "from itertools import combinations\n\ndef triples_sum_to_zero(l: list):\n    \"\"\"\n    triples_sum_to_zero takes a list of integers as an input.\n    it returns True if there are three distinct elements in the list that\n    sum to zero, and False otherwise.\n\n    >>> triples_sum_to_zero([1, 3, 5, 0])\n    False\n    >>> triples_sum_to_zero([1, 3, -2, 1])\n    True\n    >>> triples_sum_to_zero([1, 2, 3, 7])\n    False\n    >>> triples_sum_to_zero([2, 4, -5, 3, 9, 7])\n    True\n    >>> triples_sum_to_zero([1])\n    False\n    \"\"\"\n    for triplet in combinations(l, 3):\n        if sum(triplet) == 0:\n            return True\n    return False",
+  "review": "CORRECT  \nThe function correctly checks all possible combinations of three distinct elements and returns True if any triplet sums to zero.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/41",
+  "verdict": "pass",
+  "code": "def car_race_collision(n: int) -> int:\n    \"\"\"\n    Imagine a road that's a perfectly straight infinitely long line.\n    n cars are driving left to right;  simultaneously, a different set of n cars\n    are driving right to left.   The two sets of cars start out being very far from\n    each other.  All cars move in the same speed.  Two cars are said to collide\n    when a car that's moving left to right hits a car that's moving right to left.\n    However, the cars are infinitely sturdy and strong; as a result, they continue moving\n    in their trajectory as if they did not collide.\n\n    This function outputs the number of such collisions.\n    \"\"\"\n    return n ** 2",
+  "review": "CORRECT  \nEach car moving left to right will collide with each car moving right to left, resulting in n × n = n² collisions.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/42",
+  "verdict": "pass",
+  "code": "def incr_list(l: list):\n    \"\"\"Return list with elements incremented by 1.\"\"\"\n    return [x + 1 for x in l]",
+  "review": "CORRECT  \nThe function correctly increments each element in the list by 1 and returns a new list with the incremented values.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/43",
+  "verdict": "pass",
+  "code": "def pairs_sum_to_zero(l):\n    seen = set()\n    for num in l:\n        if -num in seen:\n            return True\n        seen.add(num)\n    return False",
+  "review": "CORRECT  \nThe function correctly checks if any two distinct elements in the list sum to zero by using a set to track seen numbers and looking for their negatives.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/44",
+  "verdict": "pass",
+  "code": "def change_base(x: int, base: int) -> str:\n    \"\"\"Change numerical base of input number x to base.\n    return string representation after the conversion.\n    base numbers are less than 10.\n    >>> change_base(8, 3)\n    '22'\n    >>> change_base(8, 2)\n    '1000'\n    >>> change_base(7, 2)\n    '111'\n    \"\"\"\n    if base < 2 or base > 9:\n        raise ValueError(\"Base must be between 2 and 9.\")\n    \n    result = \"\"\n    while x > 0:\n        remainder = x % base\n        result = str(remainder) + result\n        x //= base\n    \n    return result",
+  "review": "CORRECT  \nThe function correctly converts a number from base 10 to any base between 2 and 9 and returns the result as a string.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/45",
+  "verdict": "pass",
+  "code": "def triangle_area(a, h):\n    \"\"\"Given length of a side and high return area for a triangle.\n    >>> triangle_area(5, 3)\n    7.5\n    \"\"\"\n    return (a * h) / 2",
+  "review": "CORRECT  \nThe function correctly calculates the area of a triangle using the formula (base * height) / 2, and the test case passes.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/46",
+  "verdict": "pass",
+  "code": "def fib4(n: int):\n    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 2\n    else:\n        a, b, c, d = 0, 0, 2, 0\n        for _ in range(4, n + 1):\n            a, b, c, d = b, c, d, a + b + c + d\n        return d",
+  "review": "WRONG  \nThe function returns `d` at the end, but for `n=3`, the expected value is 0, and the loop starts at 4, so `n=3` is not handled correctly. The initial values and loop logic do not properly compute `fib4(",
+  "flag": true,
+  "hint": "The initial values for the tuple assignment are incorrect: `a, b, c, d = 0, 0, 2, 0` should be `a, b, c, d = 0, 0, 2, 0` for n=2, but",
+  "fix": "def fib4(n: int):\n    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 2\n    else:\n        a, b, c, d = 0, 0, 2, 0\n        for _ in range(4, n + 1):\n            a, b, c, d = b, c, d, a + b + c + d\n        return d",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe function returns `d` at the end, but for `n=3`, the expected value is 0, and the loop starts at 4, so `n=3` is not handled correctly. The initial values and loop logic do not properly compute `fib4("
+ },
+ {
+  "task_id": "HumanEval/47",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef median(l: List[int]) -> float:\n    \"\"\"Return median of elements in the list l.\n    >>> median([3, 1, 2, 4, 5])\n    3\n    >>> median([-10, 4, 6, 1000, 10, 20])\n    15.0\n    \"\"\"\n    sorted_l = sorted(l)\n    n = len(sorted_l)\n    if n % 2 == 1:\n        return sorted_l[n // 2]\n    else:\n        return (sorted_l[n // 2 - 1] + sorted_l[n // 2]) / 2.0",
+  "review": "CORRECT  \nThe function correctly computes the median of a list by sorting it and returning the middle element (or the average of the two middle elements for even-length lists).",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/48",
+  "verdict": "pass",
+  "code": "def is_palindrome(text: str) -> bool:\n    \"\"\"\n    Checks if given string is a palindrome\n    >>> is_palindrome('')\n    True\n    >>> is_palindrome('aba')\n    True\n    >>> is_palindrome('aaaaa')\n    True\n    >>> is_palindrome('zbcd')\n    False\n    \"\"\"\n    return text == text[::-1]",
+  "review": "CORRECT  \nThe function correctly checks if a string is a palindrome by comparing the string with its reverse.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/49",
+  "verdict": "pass",
+  "code": "from typing import *\nfrom collections import *\n\ndef modp(n: int, p: int) -> int:\n    \"\"\"Return 2^n modulo p (be aware of numerics).\n    >>> modp(3, 5)\n    3\n    >>> modp(1101, 101)\n    2\n    >>> modp(0, 101)\n    1\n    >>> modp(3, 11)\n    8\n    >>> modp(100, 101)\n    1\n    \"\"\"\n    result = 1\n    base = 2\n\n    while n > 0:\n        if n % 2 == 1:\n            result = (result * base) % p\n        base = (base * base) % p\n        n //= 2\n\n    return result",
+  "review": "CORRECT  \nThe function correctly computes 2^n mod p using fast exponentiation (binary exponentiation), handling large exponents efficiently and avoiding overflow with modulo at each step.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/50",
+  "verdict": "pass",
+  "code": "from typing import *\nfrom collections import *\n\ndef encode_shift(s: str):\n    \"\"\"\n    returns encoded string by shifting every character by 5 in the alphabet.\n    \"\"\"\n    return \"\".join([chr(((ord(ch) + 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n\ndef decode_shift(s: str):\n    \"\"\"\n    takes as input string encoded with encode_shift function. Returns decoded string.\n    \"\"\"\n    return \"\".join([chr(((ord(ch) - 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])",
+  "review": "WRONG  \nThe decode_shift function should subtract 5 from each character, but the expression `(ord(ch) - 5 - ord(\"a\")) % 26` is incorrect because it does not properly handle the modulo arithmetic for decoding. It should be `(ord(ch) - 5)",
+  "flag": true,
+  "hint": "Fix the decode_shift function by changing `(- 5)` to `(+ 21)` because subtracting 5 modulo 26 is equivalent to adding 21 (since -5 ≡ 21 mod 26).",
+  "fix": "from typing import *\nfrom collections import *\n\ndef encode_shift(s: str):\n    \"\"\"\n    returns encoded string by shifting every character by 5 in the alphabet.\n    \"\"\"\n    return \"\".join([chr(((ord(ch) + 5 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])\n\ndef decode_shift(s: str):\n    \"\"\"\n    takes as input string encoded with encode_shift function. Returns decoded string.\n    \"\"\"\n    return \"\".join([chr(((ord(ch) + 21 - ord(\"a\")) % 26) + ord(\"a\")) for ch in s])",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe decode_shift function shifts each character by 21 (which is 26 - 5), correctly reversing the shift applied by encode_shift."
+ },
+ {
+  "task_id": "HumanEval/51",
+  "verdict": "pass",
+  "code": "def remove_vowels(text):\n    \"\"\"\n    remove_vowels is a function that takes string and returns string without vowels.\n    >>> remove_vowels('')\n    ''\n    >>> remove_vowels(\"abcdef\\nghijklm\")\n    'bcdf\\nghjklm'\n    >>> remove_vowels('abcdef')\n    'bcdf'\n    >>> remove_vowels('aaaaa')\n    ''\n    >>> remove_vowels('aaBAA')\n    'B'\n    >>> remove_vowels('zbcd')\n    'zbcd'\n    \"\"\"\n    vowels = \"aeiouAEIOU\"\n    return ''.join([char for char in text if char not in vowels])",
+  "review": "CORRECT  \nThe function correctly removes all vowels (both lowercase and uppercase) from the input string and preserves the rest of the characters, including newlines and case.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/52",
+  "verdict": "pass",
+  "code": "def below_threshold(l: list, t: int) -> bool:\n    \"\"\"Return True if all numbers in the list l are below threshold t.\n    >>> below_threshold([1, 2, 4, 10], 100)\n    True\n    >>> below_threshold([1, 20, 4, 10], 5)\n    False\n    \"\"\"\n    return all(x < t for x in l)",
+  "review": "CORRECT  \nThe function correctly returns `True` if all elements in the list are below the threshold `t`, as verified by the test cases.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/53",
+  "verdict": "pass",
+  "code": "def add(x: int, y: int) -> int:\n    \"\"\"Add two numbers x and y\n    >>> add(2, 3)\n    5\n    >>> add(5, 7)\n    12\n    \"\"\"\n    return x + y",
+  "review": "CORRECT  \nThe function correctly adds two integers and includes proper type hints and docstring with correct examples.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/54",
+  "verdict": "fail: AssertionError",
+  "code": "def same_chars(s0: str, s1: str) -> bool:\n    \"\"\"\n    Check if two words have the same characters.\n    >>> same_chars('eabcdzzzz', 'dddzzzzzzzddeddabc')\n    True\n    >>> same_chars('abcd', 'dddddddabc')\n    True\n    >>> same_chars('dddddddabc', 'abcd')\n    True\n    >>> same_chars('eabcd', 'dddddddabc')\n    False\n    >>> same_chars('abcd', 'dddddddabce')\n    False\n    >>> same_chars('eabcdzzzz', 'dddzzzzzzzddddabc')\n    False\n    \"\"\"\n    return sorted(s0) == sorted(s1)",
+  "review": "CORRECT  \nThe function correctly checks if two strings have the same characters by sorting both strings and comparing them.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/55",
+  "verdict": "pass",
+  "code": "def fib(n: int):\n    \"\"\"Return n-th Fibonacci number.\n    >>> fib(10)\n    55\n    >>> fib(1)\n    1\n    >>> fib(8)\n    21\n    \"\"\"\n    if n <= 1:\n        return n\n    else:\n        a, b = 0, 1\n        for _ in range(2, n + 1):\n            a, b = b, a + b\n        return b",
+  "review": "CORRECT  \nThe function correctly computes the n-th Fibonacci number using an iterative approach and matches the given test cases.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/56",
+  "verdict": "pass",
+  "code": "def correct_bracketing(brackets: str) -> bool:\n    stack = []\n    \n    for char in brackets:\n        if char == '<':\n            stack.append(char)\n        elif char == '>':\n            if not stack or stack.pop() != '<':\n                return False\n    \n    return len(stack) == 0",
+  "review": "CORRECT  \nThe function correctly uses a stack to ensure that every opening bracket has a matching closing bracket in the right order.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/57",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef monotonic(l: List[int]) -> bool:\n    \"\"\"Return True is list elements are monotonically increasing or decreasing.\n    >>> monotonic([1, 2, 4, 20])\n    True\n    >>> monotonic([1, 20, 4, 10])\n    False\n    >>> monotonic([4, 1, 0, -10])\n    True\n    \"\"\"\n    return all(x <= y for x, y in zip(l, l[1:])) or all(x >= y for x, y in zip(l, l[1:]))",
+  "review": "CORRECT  \nThe function correctly checks if a list is monotonically increasing or decreasing by verifying that all adjacent pairs satisfy either `x <= y` (non-decreasing) or `x >= y` (non-increasing).",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/58",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef common(l1: List[int], l2: List[int]) -> List[int]:\n    \"\"\"Return sorted unique common elements for two lists.\"\"\"\n    return sorted(set(l1) & set(l2))",
+  "review": "CORRECT  \nThe function correctly returns the sorted unique common elements between two lists using set intersection.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/59",
+  "verdict": "pass",
+  "code": "from math import sqrt\n\ndef largest_prime_factor(n: int):\n    \"\"\"Return the largest prime factor of n. Assume n > 1 and is not a prime.\n    >>> largest_prime_factor(13195)\n    29\n    >>> largest_prime_factor(2048)\n    2\n    \"\"\"\n    # Divide n by 2 until it's odd\n    while n % 2 == 0:\n        n //= 2\n    \n    # Now n must be odd, start checking from 3\n    for i in range(3, int(sqrt(n)) + 1, 2):\n        # While i divides n, divide n by i and update largest_prime\n        while n % i == 0:\n            largest_prime = i\n            n //= i\n    \n    # If n is a prime number greater than 2\n    if n > 2:\n        largest_prime = n\n    \n    return largest_prime",
+  "review": "CORRECT  \nThe function correctly finds the largest prime factor by handling even factors first, then checking odd divisors up to sqrt(n), and finally returning n if it remains a prime greater than 2.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/60",
+  "verdict": "pass",
+  "code": "def sum_to_n(n: int) -> int:\n    \"\"\"sum_to_n is a function that sums numbers from 1 to n.\n    >>> sum_to_n(30)\n    465\n    >>> sum_to_n(100)\n    5050\n    >>> sum_to_n(5)\n    15\n    >>> sum_to_n(10)\n    55\n    >>> sum_to_n(1)\n    1\n    \"\"\"\n    return n * (n + 1) // 2",
+  "review": "CORRECT  \nThe function correctly computes the sum of numbers from 1 to n using the mathematical formula n*(n+1)/2.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/61",
+  "verdict": "pass",
+  "code": "def correct_bracketing(brackets: str) -> bool:\n    stack = []\n    \n    for char in brackets:\n        if char == '(':\n            stack.append(char)\n        elif char == ')':\n            if not stack or stack.pop() != '(':\n                return False\n    \n    return len(stack) == 0",
+  "review": "CORRECT  \nThe function correctly checks if brackets are properly nested and balanced by using a stack to ensure every closing bracket has a matching opening bracket.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/62",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef derivative(xs: List[float]) -> List[float]:\n    return [i * xs[i] for i in range(1, len(xs))]",
+  "review": "WRONG  \nThe function uses `float` in the type annotation, but the task specifies that `xs` represents coefficients of a polynomial, which are typically integers or numbers, and the examples show integer inputs. More importantly, the code incorrectly computes the derivative: it multiplies each coefficient by its index",
+  "flag": true,
+  "hint": "Change `xs: List[float]` to `xs: list` in the function signature and `xs[i]` to `xs[i]` (no change needed), but fix the multiplication to `i * xs[i]` — actually, the code is correct in logic, but the type",
+  "fix": "from typing import List\n\ndef derivative(xs: List[float]) -> List[float]:\n    return [i * xs[i] for i in range(1, len(xs))]",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe function uses `float` in the type annotation, but the task specifies that `xs` represents coefficients of a polynomial, which are typically integers or numbers, and the examples show integer inputs. More importantly, the code incorrectly computes the derivative: it multiplies each coefficient by its index"
+ },
+ {
+  "task_id": "HumanEval/63",
+  "verdict": "pass",
+  "code": "def fibfib(n: int):\n    if n == 0 or n == 1:\n        return 0\n    elif n == 2:\n        return 1\n    \n    fib_fib = [0, 0, 1]\n    for i in range(3, n + 1):\n        fib_fib.append(fib_fib[i - 1] + fib_fib[i - 2] + fib_fib[i - 3])\n    \n    return fib_fib[n]",
+  "review": "CORRECT  \nThe function correctly implements the FibFib sequence with proper base cases and recurrence relation, and efficiently computes the nth value using dynamic programming.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/64",
+  "verdict": "pass",
+  "code": "FIX = \"\"\"\nAdd more test cases.\n\"\"\"\n\ndef vowels_count(s):\n    \"\"\"Write a function vowels_count which takes a string representing\n    a word as input and returns the number of vowels in the string.\n    Vowels in this case are 'a', 'e', 'i', 'o', 'u'. Here, 'y' is also a\n    vowel, but only when it is at the end of the given word.\n\n    Example:\n    >>> vowels_count(\"abcde\")\n    2\n    >>> vowels_count(\"ACEDY\")\n    3\n    \"\"\"\n    vowels = \"aeiou\"\n    count = sum(1 for char in s if char.lower() in vowels)\n    if s.endswith('y') or s.endswith('Y'):\n        count += 1\n    return count",
+  "review": "CORRECT  \nThe function correctly counts standard vowels and adds one for 'y' only when it is at the end of the string.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/65",
+  "verdict": "fail: AssertionError",
+  "code": "def circular_shift(x, shift):\n    num_str = str(x)\n    if shift >= len(num_str):\n        return num_str[::-1]\n    else:\n        shifted_str = num_str[-shift:] + num_str[:-shift]\n        return shifted_str",
+  "review": "WRONG  \nFor a right circular shift, the digits should move to the right, but the code implements a left shift (taking the last `shift` digits and moving them to the front), which is incorrect. For example, `circular_shift(12, 1)` should return \"",
+  "flag": true,
+  "hint": "The function incorrectly shifts digits to the right; it should move the last `shift` digits to the front, but the current code uses `num_str[-shift:] + num_str[:-shift]`, which is correct for a right shift, so the logic is actually correct—no fix needed. However",
+  "fix": "def circular_shift(x, shift):\n    num_str = str(x)\n    if shift >= len(num_str):\n        return num_str[::-1]\n    else:\n        shifted_str = num_str[-shift:] + num_str[:-shift]\n        return shifted_str",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG  \nFor a right circular shift, the digits should move to the right, but the code implements a left shift (taking the last `shift` digits and moving them to the front), which is incorrect. For example, `circular_shift(12, 1)` should return \""
+ },
+ {
+  "task_id": "HumanEval/66",
+  "verdict": "pass",
+  "code": "def digitSum(s):\n    return sum(ord(c) for c in s if c.isupper())",
+  "review": "CORRECT  \nThe function sums the ASCII values of only the uppercase characters in the string, as required.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/67",
+  "verdict": "fail: ValueError: invalid literal for int() with base 10: 'apples'",
+  "code": "def fruit_distribution(s,n):\n    \"\"\"\n    In this task, you will be given a string that represents a number of apples and oranges \n    that are distributed in a basket of fruit this basket contains \n    apples, oranges, and mango fruits. Given the string that represents the total number of \n    the oranges and apples and an integer that represent the total number of the fruits \n    in the basket return the number of the mango fruits in the basket.\n    for examble:\n    fruit_distribution(\"5 apples and 6 oranges\", 19) ->19 - 5 - 6 = 8\n    fruit_distribution(\"0 apples and 1 oranges\",3) -> 3 - 0 - 1 = 2\n    fruit_distribution(\"2 apples and 3 oranges\", 100) -> 100 - 2 - 3 = 95\n    fruit_distribution(\"100 apples and 1 oranges\",120) -> 120 - 100 - 1 = 19\n    \"\"\"\n    # Split the input string into parts\n    parts = s.split()\n    \n    # Extract the number of apples and oranges from the first part\n    apples = int(parts[0].split()[0])\n    oranges = int(parts[1].split()[0])\n    \n    # Calculate the number of mangoes by subtracting the number of apples and oranges from the total number of fruits\n    mangoes = n - (apples + oranges)\n    \n    return mangoes",
+  "review": "WRONG  \nThe code incorrectly splits the string and assumes the first number is apples and the second is oranges, but it fails to handle cases where the string has more than two numbers or when the format is not strictly \"X apples and Y oranges\". For example, \"100 apples and",
+  "flag": true,
+  "hint": "The code incorrectly splits the string and extracts apples and oranges by assuming the first two numbers are always in the format \"X apples and Y oranges\", but it fails when there are more than two words or when the numbers are not in the first two parts (e.g., \"100 apples and",
+  "fix": "def fruit_distribution(s, n):\n    \"\"\"\n    In this task, you will be given a string that represents a number of apples and oranges \n    that are distributed in a basket of fruit this basket contains \n    apples, oranges, and mango fruits. Given the string that represents the total number of \n    the oranges and apples and an integer that represent the total number of the fruits \n    in the basket return the number of the mango fruits in the basket.\n    for examble:\n    fruit_distribution(\"5 apples and 6 oranges\", 19) ->19 - 5 - 6 = 8\n    fruit_distribution(\"0 apples and 1 oranges\",3) -> 3 - 0 - 1 = 2\n    fruit_distribution(\"2 apples and 3 oranges\", 100) -> 100 - 2 - 3 = 95\n    fruit_distribution(\"100 apples and 1 oranges\",120) -> 120 - 100 - 1 = 19\n    \"\"\"\n    # Split the input string into parts based on spaces\n    parts = s.split()\n    \n    # Extract the number of apples and oranges from the first two parts\n    apples = int(parts[0])\n    oranges = int(parts[1])\n    \n    # Calculate the number of mangoes by subtracting the number of apples and oranges from the total number of fruits\n    mangoes = n - (apples + oranges)\n    \n    return mangoes",
+  "fix_verdict": "fail: ValueError: invalid literal for int() with base 10: 'apples'",
+  "review2": "WRONG  \nThe code incorrectly assumes that the first two parts of the string are the numbers for apples and oranges, but the string format may vary (e.g., \"100 apples and 1 oranges\" has \"100\" and \"1\" as numbers, but the second number"
+ },
+ {
+  "task_id": "HumanEval/68",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef pluck(arr: List[int]) -> List[int]:\n    if not arr:\n        return []\n\n    min_even = float('inf')\n    min_index = -1\n\n    for i, val in enumerate(arr):\n        if val % 2 == 0 and val < min_even:\n            min_even = val\n            min_index = i\n\n    if min_index == -1:\n        return []\n\n    return [min_even, min_index]",
+  "review": "CORRECT  \nThe function correctly finds the smallest even value and returns it along with its smallest index, handling edge cases like empty arrays and no even values.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/69",
+  "verdict": "fail: AssertionError",
+  "code": "from collections import Counter\n\ndef search(lst):\n    count = Counter(lst)\n    for num, freq in count.items():\n        if num <= freq:\n            return num\n    return -1",
+  "review": "CORRECT\n\nThe function correctly returns the greatest integer that is greater than zero and has a frequency greater than or equal to its value. It iterates through the frequency count and returns the first number (in ascending order) that satisfies the condition, but since it returns the first such number and not the",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/70",
+  "verdict": "pass",
+  "code": "def strange_sort_list(lst):\n    \"\"\"\n    Given list of integers, return list in strange order.\n    Strange sorting, is when you start with the minimum value,\n    then maximum of the remaining integers, then minimum and so on.\n\n    Examples:\n    strange_sort_list([1, 2, 3, 4]) == [1, 4, 2, 3]\n    strange_sort_list([5, 5, 5, 5]) == [5, 5, 5, 5]\n    strange_sort_list([]) == []\n    \"\"\"\n    if not lst:\n        return []\n\n    sorted_lst = []\n    while lst:\n        # Append the smallest element\n        sorted_lst.append(min(lst))\n        # Remove the smallest element from the list\n        lst.remove(min(lst))\n        \n        # If there are still elements left, append the largest element\n        if lst:\n            sorted_lst.append(max(lst))\n            # Remove the largest element from the list\n            lst.remove(max(lst))\n\n    return sorted_lst",
+  "review": "WRONG  \nThe code removes elements from the list using `lst.remove()`, which modifies the original list and causes incorrect behavior because `min(lst)` and `max(lst)` are computed on a list that is being altered during iteration. This leads to wrong results (e.g., for [1,",
+  "flag": true,
+  "hint": "The code removes elements from `lst` using `min(lst)` and `max(lst)` repeatedly, which is inefficient and incorrect because `min(lst)` and `max(lst)` are recalculated each time, and removing elements in this way alters the list in a way that breaks the alternating min-max pattern",
+  "fix": "def strange_sort_list(lst):\n    \"\"\"\n    Given list of integers, return list in strange order.\n    Strange sorting, is when you start with the minimum value,\n    then maximum of the remaining integers, then minimum and so on.\n\n    Examples:\n    strange_sort_list([1, 2, 3, 4]) == [1, 4, 2, 3]\n    strange_sort_list([5, 5, 5, 5]) == [5, 5, 5, 5]\n    strange_sort_list([]) == []\n    \"\"\"\n    if not lst:\n        return []\n\n    sorted_lst = []\n    while lst:\n        # Find the index of the minimum element\n        min_index = lst.index(min(lst))\n        # Append the minimum element\n        sorted_lst.append(lst.pop(min_index))\n        \n        # Find the index of the maximum element\n        max_index = lst.index(max(lst))\n        # Append the maximum element\n        sorted_lst.append(lst.pop(max_index))\n\n    return sorted_lst",
+  "fix_verdict": "fail: ValueError: max() iterable argument is empty",
+  "review2": "WRONG  \nThe code alternates between taking the minimum and maximum elements, but it removes elements from the original list and re-indexes after each pop, which causes incorrect behavior. For example, after removing the minimum, the maximum is taken from the remaining list, but the list is modified, so"
+ },
+ {
+  "task_id": "HumanEval/71",
+  "verdict": "pass",
+  "code": "import math\n\ndef triangle_area(a, b, c):\n    # Check if the sides form a valid triangle\n    if a + b <= c or a + c <= b or b + c <= a:\n        return -1\n    \n    # Calculate the semi-perimeter\n    s = (a + b + c) / 2\n    \n    # Calculate the area using Heron's formula\n    area = math.sqrt(s * (s - a) * (s - b) * (s - c))\n    \n    # Round the area to 2 decimal points\n    return round(area, 2)",
+  "review": "CORRECT  \nThe function correctly checks if the sides form a valid triangle and computes the area using Heron's formula, rounding to 2 decimal places as required.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/72",
+  "verdict": "pass",
+  "code": "def will_it_fly(q, w):\n    \"\"\"\n    Write a function that returns True if the object q will fly, and False otherwise.\n    The object q will fly if it's balanced (it is a palindromic list) and the sum of its elements is less than or equal to the maximum possible weight w.\n\n    Example:\n    will_it_fly([1, 2], 5) ➞ False \n    # 1+2 is less than the maximum possible weight, but it's unbalanced.\n\n    will_it_fly([3, 2, 3], 1) ➞ False\n    # it's balanced, but 3+2+3 is more than the maximum possible weight.\n\n    will_it_fly([3, 2, 3], 9) ➞ True\n    # 3+2+3 is less than the maximum possible weight, and it's balanced.\n\n    will_it_fly([3], 5) ➞ True\n    # 3 is less than the maximum possible weight, and it's balanced.\n    \"\"\"\n    return q == q[::-1] and sum(q) <= w",
+  "review": "CORRECT  \nThe function correctly checks if the list is palindromic (balanced) and if the sum of its elements is less than or equal to the maximum weight.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/73",
+  "verdict": "pass",
+  "code": "def smallest_change(arr):\n    left, right = 0, len(arr) - 1\n    changes = 0\n    \n    while left < right:\n        if arr[left] != arr[right]:\n            changes += 1\n        left += 1\n        right -= 1\n    \n    return changes",
+  "review": "CORRECT  \nThe function correctly counts the number of mismatched pairs from the start and end of the array, which is exactly the minimum number of changes needed to make the array palindromic.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/74",
+  "verdict": "pass",
+  "code": "def total_match(lst1, lst2):\n    \"\"\"\n    Write a function that accepts two lists of strings and returns the list that has \n    total number of chars in the all strings of the list less than the other list.\n\n    if the two lists have the same number of chars, return the first list.\n\n    Examples\n    total_match([], []) ➞ []\n    total_match(['hi', 'admin'], ['hI', 'Hi']) ➞ ['hI', 'Hi']\n    total_match(['hi', 'admin'], ['hi', 'hi', 'admin', 'project']) ➞ ['hi', 'admin']\n    total_match(['hi', 'admin'], ['hI', 'hi', 'hi']) ➞ ['hI', 'hi', 'hi']\n    total_match(['4'], ['1', '2', '3', '4', '5']) ➞ ['4']\n    \"\"\"\n    # Calculate the total number of characters in each list\n    char_count_lst1 = sum(len(s) for s in lst1)\n    char_count_lst2 = sum(len(s) for s in lst2)\n\n    # Compare the total character counts and return the appropriate list\n    if char_count_lst1 < char_count_lst2:\n        return lst1\n    elif char_count_lst1 > char_count_lst2:\n        return lst2\n    else:\n        return lst1",
+  "review": "CORRECT  \nThe function correctly compares the total number of characters in both lists and returns the list with fewer characters, or the first list if they are equal.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/75",
+  "verdict": "fail: AssertionError",
+  "code": "from math import sqrt\n\ndef is_prime(n):\n    \"\"\"Check if a number is prime.\"\"\"\n    if n <= 1:\n        return False\n    for i in range(2, int(sqrt(n)) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef is_multiply_prime(a):\n    \"\"\"Check if the given number is the multiplication of 3 prime numbers.\"\"\"\n    if a >= 100:\n        raise ValueError(\"Input must be less than 100.\")\n    \n    count = 0\n    for i in range(2, a + 1):\n        if a % i == 0 and is_prime(i):\n            count += 1\n            if count > 3:\n                return False\n    \n    return count == 3",
+  "review": "WRONG  \nThe function checks if the number has exactly three prime divisors, but it does not ensure that the number is the product of exactly three *distinct* or *any* primes — it only counts the number of prime factors (with multiplicity), and fails to verify that the actual product",
+  "flag": true,
+  "hint": "The function incorrectly checks if the number has exactly three prime divisors (with multiplicity), but it should verify that the number is the product of exactly three *distinct* prime numbers, not just that it has three prime factors. Fix the logic to factor the number into primes and check if exactly three",
+  "fix": "from math import sqrt\n\ndef is_prime(n):\n    \"\"\"Check if a number is prime.\"\"\"\n    if n <= 1:\n        return False\n    for i in range(2, int(sqrt(n)) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef is_multiply_prime(a):\n    \"\"\"Check if the given number is the multiplication of exactly three distinct prime numbers.\"\"\"\n    if a >= 100:\n        raise ValueError(\"Input must be less than 100.\")\n    \n    prime_factors = []\n    for i in range(2, a + 1):\n        while a % i == 0 and is_prime(i):\n            prime_factors.append(i)\n            a //= i\n    \n    # Check if there are exactly three distinct prime factors\n    if len(prime_factors) != 3:\n        return False\n    \n    return True",
+  "fix_verdict": "fail: ValueError: Input must be less than 100.",
+  "review2": "WRONG  \nThe function does not ensure that the prime factors are distinct and does not properly handle the case where a number is the product of three *distinct* primes. For example, if a number has repeated prime factors (like 8 = 2×2×2), it will incorrectly return"
+ },
+ {
+  "task_id": "HumanEval/76",
+  "verdict": "pass",
+  "code": "def is_simple_power(x, n):\n    \"\"\"Your task is to write a function that returns true if a number x is a simple\n    power of n and false in other cases.\n    x is a simple power of n if n**int=x\n    For example:\n    is_simple_power(1, 4) => true\n    is_simple_power(2, 2) => true\n    is_simple_power(8, 2) => true\n    is_simple_power(3, 2) => false\n    is_simple_power(3, 1) => false\n    is_simple_power(5, 3) => false\n    \"\"\"\n    if n == 1:\n        return x == 1\n    if x < 1 or n <= 0:\n        return False\n    \n    while x % n == 0:\n        x //= n\n    \n    return x == 1",
+  "review": "CORRECT  \nThe function correctly checks if `x` is a power of `n` by repeatedly dividing `x` by `n` until it is no longer divisible, then verifying if the result is 1.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/77",
+  "verdict": "pass",
+  "code": "def iscube(a):\n    \"\"\"\n    Write a function that takes an integer a and returns True \n    if this ingeger is a cube of some integer number.\n    Note: you may assume the input is always valid.\n    Examples:\n    iscube(1) ==> True\n    iscube(2) ==> False\n    iscube(-1) ==> True\n    iscube(64) ==> True\n    iscube(0) ==> True\n    iscube(180) ==> False\n    \"\"\"\n    # Check if the absolute value of a is a perfect cube\n    return round(abs(a)**(1/3))**3 == abs(a)",
+  "review": "CORRECT  \nThe function correctly checks if a number is a perfect cube by verifying that the cube of the rounded cube root of its absolute value equals the absolute value of the input.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/78",
+  "verdict": "pass",
+  "code": "def hex_key(num):\n    # Define the set of prime hexadecimal digits\n    prime_hex_digits = {'2', '3', '5', '7', 'B', 'D'}\n    \n    # Count the number of prime hexadecimal digits in the input string\n    count = sum(1 for digit in num if digit in prime_hex_digits)\n    \n    return count",
+  "review": "CORRECT  \nThe function correctly identifies and counts the prime hexadecimal digits (2, 3, 5, 7, B, D) as specified in the task.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/79",
+  "verdict": "pass",
+  "code": "def decimal_to_binary(decimal):\n    \"\"\"Converts a decimal number to its binary representation as a string.\"\"\"\n    if decimal == 0:\n        return \"db0db\"\n    \n    binary_str = \"\"\n    while decimal > 0:\n        remainder = decimal % 2\n        binary_str = str(remainder) + binary_str\n        decimal //= 2\n    \n    return f\"db{binary_str}db\"",
+  "review": "CORRECT  \nThe function correctly converts a decimal number to binary and adds \"db\" at the beginning and end as required.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/80",
+  "verdict": "pass",
+  "code": "def is_happy(s):\n    if len(s) < 3:\n        return False\n    \n    for i in range(len(s) - 2):\n        if s[i] == s[i + 1] or s[i] == s[i + 2] or s[i + 1] == s[i + 2]:\n            return False\n    \n    return True",
+  "review": "CORRECT  \nThe function correctly checks if every three consecutive characters are distinct by verifying that no two adjacent characters in any triplet are the same.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/81",
+  "verdict": "static-blocked",
+  "code": "```python\ndef numerical_letter_grade(grades):\n    \"\"\"It is the last week of the semester and the teacher has to give the grades\n    to students. The teacher has been making her own algorithm for grading.\n    The only problem is, she has lost the code she used for grading.\n    She has given you a list of GPAs for some students and you have to write \n    a function that can output a list of letter grades using the following table:\n             GPA       |    Letter grade\n              4.0                A+\n            > 3.7                A \n            > 3.3                A- \n            > 3.0                B+\n            > 2.7                B \n            > 2.3                B-\n            > 2.0                C+\n            > 1.7                C\n            > 1.3                C-\n            > 1.0                D+ \n            > 0.7                D \n            > 0.0                D-\n              0.0                E\n    \n    Example:\n    grade_equation([4.0, 3, 1.7, 2, 3.5]) ==> ['A+', 'B', 'C-', 'C', 'A-']\n    \"\"\"\n    letter_grades = []\n    for gpa in grades:\n        if gpa == 4.0:\n            letter_grades.append('A+')\n        elif gpa > 3.7:\n            letter_grades.append('A')\n        elif gpa > 3.3:\n            letter_grades.append('A-')\n        elif gpa > 3.0:\n            letter_grades.append('B+')\n        elif gpa > 2.7:\n            letter_grades.append('B')\n        elif gpa > 2.3:\n            letter_grades.append('B-')\n        elif gpa > 2.0:\n            letter_grades.append('C+')\n        elif gpa > 1.7:\n            letter_grades.append('C')\n        elif gpa > 1.3:\n            letter_grades.append('C-')\n        elif gpa > 1.0:\n            letter_grades.append('D+')\n        elif gpa > 0.7:\n            letter_grades.append('D')\n        elif gpa > 0.0:\n            letter_grades.append('D-')\n        else:\n            letter_grades.append",
+  "review": "WRONG  \nThe function ends with `letter_grades.append` without parentheses, which will cause a SyntaxError and does not actually append 'E' for a GPA of 0.0.",
+  "flag": true,
+  "hint": "Fix the `else:` block by changing `letter_grades.append` to `letter_grades.append('E')`.",
+  "fix": "letter_grades.append('E')",
+  "fix_verdict": "fail: NameError: name 'letter_grades' is not defined",
+  "review2": "WRONG  \nThe code only adds 'E' once and does not process any input grades or generate a list of letter grades as required."
+ },
+ {
+  "task_id": "HumanEval/82",
+  "verdict": "pass",
+  "code": "def prime_length(string):\n    \"\"\"Write a function that takes a string and returns True if the string\n    length is a prime number or False otherwise\n    Examples\n    prime_length('Hello') == True\n    prime_length('abcdcba') == True\n    prime_length('kittens') == True\n    prime_length('orange') == False\n    \"\"\"\n    def is_prime(n):\n        \"\"\"Check if a number is prime\"\"\"\n        if n <= 1:\n            return False\n        for i in range(2, int(n**0.5) + 1):\n            if n % i == 0:\n                return False\n        return True\n    \n    return is_prime(len(string))",
+  "review": "CORRECT  \nThe function correctly checks if the length of the string is a prime number by using an efficient prime-checking algorithm.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/83",
+  "verdict": "fail: AssertionError",
+  "code": "def starts_one_ends(n):\n    \"\"\"\n    Given a positive integer n, return the count of the numbers of n-digit\n    positive integers that start or end with 1.\n    \"\"\"\n    if n == 1:\n        return 1\n    else:\n        # For n > 1, there are two cases to consider:\n        # 1. The number starts with 1 and ends with any digit (except 0).\n        # 2. The number ends with 1 and starts with any digit (except 0).\n        # Since each case has 9 options for the middle digits (0-9 except 0),\n        # we multiply by 9^((n-2)).\n        return 2 * 9 ** (n - 2)",
+  "review": "WRONG  \nThe function incorrectly assumes that numbers starting or ending with 1 have only 9 options for middle digits and fails to account for overlap (numbers that both start and end with 1), leading to overcounting.",
+  "flag": true,
+  "hint": "The function incorrectly assumes that middle digits exclude 0, and fails to account for numbers that both start and end with 1 (double-counting), and also misrepresents the valid digit choices. Fix by correctly calculating: numbers starting with 1 (1 × 10^(n-1",
+  "fix": "def starts_one_ends(n):\n    \"\"\"\n    Given a positive integer n, return the count of the numbers of n-digit\n    positive integers that start or end with 1.\n    \"\"\"\n    if n == 1:\n        return 1\n    else:\n        # Correct calculation: numbers starting with 1 (1 × 10^(n-1) - double-counting numbers that both start and end with 1)\n        return 2 * 10 ** (n - 1)",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG  \nThe function double-counts numbers that both start and end with 1, leading to an overcount. The correct formula should subtract the overlap: $10^{n-2}$ for $n > 1$."
+ },
+ {
+  "task_id": "HumanEval/84",
+  "verdict": "pass",
+  "code": "def solve(N):\n    \"\"\"Given a positive integer N, return the total sum of its digits in binary.\n    \n    Example\n        For N = 1000, the sum of digits will be 1 the output should be \"1\".\n        For N = 150, the sum of digits will be 6 the output should be \"110\".\n        For N = 147, the sum of digits will be 12 the output should be \"1100\".\n    \n    Variables:\n        @N integer\n             Constraints: 0 ≤ N ≤ 10000.\n    Output:\n         a string of binary number\n    \"\"\"\n    # Calculate the sum of digits\n    digit_sum = sum(int(digit) for digit in str(N))\n    \n    # Convert the sum to binary and return it\n    return bin(digit_sum)[2:]",
+  "review": "CORRECT  \nThe function correctly calculates the sum of digits of N, then returns the binary representation of that sum.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/85",
+  "verdict": "pass",
+  "code": "def add(lst):\n    \"\"\"Given a non-empty list of integers lst. add the even elements that are at odd indices.\"\"\"\n    return sum(lst[i] for i in range(1, len(lst), 2) if lst[i] % 2 == 0)",
+  "review": "CORRECT  \nThe function correctly sums the even elements that are at odd indices (1, 3, 5, ...).",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/86",
+  "verdict": "fail: TypeError: sequence item 0: expected str instance, list found",
+  "code": "def anti_shuffle(s):\n    # Split the input string into words\n    words = s.split()\n    \n    # Sort each word alphabetically\n    sorted_words = [sorted(word) for word in words]\n    \n    # Join the sorted words back into a single string\n    result = ' '.join(sorted_words)\n    \n    return result",
+  "review": "WRONG  \nThe function sorts each word alphabetically, but the task requires arranging characters in ascending order based on ASCII value, which is correct, but the example `anti_shuffle('Hello World!!!') returns 'Hello !!!Wdlor'` shows that punctuation is not being handled properly — the function",
+  "flag": true,
+  "hint": "The code incorrectly sorts the characters in each word alphabetically instead of arranging them in ascending order by ASCII value, which is correct, but it fails to preserve the original spacing and word order properly—specifically, it joins the sorted characters back with spaces, but the original string may have multiple spaces or",
+  "fix": "def anti_shuffle(s):\n    # Split the input string into words\n    words = s.split()\n    \n    # Sort each word alphabetically\n    sorted_words = [''.join(sorted(word)) for word in words]\n    \n    # Join the sorted words back into a single string with spaces preserved\n    result = ' '.join(sorted_words)\n    \n    return result",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe function correctly sorts the characters in each word in ascending ASCII order while preserving the word order and spaces."
+ },
+ {
+  "task_id": "HumanEval/87",
+  "verdict": "fail: AssertionError",
+  "code": "def get_row(lst, x):\n    result = []\n    for i, row in enumerate(lst):\n        if x in row:\n            result.append((i, row.index(x)))\n    # Sorting by rows in ascending order and then by columns in descending order\n    result.sort(key=lambda item: (item[0], -item[1]))\n    return result",
+  "review": "CORRECT  \nThe code correctly finds the coordinates of `x` in each row, appends them as (row, column) tuples, and sorts by row ascending and column descending.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/88",
+  "verdict": "fail: IndexError: list index out of range",
+  "code": "def sort_array(array):\n    \"\"\"\n    Given an array of non-negative integers, return a copy of the given array after sorting,\n    you will sort the given array in ascending order if the sum( first index value, last index value) is odd,\n    or sort it in descending order if the sum( first index value, last index value) is even.\n\n    Note:\n    * don't change the given array.\n\n    Examples:\n    * sort_array([]) => []\n    * sort_array([5]) => [5]\n    * sort_array([2, 4, 3, 0, 1, 5]) => [0, 1, 2, 3, 4, 5]\n    * sort_array([2, 4, 3, 0, 1, 5, 6]) => [6, 5, 4, 3, 2, 1, 0]\n    \"\"\"\n    # Create a deep copy of the array to avoid modifying the original array\n    sorted_array = array.copy()\n    \n    # Determine the sorting order based on the sum of the first and last elements\n    if (sorted_array[0] + sorted_array[-1]) % 2 == 0:\n        sorted_array.sort(reverse=True)\n    else:\n        sorted_array.sort()\n    \n    return sorted_array",
+  "review": "CORRECT  \nThe function correctly checks if the sum of the first and last elements is even or odd to determine sorting order and returns a copy of the array without modifying the original.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/89",
+  "verdict": "pass",
+  "code": "def encrypt(s):\n    \"\"\"Create a function encrypt that takes a string as an argument and\n    returns a string encrypted with the alphabet being rotated. \n    The alphabet should be rotated in a manner such that the letters \n    shift down by two multiplied to two places.\n    For example:\n    encrypt('hi') returns 'lm'\n    encrypt('asdfghjkl') returns 'ewhjklnop'\n    encrypt('gf') returns 'kj'\n    encrypt('et') returns 'ix'\n    \"\"\"\n    # Define the alphabet\n    alphabet = \"abcdefghijklmnopqrstuvwxyz\"\n    \n    # Create a dictionary to map each letter to its new position after rotation\n    rotation_dict = {alphabet[i]: alphabet[(i + 2 * 2) % 26] for i in range(26)}\n    \n    # Encrypt the string using the rotation dictionary\n    encrypted_string = ''.join(rotation_dict[char] if char in rotation_dict else char for char in s)\n    \n    return encrypted_string",
+  "review": "CORRECT  \nThe function correctly rotates each letter in the alphabet by 4 positions (2 multiplied by 2), as required, and matches the given examples.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/90",
+  "verdict": "fail: AssertionError",
+  "code": "def next_smallest(lst):\n    \"\"\"\n    You are given a list of integers.\n    Write a function next_smallest() that returns the 2nd smallest element of the list.\n    Return None if there is no such element.\n    \n    next_smallest([1, 2, 3, 4, 5]) == 2\n    next_smallest([5, 1, 4, 3, 2]) == 2\n    next_smallest([]) == None\n    next_smallest([1, 1]) == None\n    \"\"\"\n    if len(lst) < 2:\n        return None\n    \n    # Sort the list to find the second smallest element\n    lst.sort()\n    \n    # Return the second element\n    return lst[1]",
+  "review": "CORRECT  \nThe function correctly returns the second smallest element when the list has at least two distinct elements and returns None for edge cases like empty lists or lists with fewer than two elements.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/91",
+  "verdict": "fail: AssertionError: Test 2",
+  "code": "import re\n\ndef is_bored(S):\n    \"\"\"\n    You'll be given a string of words, and your task is to count the number\n    of boredoms. A boredom is a sentence that starts with the word \"I\".\n    Sentences are delimited by '.', '?' or '!'.\n   \n    For example:\n    >>> is_bored(\"Hello world\")\n    0\n    >>> is_bored(\"The sky is blue. The sun is shining. I love this weather\")\n    1\n    \"\"\"\n    # Split the input string into sentences based on '.', '?' or '!'\n    sentences = re.split(r'[.?!]', S)\n    \n    # Count the number of sentences that start with \"I\"\n    boredom_count = sum(1 for sentence in sentences if sentence.strip().startswith('I'))\n    \n    return boredom_count",
+  "review": "CORRECT  \nThe function correctly splits the string into sentences at punctuation marks and counts how many start with \"I\".",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/92",
+  "verdict": "pass",
+  "code": "def any_int(x, y, z):\n    # Check if all inputs are integers\n    if not (isinstance(x, int) and isinstance(y, int) and isinstance(z, int)):\n        return False\n    \n    # Check if any number is equal to the sum of the other two\n    if x == y + z or y == x + z or z == x + y:\n        return True\n    \n    return False",
+  "review": "CORRECT  \nThe function correctly checks if all three inputs are integers and if one of them equals the sum of the other two.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/93",
+  "verdict": "fail: AssertionError: This prints if this assert fails 1 (good for debugging!)",
+  "code": "def encode(message):\n    vowels = \"aeiouAEIOU\"\n    encoded_message = \"\"\n    \n    for char in message:\n        if char.isalpha():\n            # Swap case\n            new_char = char.swapcase()\n            \n            # Replace vowel with the letter 2 places ahead\n            if new_char in vowels:\n                index = vowels.index(new_char)\n                new_char = chr((index + 2) % 26 + ord('a'))\n            \n            encoded_message += new_char\n        else:\n            encoded_message += char\n    \n    return encoded_message",
+  "review": "WRONG  \nThe code replaces vowels with a letter 2 places ahead of the vowel in the alphabet, but it does so in lowercase regardless of the original case, and it incorrectly applies the shift after swapping case, which can lead to wrong results. For example, 'T' (uppercase) becomes",
+  "flag": true,
+  "hint": "Fix the vowel replacement by using the original vowel's case (not the swapped case) when determining the shift, and ensure the replacement respects the original vowel's case after shifting.",
+  "fix": "def encode(message):\n    vowels = \"aeiouAEIOU\"\n    encoded_message = \"\"\n    \n    for char in message:\n        if char.isalpha():\n            # Swap case\n            new_char = char.swapcase()\n            \n            # Replace vowel with the letter 2 places ahead of that vowel in the English alphabet.\n            # Use the original vowel's case to determine the shift.\n            if new_char in vowels:\n                index = vowels.index(new_char)\n                shift = (index + 2) % 26\n                if char.islower():\n                    new_char = chr((ord(char) - ord('a') + shift) % 26 + ord('a'))\n                else:\n                    new_char = chr((ord(char) - ord('A') + shift) % 26 + ord('A'))\n            \n            encoded_message += new_char\n        else:\n            encoded_message += char\n    \n    return encoded_message",
+  "fix_verdict": "fail: AssertionError: This prints if this assert fails 1 (good for debugging!)",
+  "review2": "WRONG  \nThe code incorrectly replaces vowels with letters 2 places ahead using the original character's case, but it should use the vowel's original case to determine the shift, and the logic for shifting is flawed because it applies the shift to the original character, not the vowel in its original form."
+ },
+ {
+  "task_id": "HumanEval/94",
+  "verdict": "pass",
+  "code": "from math import sqrt\n\ndef is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(sqrt(n)) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef skjkasdkd(lst):\n    max_prime = 0\n    for num in lst:\n        if num > max_prime and is_prime(num):\n            max_prime = num\n    return sum(int(digit) for digit in str(max_prime))",
+  "review": "CORRECT  \nThe function correctly finds the largest prime number in the list and returns the sum of its digits.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/95",
+  "verdict": "fail: AttributeError: 'int' object has no attribute 'islower'",
+  "code": "def check_dict_case(dict):\n    if not dict:\n        return False\n    \n    all_lower = all(key.islower() for key in dict)\n    all_upper = all(key.isupper() for key in dict)\n    \n    return all_lower or all_upper",
+  "review": "CORRECT  \nThe function correctly checks if all keys are in lower case or all in upper case and returns False for empty dictionaries or mixed cases.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/96",
+  "verdict": "pass",
+  "code": "from math import sqrt\n\ndef is_prime(num):\n    if num <= 1:\n        return False\n    if num == 2:\n        return True\n    if num % 2 == 0:\n        return False\n    for i in range(3, int(sqrt(num)) + 1, 2):\n        if num % i == 0:\n            return False\n    return True\n\ndef count_up_to(n):\n    primes = []\n    for num in range(2, n):\n        if is_prime(num):\n            primes.append(num)\n    return primes",
+  "review": "CORRECT  \nThe function correctly identifies prime numbers less than `n` and returns them in ascending order.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/97",
+  "verdict": "pass",
+  "code": "def multiply(a, b):\n    \"\"\"Complete the function that takes two integers and returns \n    the product of their unit digits.\n    Assume the input is always valid.\n    Examples:\n    multiply(148, 412) should return 16.\n    multiply(19, 28) should return 72.\n    multiply(2020, 1851) should return 0.\n    multiply(14,-15) should return 20.\n    \"\"\"\n    # Extract the unit digit from each number\n    unit_digit_a = abs(a) % 10\n    unit_digit_b = abs(b) % 10\n    \n    # Return the product of the unit digits\n    return unit_digit_a * unit_digit_b",
+  "review": "CORRECT  \nThe function correctly extracts the unit digits of both numbers using modulo 10 and returns their product, handling negative numbers by using `abs()` to ensure the unit digit is positive.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/98",
+  "verdict": "pass",
+  "code": "def count_upper(s):\n    \"\"\"\n    Given a string s, count the number of uppercase vowels in even indices.\n    \n    For example:\n    count_upper('aBCdEf') returns 1\n    count_upper('abcdefg') returns 0\n    count_upper('dBBE') returns 0\n    \"\"\"\n    # Define the set of uppercase vowels\n    uppercase_vowels = {'A', 'E', 'I', 'O', 'U'}\n    \n    # Initialize the count\n    count = 0\n    \n    # Iterate over the string, considering only even indices\n    for i in range(0, len(s), 2):\n        if s[i] in uppercase_vowels:\n            count += 1\n            \n    return count",
+  "review": "CORRECT  \nThe function correctly counts uppercase vowels (A, E, I, O, U) that are at even indices in the string.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/99",
+  "verdict": "fail: AssertionError: Test case 2 failed",
+  "code": "import math\n\ndef closest_integer(value):\n    \"\"\"\n    Create a function that takes a value (string) representing a number\n    and returns the closest integer to it. If the number is equidistant\n    from two integers, round it away from zero.\n\n    Examples\n    >>> closest_integer(\"10\")\n    10\n    >>> closest_integer(\"15.3\")\n    15\n\n    Note:\n    Rounding away from zero means that if the given number is equidistant\n    from two integers, the one you should return is the one that is the\n    farthest from zero. For example closest_integer(\"14.5\") should\n    return 15 and closest_integer(\"-14.5\") should return -15.\n    \"\"\"\n    num = float(value)\n    if num > 0:\n        return int(math.ceil(num))\n    else:\n        return int(math.floor(num))\n\n# Check function to verify the correctness of the solution\ndef check_solution():\n    assert closest_integer(\"10\") == 10, \"Test case 1 failed\"\n    assert closest_integer(\"15.3\") == 15, \"Test case 2 failed\"\n    assert closest_integer(\"14.5\") == 15, \"Test case 3 failed\"\n    assert closest_integer(\"-14.5\") == -15, \"Test case 4 failed\"\n    print(\"All test cases passed!\")\n\ncheck_solution()",
+  "review": "CORRECT  \nThe function correctly rounds away from zero by using `math.ceil` for positive numbers and `math.floor` for negative numbers, satisfying the requirement to round equidistant values away from zero.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/100",
+  "verdict": "pass",
+  "code": "def make_a_pile(n):\n    \"\"\"\n    Given a positive integer n, you have to make a pile of n levels of stones.\n    The first level has n stones.\n    The number of stones in the next level is:\n        - the next odd number if n is odd.\n        - the next even number if n is even.\n    Return the number of stones in each level in a list, where element at index\n    i represents the number of stones in the level (i+1).\n    \"\"\"\n    stones = []\n    current_stones = n\n    for _ in range(n):\n        stones.append(current_stones)\n        # Determine the next number of stones based on whether n is odd or even\n        if n % 2 == 0:\n            current_stones += 2\n        else:\n            current_stones += 2\n    return stones",
+  "review": "CORRECT  \nThe function correctly builds a pile of `n` levels, starting with `n` stones, and each subsequent level increases by 2 (either the next odd or even number), which is consistent with the rule. The logic works for both odd and even `n`.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/101",
+  "verdict": "fail: AssertionError",
+  "code": "def words_string(s):\n    \"\"\"\n    You will be given a string of words separated by commas or spaces. Your task is\n    to split the string into words and return an array of the words.\n    \n    For example:\n    words_string(\"Hi, my name is John\") == [\"Hi\", \"my\", \"name\", \"is\", \"John\"]\n    words_string(\"One, two, three, four, five, six\") == [\"One\", \"two\", \"three\", \"four\", \"five\", \"six\"]\n    \"\"\"\n    # Splitting the string based on comma or space\n    words = s.split(', ')\n    return words",
+  "review": "WRONG  \nThe function only splits on ', ' (comma followed by space) and ignores spaces between words, so it fails for inputs with only spaces or mixed delimiters.",
+  "flag": true,
+  "hint": "Fix the function by using `split()` with both commas and spaces as separators, e.g., `s.split(',| ')` or better, `s.replace(',', ' ').split()` to handle both delimiters properly.",
+  "fix": "def words_string(s):\n    \"\"\"\n    You will be given a string of words separated by commas or spaces. Your task is\n    to split the string into words and return an array of the words.\n    \n    For example:\n    words_string(\"Hi, my name is John\") == [\"Hi\", \"my\", \"name\", \"is\", \"John\"]\n    words_string(\"One, two, three, four, five, six\") == [\"One\", \"two\", \"three\", \"four\", \"five\", \"six\"]\n    \"\"\"\n    # Using replace() to replace commas with spaces and then splitting\n    words = s.replace(',', ' ').split()\n    return words",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe function correctly replaces commas with spaces and splits the string by whitespace, handling both commas and spaces as separators."
+ },
+ {
+  "task_id": "HumanEval/102",
+  "verdict": "fail: AssertionError",
+  "code": "def choose_num(x, y):\n    # Ensure x is less than or equal to y\n    if x > y:\n        x, y = y, x\n    \n    # Check if x is even\n    if x % 2 == 0:\n        return x\n    else:\n        # Find the next even number greater than or equal to x\n        for num in range(x, y + 1):\n            if num % 2 == 0:\n                return num\n        # Return -1 if no even number is found within the range\n        return -1",
+  "review": "CORRECT  \nThe function correctly returns the largest even number in the range [x, y] inclusive, or -1 if no such number exists.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/103",
+  "verdict": "fail: AssertionError",
+  "code": "def rounded_avg(n, m):\n    if n > m:\n        return -1\n    \n    total = sum(range(n, m + 1))\n    avg = round(total / (m - n + 1))\n    \n    return bin(avg)[2:]",
+  "review": "CORRECT  \nThe function correctly computes the average of integers from n to m, rounds it to the nearest integer, and converts it to binary, returning \"0b\" prefix removed. It also returns -1 when n > m.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/104",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef unique_digits(x: List[int]) -> List[int]:\n    def has_even_digit(n):\n        while n > 0:\n            if n % 2 == 0:\n                return True\n            n //= 10\n        return False\n    \n    return sorted(set(filter(has_even_digit, x)))",
+  "review": "WRONG  \nThe function returns elements that *have* even digits, but it should return elements that *have no even digits*. The logic is inverted.",
+  "flag": true,
+  "hint": "Fix the condition in `has_even_digit` to check if any digit is even by testing `n % 10 % 2 == 0` instead of `n % 2 == 0`, and return `False` when no even digit is found.",
+  "fix": "from typing import List\n\ndef has_even_digit(n):\n    while n > 0:\n        if n % 10 % 2 == 0:\n            return True\n        n //= 10\n    return False",
+  "fix_verdict": "fail: NameError: name 'unique_digits' is not defined",
+  "review2": "WRONG  \nThe code provided only defines `has_even_digit(n)` but does not implement the `unique_digits(x)` function that is required by the task."
+ },
+ {
+  "task_id": "HumanEval/105",
+  "verdict": "pass",
+  "code": "def by_length(arr):\n    # Filter out numbers outside the range 1 to 9\n    filtered_arr = [num for num in arr if 1 <= num <= 9]\n    \n    # Sort the filtered array\n    sorted_arr = sorted(filtered_arr)\n    \n    # Reverse the sorted array\n    reversed_arr = sorted_arr[::-1]\n    \n    # Replace each digit with its corresponding name\n    name_map = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',\n                 6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine'}\n    result = [name_map[num] for num in reversed_arr]\n    \n    return result",
+  "review": "WRONG\n\nThe function ignores strange numbers (like negative numbers or numbers outside 1-9), but the task says to \"replace each digit by its corresponding name\" only for digits between 1 and 9, and the example shows that when the input is [1, -1,",
+  "flag": true,
+  "hint": "The code incorrectly returns `['One']` for `arr = [1, -1, 55]` because it includes `-1` in the filtered array and only returns the name for `1`, but `-1` is not in the valid range and should be ignored—fix the",
+  "fix": "def by_length(arr):\n    # Filter out numbers outside the range 1 to 9\n    filtered_arr = [num for num in arr if 1 <= num <= 9]\n    \n    # Sort the filtered array\n    sorted_arr = sorted(filtered_arr)\n    \n    # Reverse the sorted array\n    reversed_arr = sorted_arr[::-1]\n    \n    # Replace each digit with its corresponding name\n    name_map = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five',\n                 6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine'}\n    result = [name_map[num] for num in reversed_arr if num in name_map]\n    \n    return result",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe function correctly filters, sorts, reverses, and maps the digits to their names as specified in the task."
+ },
+ {
+  "task_id": "HumanEval/106",
+  "verdict": "fail: AssertionError",
+  "code": "def f(n):\n    result = []\n    for i in range(1, n + 1):\n        if i % 2 == 0:\n            result.append(i)\n        else:\n            result.append(sum(range(1, i + 1)))\n    return result",
+  "review": "WRONG  \nThe code incorrectly computes the factorial for even indices; it only appends `i` (not the factorial of `i`) and computes the sum from 1 to `i` for odd indices, which is correct, but the factorial part is wrong.",
+  "flag": true,
+  "hint": "Fix the factorial calculation in the even case: replace `result.append(i)` with `result.append(1)` and compute the factorial properly using a loop or math.prod, or correct the logic to compute factorial of i for even i.",
+  "fix": "import math\n\ndef f(n):\n    result = []\n    for i in range(1, n + 1):\n        if i % 2 == 0:\n            result.append(math.factorial(i))\n        else:\n            result.append(sum(range(1, i + 1)))\n    return result",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe code correctly implements the function: for even indices, it computes the factorial of i, and for odd indices, it computes the sum of numbers from 1 to i. The example f(5) = [1, 2, 6, 24, 1"
+ },
+ {
+  "task_id": "HumanEval/107",
+  "verdict": "pass",
+  "code": "def even_odd_palindrome(n):\n    def is_palindrome(num):\n        return str(num) == str(num)[::-1]\n\n    even_count = 0\n    odd_count = 0\n\n    for i in range(1, n + 1):\n        if is_palindrome(i):\n            if i % 2 == 0:\n                even_count += 1\n            else:\n                odd_count += 1\n\n    return (even_count, odd_count)",
+  "review": "CORRECT  \nThe function correctly identifies palindromes in the range (1, n) and counts how many are even and odd.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/108",
+  "verdict": "fail: AssertionError",
+  "code": "def count_nums(arr):\n    def sum_of_digits(n):\n        if n < 0:\n            return -sum(int(digit) for digit in str(abs(n)))\n        else:\n            return sum(int(digit) for digit in str(n))\n\n    return sum(1 for num in arr if sum_of_digits(num) > 0)",
+  "review": "CORRECT  \nThe function correctly computes the sum of digits for positive and negative numbers, handling the negative sign as specified.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/109",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef move_one_ball(arr: List[int]) -> bool:\n    # Check if the array is empty or has only one element\n    if len(arr) <= 1:\n        return True\n    \n    # Find the minimum and maximum values in the array\n    min_val = min(arr)\n    max_val = max(arr)\n    \n    # Check if the minimum value is greater than the maximum value\n    if min_val > max_val:\n        return False\n    \n    # Count the occurrences of the minimum and maximum values\n    min_count = arr.count(min_val)\n    max_count = arr.count(max_val)\n    \n    # Check if the minimum count is less than or equal to the maximum count\n    if min_count <= max_count:\n        return True\n    \n    return False",
+  "review": "WRONG\n\nThe code does not correctly solve the problem. It checks for minimum and maximum values and their counts, but right shift operations cannot change the relative order of elements in a way that would sort the array based on value distribution—this logic is irrelevant to the actual shifting behavior. The correct solution",
+  "flag": true,
+  "hint": "The function incorrectly checks for minimum and maximum value counts instead of verifying if the array can be sorted by right shifts—fix by determining the correct rotation that would sort the array and checking if that rotation exists.",
+  "fix": "from typing import List\n\ndef move_one_ball(arr: List[int]) -> bool:\n    # Check if the array is empty or has only one element\n    if len(arr) <= 1:\n        return True\n    \n    # Find the minimum and maximum values in the array\n    min_val = min(arr)\n    max_val = max(arr)\n    \n    # Check if the minimum value is greater than the maximum value\n    if min_val > max_val:\n        return False\n    \n    # Determine the rotation needed to sort the array\n    rotations_needed = (max_val - min_val + 1) % len(arr)\n    \n    # Check if the array can be sorted by rotating it\n    rotated_arr = arr[-rotations_needed:] + arr[:-rotations_needed]\n    return rotated_arr == sorted(rotated_arr)",
+  "fix_verdict": "fail: AssertionError: This prints if this assert fails 1 (good for debugging!)",
+  "review2": "WRONG\n\nThe code incorrectly calculates `rotations_needed` and does not properly validate whether a right shift can produce a sorted array. The logic `(max_val - min_val + 1) % len(arr)` is not valid for determining the correct rotation. Also, the final check `rotated"
+ },
+ {
+  "task_id": "HumanEval/110",
+  "verdict": "pass",
+  "code": "def exchange(lst1, lst2):\n    # Count the odd numbers in lst1\n    odd_count_lst1 = sum(1 for num in lst1 if num % 2 != 0)\n    \n    # Count the even numbers in lst2\n    even_count_lst2 = sum(1 for num in lst2 if num % 2 == 0)\n    \n    # Check if there are enough even numbers in lst2 to exchange with all odd numbers in lst1\n    if even_count_lst2 >= odd_count_lst1:\n        return \"YES\"\n    else:\n        return \"NO\"",
+  "review": "CORRECT  \nIf there are at least as many even numbers in lst2 as odd numbers in lst1, we can exchange them to make all elements in lst1 even.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/111",
+  "verdict": "pass",
+  "code": "from collections import Counter\n\ndef histogram(test):\n    # Split the input string into individual characters\n    chars = test.split()\n    # Count the occurrences of each character using Counter\n    char_counts = Counter(chars)\n    # Find the maximum occurrence count\n    max_count = max(char_counts.values(), default=0)\n    # Filter the characters that have the maximum occurrence count\n    result = {char: count for char, count in char_counts.items() if count == max_count}\n    return result",
+  "review": "CORRECT  \nThe function correctly counts character frequencies, identifies the maximum count, and returns all characters with that count.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/112",
+  "verdict": "pass",
+  "code": "def reverse_delete(s, c):\n    # Remove characters from s that are present in c\n    filtered_s = ''.join([char for char in s if char not in c])\n    \n    # Check if the resulting string is a palindrome\n    is_palindrome = filtered_s == filtered_s[::-1]\n    \n    return (filtered_s, is_palindrome)",
+  "review": "CORRECT  \nThe function correctly removes characters from `s` that are in `c` and checks if the result is a palindrome, returning the tuple as required.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/113",
+  "verdict": "fail: AssertionError: Test 1",
+  "code": "def odd_count(lst):\n    \"\"\"Given a list of strings, where each string consists of only digits, return a list.\n    Each element i of the output should be \"the number of odd elements in the\n    string i of the input.\" where all the i's should be replaced by the number\n    of odd digits in the i'th string of the input.\n\n    >>> odd_count(['1234567'])\n    [\"the number of odd elements 4n the str4ng 4 of the 4nput.\"]\n    >>> odd_count(['3',\"11111111\"])\n    [\"the number of odd elements 1n the str1ng 1 of the 1nput.\",\n     \"the number of odd elements 8n the str8ng 8 of the 8nput.\"]\n    \"\"\"\n    result = []\n    for s in lst:\n        count = sum(1 for char in s if int(char) % 2 != 0)\n        result.append(f\"the number of odd elements {count}n the str{len(s)}ng {len(s)} of the {len(lst)}nput.\")\n    return result",
+  "review": "WRONG  \nThe code replaces the `i`'s with `len(s)` and `len(lst)`, not the actual count of odd digits. It should use `count` (the number of odd digits) in place of `i`.",
+  "flag": true,
+  "hint": "Fix the string formatting to use `count` instead of `len(s)` and `len(lst)` when replacing the `i`s in the template.",
+  "fix": "def odd_count(lst):\n    \"\"\"Given a list of strings, where each string consists of only digits, return a list.\n    Each element i of the output should be \"the number of odd elements in the\n    string i of the input.\" where all the i's should be replaced by the number\n    of odd digits in the i'th string of the input.\n\n    >>> odd_count(['1234567'])\n    [\"the number of odd elements 4n the str4ng 4 of the 4nput.\"]\n    >>> odd_count(['3',\"11111111\"])\n    [\"the number of odd elements 1n the str1ng 1 of the 1nput.\",\n     \"the number of odd elements 8n the str8ng 8 of the 8nput.\"]\n    \"\"\"\n    result = []\n    for s in lst:\n        count = sum(1 for char in s if int(char) % 2 != 0)\n        result.append(f\"the number of odd elements {count}n the str{count}ng {count} of the {len(lst)}nput.\")\n    return result",
+  "fix_verdict": "fail: AssertionError: Test 1",
+  "review2": "WRONG  \nThe output uses `len(lst)` for the \"nput\" part, but it should use `count` instead of `len(lst)` to match the required pattern."
+ },
+ {
+  "task_id": "HumanEval/114",
+  "verdict": "fail: AssertionError: This prints if this assert fails 1 (good for debugging!)",
+  "code": "def minSubArraySum(nums):\n    if not nums:\n        return 0\n    \n    current_sum = max_sum = nums[0]\n    \n    for num in nums[1:]:\n        current_sum = min(num, current_sum + num)\n        max_sum = max(max_sum, current_sum)\n    \n    return max_sum",
+  "review": "WRONG  \nThe function finds the maximum subarray sum, not the minimum. It should use `max` and `min` appropriately for the minimum sum, but currently it computes the maximum.",
+  "flag": true,
+  "hint": "Fix the variable names: change `max_sum` to `min_sum` and update the logic to track the minimum sum instead of the maximum.",
+  "fix": "def minSubArraySum(nums):\n    if not nums:\n        return 0\n    \n    current_sum = min_sum = nums[0]\n    \n    for num in nums[1:]:\n        current_sum = min(num, current_sum + num)\n        min_sum = min(min_sum, current_sum)\n    \n    return min_sum",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe code finds the minimum subarray sum by comparing each element with the sum of the current subarray, but it incorrectly computes the minimum subarray sum. It does not properly track the minimum sum of any contiguous subarray. For example, in `[-1, -2, -"
+ },
+ {
+  "task_id": "HumanEval/115",
+  "verdict": "fail: AssertionError: Error",
+  "code": "import math\n\ndef max_fill(grid, capacity):\n    total_water_units = sum(sum(row) for row in grid)\n    return math.ceil(total_water_units / capacity)",
+  "review": "CORRECT  \nThe function correctly calculates the total number of water units and returns the ceiling of the division by bucket capacity, which matches the requirement of determining how many times buckets must be lowered to empty all wells.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/116",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef sort_array(arr: List[int]) -> List[int]:\n    return sorted(arr, key=lambda x: (bin(x).count('1'), x))",
+  "review": "WRONG  \nThe task specifies sorting non-negative integers, but the code includes negative numbers in its examples (e.g., `-2, -3, -4, -5, -6`), and `bin(-2)` raises a `ValueError` because `bin()` does not work for",
+  "flag": true,
+  "hint": "The function incorrectly handles negative integers because `bin(x)` raises a ValueError for negative numbers; fix by using `abs(x)` in the key or handling negatives separately.",
+  "fix": "from typing import List\n\ndef sort_array(arr: List[int]) -> List[int]:\n    # Handle negative numbers separately\n    if any(x < 0 for x in arr):\n        raise ValueError(\"Array cannot contain negative numbers.\")\n    \n    # Use abs(x) in the key to handle negative numbers correctly\n    return sorted(arr, key=lambda x: (bin(abs(x)).count('1'), x))",
+  "fix_verdict": "fail: ValueError: Array cannot contain negative numbers.",
+  "review2": "WRONG  \nThe function raises a ValueError for negative numbers, but the task specifies that it should handle negative numbers (as shown in the examples), and the provided examples include negative inputs like [-2, -3, -4, -5, -6]. The code incorrectly raises an exception instead of"
+ },
+ {
+  "task_id": "HumanEval/117",
+  "verdict": "fail: AssertionError: First test error: []",
+  "code": "import re\n\ndef select_words(s, n):\n    if not s:\n        return []\n\n    # Define a regular expression pattern for matching words with exactly n consonants\n    pattern = r'\\b\\w{' + str(n) + '}\\b'\n    \n    # Find all matches in the string\n    matches = re.findall(pattern, s)\n    \n    return matches",
+  "review": "WRONG  \nThe code matches words of exactly `n` letters, not words with exactly `n` consonants. It does not count consonants at all.",
+  "flag": true,
+  "hint": "Fix the regular expression pattern to count exactly n consonants instead of matching words of length n.",
+  "fix": "import re\n\ndef select_words(s, n):\n    if not s:\n        return []\n\n    # Define a regular expression pattern for matching words with exactly n consonants\n    pattern = r'\\b\\w*[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]{n}\\w*\\b'\n    \n    # Find all matches in the string\n    matches = re.findall(pattern, s)\n    \n    return matches",
+  "fix_verdict": "fail: AssertionError: First test error: []",
+  "review2": "WRONG  \nThe regex pattern uses `{n}` directly without escaping or properly constructing the pattern to count exactly `n` consonants, and it fails to ensure that only words with exactly `n` consonants are matched. Also, the pattern is incorrect because `{n}` is not a valid quant"
+ },
+ {
+  "task_id": "HumanEval/118",
+  "verdict": "pass",
+  "code": "def get_closest_vowel(word):\n    vowels = 'aeiouAEIOU'\n    for i in range(len(word) - 2, 0, -1):\n        if word[i] in vowels and word[i-1] not in vowels and word[i+1] not in vowels:\n            return word[i]\n    return ''",
+  "review": "CORRECT  \nThe function correctly iterates from the second-to-last character to the second character (excluding ends), checks if the current character is a vowel surrounded by consonants, and returns the first such vowel found from the right. It handles case sensitivity and returns an empty string if no such vowel exists",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/119",
+  "verdict": "fail: AssertionError",
+  "code": "def match_parens(lst):\n    \"\"\"\n    You are given a list of two strings, both strings consist of open\n    parentheses '(' or close parentheses ')' only.\n    Your job is to check if it is possible to concatenate the two strings in\n    some order, that the resulting string will be good.\n    A string S is considered to be good if and only if all parentheses in S\n    are balanced. For example: the string '(())()' is good, while the string\n    '())' is not.\n    Return 'Yes' if there's a way to make a good string, and return 'No' otherwise.\n\n    Examples:\n    match_parens(['()(', ')']) == 'Yes'\n    match_parens([')', ')']) == 'No'\n    \"\"\"\n    # Count the number of opening and closing parentheses in each string\n    count1 = lst[0].count('(')\n    count2 = lst[1].count(')')\n    \n    # If the total number of opening parentheses is greater than the total number of closing ones,\n    # it's impossible to balance the parentheses by concatenating in any order.\n    if count1 > count2:\n        return 'No'\n    \n    # Check if we can balance the parentheses by adding an extra opening parenthesis to the first string\n    # or a closing parenthesis to the second string.\n    if (count1 - count2) % 2 == 0:\n        return 'Yes'\n    \n    return 'No'",
+  "review": "WRONG  \nThe code incorrectly checks the balance condition and uses the wrong logic for determining if a balanced string is possible. It fails to properly account for the actual opening and closing parentheses in both strings and misuses the modulo condition.",
+  "flag": true,
+  "hint": "The code incorrectly calculates the total opening and closing parentheses and misapplies the balance condition; fix by properly counting total opening and closing parentheses from both strings and ensuring the total opening equals total closing, with a valid balance at every prefix.",
+  "fix": "def match_parens(lst):\n    \"\"\"\n    You are given a list of two strings, both strings consist of open\n    parentheses '(' or close parentheses ')' only.\n    Your job is to check if it is possible to concatenate the two strings in\n    some order, that the resulting string will be good.\n    A string S is considered to be good if and only if all parentheses in S\n    are balanced. For example: the string '(())()' is good, while the string\n    '())' is not.\n    Return 'Yes' if there's a way to make a good string, and return 'No' otherwise.\n\n    Examples:\n    match_parens(['()(', ')']) == 'Yes'\n    match_parens([')', ')']) == 'No'\n    \"\"\"\n    # Initialize counters for opening and closing parentheses\n    open_count1 = 0\n    open_count2 = 0\n    \n    # Iterate through the first string to count opening parentheses\n    for char in lst[0]:\n        if char == '(':\n            open_count1 += 1\n    \n    # Iterate through the second string to count closing parentheses\n    for char in lst[1]:\n        if char == ')':\n            open_count2 += 1\n    \n    # Calculate the total number of opening and closing parentheses\n    total_open = open_count1 + open_count2\n    total_close = open_count1 + open_count2\n    \n    # Check if the total number of opening parentheses is greater than the total number of closing ones\n    if total_open > total_close:\n        return 'No'\n    \n    # Check if we can balance the parentheses by adding an extra opening parenthesis to the first string\n    # or a closing parenthesis to the second string.\n    if (total_open - total_close) % 2 == 0:\n        return 'Yes'\n    \n    return 'No'",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG  \nThe code incorrectly checks the balance condition and uses flawed logic for determining if a balanced string is possible. It incorrectly assumes that if the total open and close counts are equal, the string can be balanced, but it fails to properly evaluate the feasibility of concatenation in either order. For example"
+ },
+ {
+  "task_id": "HumanEval/120",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef maximum(arr: List[int], k: int) -> List[int]:\n    # Sort the array in descending order\n    arr.sort(reverse=True)\n    \n    # Return the first k elements from the sorted array\n    return arr[:k]",
+  "review": "CORRECT  \nThe function sorts the array in descending order and returns the first k elements, which are the largest k numbers, matching the required behavior.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/121",
+  "verdict": "pass",
+  "code": "def solution(lst):\n    \"\"\"Given a non-empty list of integers, return the sum of all of the odd elements that are in even positions.\n\n    Examples\n    solution([5, 8, 7, 1]) ==> 12\n    solution([3, 3, 3, 3, 3]) ==> 9\n    solution([30, 13, 24, 321]) ==>0\n    \"\"\"\n    return sum(x for i, x in enumerate(lst) if i % 2 == 0 and x % 2 != 0)",
+  "review": "WRONG  \nThe function sums odd elements at even indices, but the example `solution([5, 8, 7, 1])` should return 12. Here, index 0: 5 (odd, even index) → 5, index 2: 7",
+  "flag": true,
+  "hint": "The function incorrectly checks for odd elements at even *indices*, but the problem asks for odd elements at even *positions*—which typically means positions starting from 1 (i.e., 2nd, 4th, etc.), so it should check indices starting from 1 (i.e.,",
+  "fix": "def solution(lst):\n    \"\"\"Given a non-empty list of integers, return the sum of all of the odd elements that are in even positions.\n\n    Examples\n    solution([5, 8, 7, 1]) ==> 12\n    solution([3, 3, 3, 3, 3]) ==> 9\n    solution([30, 13, 24, 321]) ==>0\n    \"\"\"\n    return sum(x for i, x in enumerate(lst) if i + 1 % 2 == 0 and x % 2 != 0)",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG  \nThe condition `i + 1 % 2 == 0` checks for even *positions* incorrectly — it should be `i % 2 == 0` for even indices (0-based), but the problem says \"even positions\", which typically means 2nd,"
+ },
+ {
+  "task_id": "HumanEval/122",
+  "verdict": "pass",
+  "code": "def add_elements(arr, k):\n    \"\"\"\n    Given a non-empty array of integers arr and an integer k, return\n    the sum of the elements with at most two digits from the first k elements of arr.\n\n    Example:\n\n        Input: arr = [111,21,3,4000,5,6,7,8,9], k = 4\n        Output: 24 # sum of 21 + 3\n\n    Constraints:\n        1. 1 <= len(arr) <= 100\n        2. 1 <= k <= len(arr)\n    \"\"\"\n    total_sum = 0\n    for i in range(k):\n        if -99 < arr[i] < 100:\n            total_sum += arr[i]\n    return total_sum",
+  "review": "CORRECT  \nThe code correctly sums elements from the first k elements that have at most two digits (i.e., values between -99 and 99), which matches the problem description and example.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/123",
+  "verdict": "fail: AssertionError: Test case 2 failed",
+  "code": "def get_odd_collatz(n):\n    \"\"\"\n    Given a positive integer n, return a sorted list that has the odd numbers in collatz sequence.\n\n    The Collatz conjecture is a conjecture in mathematics that concerns a sequence defined\n    as follows: start with any positive integer n. Then each term is obtained from the \n    previous term as follows: if the previous term is even, the next term is one half of \n    the previous term. If the previous term is odd, the next term is 3 times the previous\n    term plus 1. The conjecture is that no matter what value of n, the sequence will always reach 1.\n\n    Note: \n        1. Collatz(1) is [1].\n        2. returned list sorted in increasing order.\n\n    For example:\n    get_odd_collatz(5) returns [1, 5] # The collatz sequence for 5 is [5, 16, 8, 4, 2, 1], so the odd numbers are only 1, and 5.\n    \"\"\"\n    def collatz_sequence(num):\n        sequence = []\n        while num != 1:\n            sequence.append(num)\n            if num % 2 == 0:\n                num //= 2\n            else:\n                num = 3 * num + 1\n        sequence.append(1)\n        return sequence\n    \n    odd_numbers = [num for num in collatz_sequence(n) if num % 2 != 0]\n    return sorted(odd_numbers)\n\n# Check function to verify the correctness of the solution\ndef check_solution():\n    assert get_odd_collatz(5) == [1, 5], \"Test case 1 failed\"\n    assert get_odd_collatz(7) == [1, 7, 11, 17, 21, 85], \"Test case 2 failed\"\n    assert get_odd_collatz(1) == [1], \"Test case 3 failed\"\n    assert get_odd_collatz(10) == [1, 5, 17, 85], \"Test case 4 failed\"\n    print(\"All test cases passed!\")\n\ncheck_solution()",
+  "review": "CORRECT  \nThe function correctly generates the Collatz sequence, extracts the odd numbers, and returns them in sorted order.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/124",
+  "verdict": "pass",
+  "code": "import re\n\ndef valid_date(date):\n    # Regular expression to match the date format mm-dd-yyyy\n    pattern = r\"^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[012])-\\d{4}$\"\n    \n    # Check if the date matches the pattern\n    if re.match(pattern, date):\n        # Extract month, day, and year from the date string\n        month, day, year = map(int, date.split('-'))\n        \n        # Check if the month is between 1 and 12\n        if month < 1 or month > 12:\n            return False\n        \n        # Check if the day is valid based on the month\n        if month in [1, 3, 5, 7, 8, 10, 12]:\n            if day < 1 or day > 31:\n                return False\n        elif month in [4, 6, 9, 11]:\n            if day < 1 or day > 30:\n                return False\n        elif month == 2:\n            if day < 1 or day > 29:\n                return False\n        \n        return True\n    else:\n        return False",
+  "review": "WRONG  \nThe regular expression does not correctly validate the format: it allows months like \"30\" or \"31\" in the month part, which violates the rule that months must be between 1 and 12. For example, \"30-01-200",
+  "flag": true,
+  "hint": "Fix the regular expression pattern to correctly validate the month and day ranges, as the current pattern allows invalid months like \"30\" or \"31\" for months that only allow up to 30 or 31 days, and it incorrectly permits months like \"30\" or \"3",
+  "fix": "import re\n\ndef valid_date(date):\n    # Regular expression to match the date format mm-dd-yyyy\n    pattern = r\"^(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])-\\d{4}$\"\n    \n    # Check if the date matches the pattern\n    if re.match(pattern, date):\n        # Extract month, day, and year from the date string\n        month, day, year = map(int, date.split('-'))\n        \n        # Check if the month is between 1 and 12\n        if month < 1 or month > 12:\n            return False\n        \n        # Check if the day is valid based on the month\n        if month in [1, 3, 5, 7, 8, 10, 12]:\n            if day < 1 or day > 31:\n                return False\n        elif month in [4, 6, 9, 11]:\n            if day < 1 or day > 30:\n                return False\n        elif month == 2:\n            if day < 1 or day > 29:\n                return False\n        \n        return True\n    else:\n        return False",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe regex pattern incorrectly allows days like \"31\" in April (month 4), which should be invalid, and it does not properly validate February days (e.g., 29 in non-leap years). The pattern also fails to account for leap years, which means February"
+ },
+ {
+  "task_id": "HumanEval/125",
+  "verdict": "pass",
+  "code": "def split_words(txt):\n    # Check for spaces and split accordingly\n    if ' ' in txt:\n        return txt.split()\n    \n    # Check for commas and split accordingly\n    elif ',' in txt:\n        return txt.split(',')\n    \n    # Count lowercase letters with odd order in the alphabet\n    else:\n        count = sum(1 for char in txt if char.islower() and (ord(char) - ord('a')) % 2 == 1)\n        return count",
+  "review": "CORRECT  \nThe function correctly handles splitting on whitespace, commas, and falls back to counting lowercase letters with odd alphabetical positions when neither is present.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/126",
+  "verdict": "pass",
+  "code": "def is_sorted(lst):\n    \"\"\"\n    Given a list of numbers, return whether or not they are sorted\n    in ascending order. If list has more than 1 duplicate of the same\n    number, return False. Assume no negative numbers and only integers.\n\n    Examples\n    is_sorted([5]) ➞ True\n    is_sorted([1, 2, 3, 4, 5]) ➞ True\n    is_sorted([1, 3, 2, 4, 5]) ➞ False\n    is_sorted([1, 2, 3, 4, 5, 6]) ➞ True\n    is_sorted([1, 2, 3, 4, 5, 6, 7]) ➞ True\n    is_sorted([1, 3, 2, 4, 5, 6, 7]) ➞ False\n    is_sorted([1, 2, 2, 3, 3, 4]) ➞ True\n    is_sorted([1, 2, 2, 2, 3, 4]) ➞ False\n    \"\"\"\n    # Check if the list is empty or contains only one element\n    if len(lst) <= 1:\n        return True\n    \n    # Iterate through the list to check for duplicates and sorting order\n    for i in range(len(lst) - 1):\n        if lst[i] > lst[i + 1]:\n            return False\n        elif lst[i] == lst[i + 1]:\n            # Check for more than one duplicate\n            if i < len(lst) - 2 and lst[i] == lst[i + 2]:\n                return False\n    \n    return True",
+  "review": "WRONG\n\nThe code incorrectly checks for \"more than one duplicate\" by only comparing `lst[i] == lst[i+2]`, which fails to detect cases where a number appears more than twice in a row or in non-consecutive positions. For example, `[1, 2,",
+  "flag": true,
+  "hint": "The function incorrectly checks for consecutive duplicates by comparing `lst[i] == lst[i + 2]`, which only catches duplicates that are two apart, missing cases like three consecutive duplicates or duplicates that aren't adjacent. Fix by checking if any element is equal to the next one and then verifying that the",
+  "fix": "def is_sorted(lst):\n    \"\"\"\n    Given a list of numbers, return whether or not they are sorted\n    in ascending order. If list has more than 1 duplicate of the same\n    number, return False. Assume no negative numbers and only integers.\n\n    Examples\n    is_sorted([5]) ➞ True\n    is_sorted([1, 2, 3, 4, 5]) ➞ True\n    is_sorted([1, 3, 2, 4, 5]) ➞ False\n    is_sorted([1, 2, 3, 4, 5, 6]) ➞ True\n    is_sorted([1, 2, 3, 4, 5, 6, 7]) ➞ True\n    is_sorted([1, 3, 2, 4, 5, 6, 7]) ➞ False\n    is_sorted([1, 2, 2, 3, 3, 4]) ➞ True\n    is_sorted([1, 2, 2, 2, 3, 4]) ➞ False\n    \"\"\"\n    # Check if the list is empty or contains only one element\n    if len(lst) <= 1:\n        return True\n    \n    # Iterate through the list to check for duplicates and sorting order\n    for i in range(len(lst) - 1):\n        if lst[i] == lst[i + 1]:\n            # Check for more than one duplicate\n            if i < len(lst) - 2 and lst[i] == lst[i + 2]:\n                return False\n            else:\n                # Check for consecutive duplicates\n                if i < len(lst) - 3 and lst[i] == lst[i + 3]:\n                    return False\n    \n    return True",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG\n\nThe code incorrectly checks for \"more than one duplicate\" by only looking at specific indices (like i and i+2 or i+3), which does not properly detect multiple consecutive duplicates. For example, in `[1, 2, 2, 2, 3,"
+ },
+ {
+  "task_id": "HumanEval/127",
+  "verdict": "fail: AssertionError",
+  "code": "from math import sqrt\n\ndef is_prime(n):\n    if n <= 1:\n        return False\n    for i in range(2, int(sqrt(n)) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef intersection(interval1, interval2):\n    start_max = max(interval1[0], interval2[0])\n    end_min = min(interval1[1], interval2[1])\n    \n    if start_max > end_min:\n        return \"NO\"\n    \n    intersection_length = end_min - start_max + 1\n    \n    if is_prime(intersection_length):\n        return \"YES\"\n    else:\n        return \"NO\"",
+  "review": "CORRECT  \nThe function correctly calculates the intersection length of two closed intervals and checks if that length is a prime number, returning \"YES\" if it is prime and \"NO\" otherwise.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/128",
+  "verdict": "pass",
+  "code": "from functools import reduce\n\ndef prod_signs(arr):\n    if not arr:\n        return None\n    \n    # Calculate the product of all signs\n    sign_product = reduce(lambda x, y: x * y, map(lambda x: 1 if x > 0 else -1 if x < 0 else 0, arr))\n    \n    # Calculate the sum of magnitudes multiplied by the product of signs\n    result = sum(abs(x) * sign_product for x in arr)\n    \n    return result",
+  "review": "WRONG  \nThe function returns 0 when any element is 0, because the sign product becomes 0, and then the entire result is 0. However, the problem states that the product of signs includes 0 for any zero element, which makes the overall sign product 0, and",
+  "flag": true,
+  "hint": "Fix the sign product calculation by returning 0 immediately if any element is 0, since the presence of a zero makes the product of signs zero.",
+  "fix": "from functools import reduce\n\ndef prod_signs(arr):\n    if not arr:\n        return None\n    \n    # Check for the presence of zero in the array\n    if 0 in arr:\n        return 0\n    \n    # Calculate the product of all signs\n    sign_product = reduce(lambda x, y: x * y, map(lambda x: 1 if x > 0 else -1 if x < 0 else 0, arr))\n    \n    # Calculate the sum of magnitudes multiplied by the product of signs\n    result = sum(abs(x) * sign_product for x in arr)\n    \n    return result",
+  "fix_verdict": "pass",
+  "review2": "WRONG\n\nThe function returns 0 if there is a zero in the array, but according to the task, if there is a zero, the product of signs should include 0, making the entire product 0, and thus the result should be 0. However, the logic is flawed"
+ },
+ {
+  "task_id": "HumanEval/129",
+  "verdict": "fail: TypeError: '<' not supported between instances of 'list' and 'float'",
+  "code": "from typing import List\n\ndef minPath(grid: List[List[int]], k: int) -> List[int]:\n    n = len(grid)\n    directions = [(0, 1), (1, 0), (-1, 0), (0, -1)]\n    \n    def dfs(x, y, path, steps):\n        if steps == k:\n            return path\n        \n        min_path = float('inf')\n        for dx, dy in directions:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < n and 0 <= ny < n:\n                new_path = path + [grid[nx][ny]]\n                min_path = min(min_path, dfs(nx, ny, new_path, steps + 1))\n        \n        return min_path\n    \n    min_values = []\n    for i in range(n):\n        for j in range(n):\n            min_values.append(dfs(i, j, [grid[i][j]], 1))\n    \n    return sorted(min_values)[0]",
+  "review": "WRONG  \nThe code uses `min_path` as a list of values and compares them lexicographically, but it incorrectly returns `min_path` which is a list of lists, and the comparison is not properly handled. Also, `min_path` is initialized as `float('inf')`",
+  "flag": true,
+  "hint": "The code incorrectly returns the lexicographically smallest path by comparing entire paths as numbers (using `min` on lists), which is invalid and leads to incorrect results; it should compare paths lexicographically at each step during DFS, not at the end.",
+  "fix": "from typing import List\n\ndef minPath(grid: List[List[int]], k: int) -> List[int]:\n    n = len(grid)\n    directions = [(0, 1), (1, 0), (-1, 0), (0, -1)]\n    \n    def dfs(x, y, path, steps):\n        if steps == k:\n            return path\n        \n        min_path = float('inf')\n        for dx, dy in directions:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < n and 0 <= ny < n:\n                new_path = path + [grid[nx][ny]]\n                min_path = min(min_path, dfs(nx, ny, new_path, steps + 1))\n        \n        return min_path\n    \n    min_values = []\n    for i in range(n):\n        for j in range(n):\n            min_values.append(dfs(i, j, [grid[i][j]], 1))\n    \n    # Sort the paths lexicographically at each step\n    min_paths_sorted = sorted(min_values, key=lambda x: tuple(x))\n    \n    # Return the first path in the sorted list\n    return min_paths_sorted[0]",
+  "fix_verdict": "fail: TypeError: '<' not supported between instances of 'list' and 'float'",
+  "review2": "WRONG\n\nThe code has a fundamental flaw: it returns `min_path` which is a comparison of lists (via `min`), but `min` on lists does not work as expected for lexicographic comparison in this context. Moreover, `min_path` is being used as a value"
+ },
+ {
+  "task_id": "HumanEval/130",
+  "verdict": "fail: IndexError: list index out of range",
+  "code": "def tri(n):\n    \"\"\"Everyone knows Fibonacci sequence, it was studied deeply by mathematicians in \n    the last couple centuries. However, what people don't know is Tribonacci sequence.\n    Tribonacci sequence is defined by the recurrence:\n    tri(1) = 3\n    tri(n) = 1 + n / 2, if n is even.\n    tri(n) =  tri(n - 1) + tri(n - 2) + tri(n + 1), if n is odd.\n    For example:\n    tri(2) = 1 + (2 / 2) = 2\n    tri(4) = 3\n    tri(3) = tri(2) + tri(1) + tri(4)\n           = 2 + 3 + 3 = 8 \n    You are given a non-negative integer number n, you have to a return a list of the \n    first n + 1 numbers of the Tribonacci sequence.\n    Examples:\n    tri(3) = [1, 3, 2, 8]\n    \"\"\"\n    if n == 0:\n        return []\n    elif n == 1:\n        return [3]\n    elif n == 2:\n        return [3, 2]\n    \n    result = [3, 3, 2]\n    for i in range(3, n + 1):\n        if i % 2 == 0:\n            result.append(result[i-1] + result[i//2])\n        else:\n            result.append(result[i-1] + result[i-2] + result[i+1])\n    return result",
+  "review": "WRONG  \nThe recurrence relation for odd n references `tri(n + 1)`, which is not defined when computing `tri(n)`, leading to infinite recursion or incorrect values.",
+  "flag": true,
+  "hint": "Fix the recurrence relation for odd n: `result[i-1] + result[i-2] + result[i+1]` references a future term `result[i+1]` that hasn't been computed yet, which is incorrect. Use `result[i-1] + result[i-",
+  "fix": "def tri(n):\n    \"\"\"Everyone knows Fibonacci sequence, it was studied deeply by mathematicians in \n    the last couple centuries. However, what people don't know is Tribonacci sequence.\n    Tribonacci sequence is defined by the recurrence:\n    tri(1) = 3\n    tri(n) = 1 + n / 2, if n is even.\n    tri(n) =  tri(n - 1) + tri(n - 2) + tri(n + 1), if n is odd.\n    For example:\n    tri(2) = 1 + (2 / 2) = 2\n    tri(4) = 3\n    tri(3) = tri(2) + tri(1) + tri(4)\n           = 2 + 3 + 3 = 8 \n    You are given a non-negative integer number n, you have to a return a list of the \n    first n + 1 numbers of the Tribonacci sequence.\n    Examples:\n    tri(3) = [1, 3, 2, 8]\n    \"\"\"\n    if n == 0:\n        return []\n    elif n == 1:\n        return [3]\n    elif n == 2:\n        return [3, 2]\n    \n    result = [3, 3, 2]\n    for i in range(3, n + 1):\n        if i % 2 == 0:\n            result.append(result[i-1] + result[i//2])\n        else:\n            result.append(result[i-1] + result[i-2] + result[i-1])  # Corrected reference to previous term\n    return result",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG  \nThe recurrence relation for odd n is incorrectly defined in the code. It states `tri(n) = tri(n-1) + tri(n-2) + tri(n+1)`, which is circular and invalid because it references a future term `tri(n+1)`. The"
+ },
+ {
+  "task_id": "HumanEval/131",
+  "verdict": "pass",
+  "code": "def digits(n):\n    \"\"\"Given a positive integer n, return the product of the odd digits.\n    Return 0 if all digits are even.\n    For example:\n    digits(1)  == 1\n    digits(4)  == 0\n    digits(235) == 15\n    \"\"\"\n    product = 1\n    has_odd = False\n    \n    while n > 0:\n        digit = n % 10\n        if digit % 2 != 0:\n            product *= digit\n            has_odd = True\n        n //= 10\n    \n    return product if has_odd else 0",
+  "review": "CORRECT  \nThe function correctly computes the product of odd digits and returns 0 if no odd digits are present.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/132",
+  "verdict": "fail: AssertionError: This prints if this assert fails 1 (good for debugging!)",
+  "code": "def is_nested(string):\n    stack = []\n    for char in string:\n        if char == '[':\n            stack.append(char)\n        elif char == ']':\n            if not stack or stack.pop() != '[':\n                return False\n    return len(stack) > 0",
+  "review": "WRONG  \nThe function checks if there are unmatched brackets (i.e., if the string is properly closed), but it does not verify whether there is a **nested** subsequence of brackets. For example, it would return `False` for `'[[]]'` because it correctly identifies that the",
+  "flag": true,
+  "hint": "The function incorrectly checks for balanced brackets instead of verifying the presence of a nested subsequence; it should track the depth of brackets to detect nesting (i.e., at least one pair of brackets containing another pair), not just balance. Fix by modifying the logic to check if the maximum depth exceeds 1",
+  "fix": "def is_nested(string):\n    max_depth = 0\n    current_depth = 0\n    for char in string:\n        if char == '[':\n            current_depth += 1\n            max_depth = max(max_depth, current_depth)\n        elif char == ']':\n            current_depth -= 1\n    return max_depth > 1",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "CORRECT  \nThe function correctly checks if there is at least one pair of brackets that is nested by verifying if the maximum depth of nesting exceeds 1."
+ },
+ {
+  "task_id": "HumanEval/133",
+  "verdict": "pass",
+  "code": "import math\n\ndef sum_squares(lst):\n    # Round each element in the list to the upper int(Ceiling)\n    rounded_lst = [math.ceil(x) for x in lst]\n    \n    # Calculate the sum of squared numbers\n    result = sum([x**2 for x in rounded_lst])\n    \n    return result",
+  "review": "CORRECT  \nThe function correctly rounds each element to the ceiling, squares them, and returns their sum, matching all provided examples.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/134",
+  "verdict": "pass",
+  "code": "import re\n\ndef check_if_last_char_is_a_letter(txt):\n    # Check if the string ends with a letter and is not part of a word\n    return bool(re.search(r'\\b[a-zA-Z]\\b$', txt))",
+  "review": "WRONG\n\nThe regex `\\b[a-zA-Z]\\b$` matches a letter that is a word boundary, but it fails to correctly handle the case where the last character is a letter not part of a word (e.g., after a space). The pattern `\\b[a-zA-Z]\\b",
+  "flag": true,
+  "hint": "The regex pattern `\\b[a-zA-Z]\\b$` is incorrect because `\\b` at the end anchors to word boundaries that don't account for the last character being standalone; it should check if the last character is a letter not preceded by a letter, not part of a word. Fix the",
+  "fix": "import re\n\ndef check_if_last_char_is_a_letter(txt):\n    # Check if the string ends with a letter and is not part of a word\n    return bool(re.search(r'[a-zA-Z]$', txt) and not re.search(r'\\b[a-zA-Z]', txt[:-1]))",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG\n\nThe code incorrectly checks if the last character is a letter and not part of a word, but the condition `not re.search(r'\\b[a-zA-Z]', txt[:-1])` fails to properly detect whether the last character is isolated (not part of a word). It checks if"
+ },
+ {
+  "task_id": "HumanEval/135",
+  "verdict": "fail: AssertionError",
+  "code": "def can_arrange(arr):\n    for i in range(1, len(arr)):\n        if arr[i] < arr[i-1]:\n            return i\n    return -1",
+  "review": "CORRECT  \nThe function returns the largest index where an element is strictly less than the previous one, which matches the requirement of finding the largest index where the element is not greater than or equal to the preceding element.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/136",
+  "verdict": "pass",
+  "code": "def largest_smallest_integers(lst):\n    \"\"\"\n    Create a function that returns a tuple (a, b), where 'a' is\n    the largest of negative integers, and 'b' is the smallest\n    of positive integers in a list.\n    If there is no negative or positive integers, return them as None.\n\n    Examples:\n    largest_smallest_integers([2, 4, 1, 3, 5, 7]) == (None, 1)\n    largest_smallest_integers([]) == (None, None)\n    largest_smallest_integers([0]) == (None, None)\n    \"\"\"\n    negatives = [x for x in lst if x < 0]\n    positives = [x for x in lst if x > 0]\n\n    if not negatives:\n        a = None\n    else:\n        a = max(negatives)\n\n    if not positives:\n        b = None\n    else:\n        b = min(positives)\n\n    return (a, b)",
+  "review": "CORRECT  \nThe function correctly identifies the largest negative integer and the smallest positive integer, returning `None` when no such integers exist.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/137",
+  "verdict": "fail: AssertionError",
+  "code": "def compare_one(a, b):\n    # Convert strings to float for comparison\n    if isinstance(a, str):\n        a = float(a.replace(',', '.'))\n    if isinstance(b, str):\n        b = float(b.replace(',', '.'))\n\n    # Compare the values\n    if a > b:\n        return a\n    elif b > a:\n        return b\n    else:\n        return None",
+  "review": "WRONG  \nThe function converts both inputs to floats for comparison but returns the original types only if they were integers or floats. However, when one input is a string (like \"2,3\"), it converts it to a float internally and then returns the float value, not the original string. This",
+  "flag": true,
+  "hint": "Fix the function to return the larger value in its original type (not converted to float) by preserving the input type when returning.",
+  "fix": "def compare_one(a, b):\n    # Check if both inputs are of the same type\n    if type(a) != type(b):\n        raise TypeError(\"Both arguments must be of the same type\")\n\n    # Compare the values\n    if a > b:\n        return a\n    elif b > a:\n        return b\n    else:\n        return None",
+  "fix_verdict": "fail: TypeError: Both arguments must be of the same type",
+  "review2": "WRONG  \nThe function raises a TypeError if the types of a and b are different, but the task specifies that the function should handle integers, floats, or strings representing real numbers. It should not raise an error in such cases—instead, it should convert strings with . or , to floats for"
+ },
+ {
+  "task_id": "HumanEval/138",
+  "verdict": "fail: AssertionError",
+  "code": "def is_equal_to_sum_even(n):\n    # Check if n is less than or equal to 0, which cannot be expressed as the sum of four positive even numbers\n    if n <= 0:\n        return False\n    \n    # Since the smallest sum of four positive even numbers is 2 + 2 + 2 + 2 = 8,\n    # any number less than 8 cannot be expressed as such a sum.\n    if n < 8:\n        return False\n    \n    # If n is greater than or equal to 8, it can always be expressed as the sum of four positive even numbers.\n    # For example, for n = 8, we can write it as 2 + 2 + 2 + 2.\n    return True",
+  "review": "CORRECT  \nThe function correctly identifies that the smallest sum of four positive even numbers is 8, and any number ≥ 8 can be expressed as such a sum.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/139",
+  "verdict": "pass",
+  "code": "from math import factorial\n\ndef special_factorial(n):\n    \"\"\"The Brazilian factorial is defined as:\n    brazilian_factorial(n) = n! * (n-1)! * (n-2)! * ... * 1!\n    where n > 0\n\n    For example:\n    >>> special_factorial(4)\n    288\n\n    The function will receive an integer as input and should return the special\n    factorial of this integer.\n    \"\"\"\n    result = 1\n    for i in range(1, n + 1):\n        result *= factorial(i)\n    return result",
+  "review": "CORRECT  \nThe function correctly computes the product of factorials from 1! to n!, which matches the definition of the Brazilian factorial.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/140",
+  "verdict": "fail: AssertionError: This prints if this assert fails 4 (good for debugging!)",
+  "code": "def fix_spaces(text):\n    result = []\n    space_count = 0\n    \n    for char in text:\n        if char == ' ':\n            space_count += 1\n        else:\n            if space_count > 2:\n                result.append('-' * space_count)\n            elif space_count > 0:\n                result.append('_' * space_count)\n            space_count = 0\n            result.append(char)\n    \n    # Handle trailing spaces\n    if space_count > 2:\n        result.append('-' * space_count)\n    elif space_count > 0:\n        result.append('_' * space_count)\n    \n    return ''.join(result)",
+  "review": "WRONG  \nThe code incorrectly handles the case where there are spaces at the end of the string and also misplaces the character appending logic—spaces are not properly separated from non-space characters. Specifically, the `result.append(char)` is placed inside the `else` block, which means it will be",
+  "flag": true,
+  "hint": "The code incorrectly appends the character after resetting `space_count` and fails to handle the case where spaces are at the end of the string properly; fix by moving the character append inside the `else` block and ensuring the trailing spaces are handled correctly after the loop.",
+  "fix": "def fix_spaces(text):\n    result = []\n    space_count = 0\n    \n    for char in text:\n        if char == ' ':\n            space_count += 1\n        else:\n            if space_count > 2:\n                result.append('-' * space_count)\n            elif space_count > 0:\n                result.append('_' * space_count)\n            result.append(char)\n            space_count = 0\n    \n    # Handle trailing spaces\n    if space_count > 2:\n        result.append('-' * space_count)\n    elif space_count > 0:\n        result.append('_' * space_count)\n    \n    return ''.join(result)",
+  "fix_verdict": "fail: AssertionError: This prints if this assert fails 4 (good for debugging!)",
+  "review2": "WRONG  \nThe code incorrectly handles the case where spaces are followed by non-space characters. It resets `space_count` after appending a non-space character, but the logic for appending underscores or hyphens is applied only when a space is encountered, and the character is appended after the space count is"
+ },
+ {
+  "task_id": "HumanEval/141",
+  "verdict": "fail: AssertionError",
+  "code": "import re\n\ndef file_name_check(file_name):\n    # Regular expression pattern for validating the file name\n    pattern = r'^[a-zA-Z][a-zA-Z0-9]{0,2}\\.[txt|exe|dll]$'\n    \n    # Check if the file name matches the pattern\n    if re.match(pattern, file_name):\n        return 'Yes'\n    else:\n        return 'No'\n\n# Test cases\nprint(file_name_check(\"example.txt\"))  # Output: Yes\nprint(file_name_check(\"1example.dll\"))  # Output: No\nprint(file_name_check(\"validfile.exe\"))  # Output: Yes\nprint(file_name_check(\".hiddenfile\"))  # Output: No\nprint(file_name_check(\"noextension\"))  # Output: No\nprint(file_name_check(\"too_many_digits_123456789.txt\"))  # Output: No",
+  "review": "WRONG\n\nThe regex pattern does not limit the total number of digits to three, so files with more than three digits (like \"too_many_digits_123456789.txt\") will be incorrectly accepted.",
+  "flag": true,
+  "hint": "The regex pattern incorrectly limits the total number of digits to 3 (via `[a-zA-Z0-9]{0,2}`) and fails to enforce that the total digits in the entire filename are at most three, so fix the pattern to allow up to three digits anywhere in the filename before",
+  "fix": "import re\n\ndef file_name_check(file_name):\n    # Regular expression pattern for validating the file name\n    pattern = r'^[a-zA-Z][a-zA-Z0-9]*\\d{0,3}\\.[txt|exe|dll]$'\n    \n    # Check if the file name matches the pattern\n    if re.match(pattern, file_name):\n        return 'Yes'\n    else:\n        return 'No'\n\n# Test cases\nprint(file_name_check(\"example.txt\"))  # Output: Yes\nprint(file_name_check(\"1example.dll\"))  # Output: No\nprint(file_name_check(\"validfile.exe\"))  # Output: Yes\nprint(file_name_check(\".hiddenfile\"))  # Output: No\nprint(file_name_check(\"noextension\"))  # Output: No\nprint(file_name_check(\"too_many_digits_123456789.txt\"))  # Output: Yes",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG  \nThe regex allows more than three digits (e.g., \"123456789\") and does not properly enforce a maximum of three digits in total, violating the task requirement."
+ },
+ {
+  "task_id": "HumanEval/142",
+  "verdict": "fail: AssertionError",
+  "code": "def sum_squares(lst):\n    total_sum = 0\n    for i, num in enumerate(lst):\n        if i % 3 == 0:\n            total_sum += num ** 2\n        elif i % 4 == 0:\n            total_sum += num ** 3\n    return total_sum",
+  "review": "WRONG  \nThe function incorrectly handles the condition: it cubes numbers at indices that are multiples of 4 *and* not multiples of 3, but the code checks `elif i % 4 == 0` after `if i % 3 == 0`, meaning indices that are multiples",
+  "flag": true,
+  "hint": "The condition is reversed: it should cube entries at indices multiple of 4 but *not* multiple of 3, not just at multiples of 4. Fix the `elif` condition to check `i % 4 == 0 and i % 3 != 0`.",
+  "fix": "def sum_squares(lst):\n    total_sum = 0\n    for i, num in enumerate(lst):\n        if i % 3 == 0:\n            total_sum += num ** 2\n        elif i % 4 == 0 and i % 3 != 0:\n            total_sum += num ** 3\n    return total_sum",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "CORRECT  \nThe function correctly squares elements at indices that are multiples of 3 and cubes elements at indices that are multiples of 4 but not of 3, returning the sum as required."
+ },
+ {
+  "task_id": "HumanEval/143",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef is_prime(n: int) -> bool:\n    \"\"\"Check if a number is prime.\"\"\"\n    if n <= 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    max_divisor = int(n**0.5)\n    for i in range(3, max_divisor + 1, 2):\n        if n % i == 0:\n            return False\n    return True\n\ndef words_in_sentence(sentence: str) -> str:\n    \"\"\"\n    Return a string containing the words from the original sentence,\n    whose lengths are prime numbers,\n    the order of the words in the new string should be the same as the original one.\n    \"\"\"\n    words = sentence.split()\n    prime_words = [word for word in words if is_prime(len(word))]\n    return ' '.join(prime_words)\n\n# Check function with provided data points\nassert words_in_sentence(\"This is a test\") == \"is\"\nassert words_in_sentence(\"lets go for swimming\") == \"go for\"",
+  "review": "CORRECT  \nThe function correctly identifies words with prime lengths and returns them in the original order.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/144",
+  "verdict": "pass",
+  "code": "from fractions import Fraction\n\ndef simplify(x, n):\n    # Convert the string representations of the fractions to Fraction objects\n    frac_x = Fraction(x)\n    frac_n = Fraction(n)\n    \n    # Multiply the two fractions\n    product = frac_x * frac_n\n    \n    # Check if the product is an integer by comparing it to its integer part\n    return product.denominator == 1",
+  "review": "CORRECT  \nThe function correctly checks if the product of two fractions is a whole number by verifying that the denominator of the resulting fraction is 1.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/145",
+  "verdict": "fail: AssertionError",
+  "code": "from typing import List\n\ndef order_by_points(nums: List[int]) -> List[int]:\n    def digit_sum(n: int) -> int:\n        return sum(int(digit) for digit in str(abs(n)))\n\n    return sorted(nums, key=lambda x: (digit_sum(x), nums.index(x)))",
+  "review": "WRONG  \nUsing `nums.index(x)` in the `sorted` function is incorrect because `nums.index(x)` will recompute the index each time and is not stable or reliable when there are duplicates or when the list is modified during sorting. Also, it's inefficient and can lead to errors (",
+  "flag": true,
+  "hint": "Replace `nums.index(x)` with `nums.index(x)` only if `x` is in `nums`, but since `nums.index(x)` is called repeatedly and inefficiently, and may fail for duplicates, fix the key to use the original index by pairing with `enumerate` and `list.index",
+  "fix": "from typing import List\n\ndef order_by_points(nums: List[int]) -> List[int]:\n    def digit_sum(n: int) -> int:\n        return sum(int(digit) for digit in str(abs(n)))\n\n    # Use enumerate to get both index and value\n    return sorted(enumerate(nums), key=lambda item: (digit_sum(item[1]), item[0]))",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "CORRECT  \nThe function correctly sorts the list by the sum of digits and maintains the original index order for ties."
+ },
+ {
+  "task_id": "HumanEval/146",
+  "verdict": "fail: AssertionError",
+  "code": "def specialFilter(nums):\n    count = 0\n    for num in nums:\n        if abs(num) > 10 and int(str(abs(num))[0]) % 2 != 0 and int(str(abs(num))[-1]) % 2 != 0:\n            count += 1\n    return count",
+  "review": "CORRECT  \nThe function correctly counts numbers greater than 10 in absolute value where both the first and last digits are odd.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/147",
+  "verdict": "fail: AssertionError",
+  "code": "def get_max_triples(n):\n    # Create the array a based on the given formula\n    a = [i * i - i + 1 for i in range(1, n + 1)]\n    \n    # Count the occurrences of each remainder when divided by 3\n    counts = {0: 0, 1: 0, 2: 0}\n    for num in a:\n        counts[num % 3] += 1\n    \n    # Calculate the number of valid triples\n    # Using combinations to count the number of ways to choose 3 elements from the array\n    return counts[0] * (counts[0] - 1) * (counts[0] - 2) // 6 + \\\n           counts[1] * counts[2] * counts[0] + \\\n           counts[2] * counts[1] * counts[0]\n\n# Test the function\nprint(get_max_triples(5))  # Output: 1",
+  "review": "WRONG\n\nThe code incorrectly calculates the number of valid triples. It assumes that only triples with remainders (0,0,0), (1,2,0), and (2,1,0) work, but it fails to properly account for all valid combinations of remainders that sum",
+  "flag": true,
+  "hint": "The function incorrectly calculates the number of valid triples by misapplying the combination logic; it should count triples based on remainders modulo 3 (0+0+0, 1+1+1, 2+2+2, 0+1+2), not use the wrong",
+  "fix": "def get_max_triples(n):\n    # Create the array a based on the given formula\n    a = [i * i - i + 1 for i in range(1, n + 1)]\n    \n    # Count the occurrences of each remainder when divided by 3\n    counts = {0: 0, 1: 0, 2: 0}\n    for num in a:\n        counts[num % 3] += 1\n    \n    # Calculate the number of valid triples\n    # Using combinations to count the number of ways to choose 3 elements from the array\n    return counts[0] * (counts[0] - 1) * (counts[0] - 2) // 6 + \\\n           counts[1] * counts[2] * counts[0] + \\\n           counts[2] * counts[1] * counts[0]\n\n# Test the function\nprint(get_max_triples(5))  # Output: 1",
+  "fix_verdict": "fail: AssertionError",
+  "review2": "WRONG\n\nThe code incorrectly calculates the number of valid triples. It assumes that only triples with remainders (0,0,0), (1,2,0), and (2,1,0) work, but it fails to properly account for all valid combinations of remainders that sum"
+ },
+ {
+  "task_id": "HumanEval/148",
+  "verdict": "fail: AssertionError: First test error: 2",
+  "code": "def bf(planet1, planet2):\n    \"\"\"\n    There are eight planets in our solar system: the closerst to the Sun \n    is Mercury, the next one is Venus, then Earth, Mars, Jupiter, Saturn, \n    Uranus, Neptune.\n    Write a function that takes two planet names as strings planet1 and planet2. \n    The function should return a tuple containing all planets whose orbits are \n    located between the orbit of planet1 and the orbit of planet2, sorted by \n    the proximity to the sun. \n    The function should return an empty tuple if planet1 or planet2\n    are not correct planet names. \n    Examples\n    bf(\"Jupiter\", \"Neptune\") ==> (\"Saturn\", \"Uranus\")\n    bf(\"Earth\", \"Mercury\") ==> (\"Venus\")\n    bf(\"Mercury\", \"Uranus\") ==> (\"Venus\", \"Earth\", \"Mars\", \"Jupiter\", \"Saturn\")\n    \"\"\"\n    planets = [\"Mercury\", \"Venus\", \"Earth\", \"Mars\", \"Jupiter\", \"Saturn\", \"Uranus\", \"Neptune\"]\n    if planet1 not in planets or planet2 not in planets:\n        return ()\n    \n    index1 = planets.index(planet1)\n    index2 = planets.index(planet2)\n    \n    if index1 > index2:\n        index1, index2 = index2, index1\n    \n    return planets[index1 + 1:index2]",
+  "review": "CORRECT  \nThe function correctly identifies the planets between two given planets, handles out-of-order inputs by swapping indices, and returns an empty tuple if either planet is invalid.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/149",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef sorted_list_sum(lst: List[str]) -> List[str]:\n    # Filter out strings with odd lengths\n    even_length_strings = [s for s in lst if len(s) % 2 == 0]\n    \n    # Sort the filtered list by length and then alphabetically\n    sorted_even_length_strings = sorted(even_length_strings, key=lambda x: (len(x), x))\n    \n    return sorted_even_length_strings",
+  "review": "WRONG\n\nThe task states: \"You may assume that all words will have the same length,\" but the example inputs have different lengths (e.g., \"aa\" (2), \"a\" (1), \"aaa\" (3)). This contradiction means the assumption is invalid, and the function",
+  "flag": true,
+  "hint": "The assumption that \"all words will have the same length\" is incorrect and contradicts the problem statement, which requires sorting by length and alphabetically; fix the function by removing the invalid assumption and ensuring proper sorting by length and then alphabetically.",
+  "fix": "from typing import List\n\ndef sorted_list_sum(lst: List[str]) -> List[str]:\n    # Filter out strings with odd lengths\n    even_length_strings = [s for s in lst if len(s) % 2 == 0]\n    \n    # Sort the filtered list by length and then alphabetically\n    sorted_even_length_strings = sorted(even_length_strings, key=lambda x: (len(x), x))\n    \n    return sorted_even_length_strings",
+  "fix_verdict": "pass",
+  "review2": "WRONG\n\nThe task states: \"You may assume that all words will have the same length,\" but the example inputs have different lengths (e.g., \"aa\" (2), \"a\" (1), \"aaa\" (3)). This contradiction means the assumption is invalid, and the function"
+ },
+ {
+  "task_id": "HumanEval/150",
+  "verdict": "pass",
+  "code": "def x_or_y(n, x, y):\n    \"\"\"A simple program which should return the value of x if n is \n    a prime number and should return the value of y otherwise.\n\n    Examples:\n    for x_or_y(7, 34, 12) == 34\n    for x_or_y(15, 8, 5) == 5\n    \n    \"\"\"\n    def is_prime(num):\n        if num <= 1:\n            return False\n        for i in range(2, int(num**0.5) + 1):\n            if num % i == 0:\n                return False\n        return True\n\n    if is_prime(n):\n        return x\n    else:\n        return y",
+  "review": "CORRECT  \nThe function correctly returns `x` if `n` is prime and `y` otherwise, with proper prime checking logic.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/151",
+  "verdict": "fail: AssertionError: This prints if this assert fails 2 (good for debugging!)",
+  "code": "def double_the_difference(lst):\n    \"\"\"\n    Given a list of numbers, return the sum of squares of the numbers\n    in the list that are odd. Ignore numbers that are negative or not integers.\n    \n    double_the_difference([1, 3, 2, 0]) == 1 + 9 + 0 + 0 = 10\n    double_the_difference([-1, -2, 0]) == 0\n    double_the_difference([9, -2]) == 81\n    double_the_difference([0]) == 0  \n   \n    If the input list is empty, return 0.\n    \"\"\"\n    if not lst:\n        return 0\n    \n    result = 0\n    for num in lst:\n        if isinstance(num, int) and num > 0 and num % 2 != 0:\n            result += num ** 2\n    \n    return result * 2",
+  "review": "WRONG  \nThe function returns twice the sum of squares of positive odd integers, but the task asks for the sum of squares of odd numbers (ignoring negatives and non-integers), not doubled.",
+  "flag": true,
+  "hint": "Change `result * 2` at the end to `result` because the task asks for the sum of squares of odd numbers, not double that sum.",
+  "fix": "def double_the_difference(lst):\n    \"\"\"\n    Given a list of numbers, return the sum of squares of the numbers\n    in the list that are odd. Ignore numbers that are negative or not integers.\n    \n    double_the_difference([1, 3, 2, 0]) == 1 + 9 + 0 + 0 = 10\n    double_the_difference([-1, -2, 0]) == 0\n    double_the_difference([9, -2]) == 81\n    double_the_difference([0]) == 0  \n   \n    If the input list is empty, return 0.\n    \"\"\"\n    if not lst:\n        return 0\n    \n    result = 0\n    for num in lst:\n        if isinstance(num, int) and num > 0 and num % 2 != 0:\n            result += num ** 2\n    \n    return result",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe function correctly sums the squares of positive odd integers, ignoring negatives and non-integers, and returns 0 for empty lists."
+ },
+ {
+  "task_id": "HumanEval/152",
+  "verdict": "pass",
+  "code": "def compare(game, guess):\n    return [abs(a - b) for a, b in zip(game, guess)]",
+  "review": "CORRECT  \nThe function correctly computes the absolute difference between each corresponding element in the `game` and `guess` arrays, returning a list of how far off each guess was.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/153",
+  "verdict": "pass",
+  "code": "def Strongest_Extension(class_name, extensions):\n    def calculate_strength(extension):\n        cap = sum(1 for char in extension if char.isupper())\n        sm = sum(1 for char in extension if char.islower())\n        return cap - sm\n    \n    max_strength = float('-inf')\n    strongest_extension = None\n    \n    for extension in extensions:\n        current_strength = calculate_strength(extension)\n        if current_strength > max_strength:\n            max_strength = current_strength\n            strongest_extension = extension\n    \n    return f\"{class_name}.{strongest_extension}\"",
+  "review": "CORRECT  \nThe function correctly calculates the strength of each extension based on the difference between uppercase and lowercase letters and returns the strongest extension in the required format.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/154",
+  "verdict": "pass",
+  "code": "def cycpattern_check(a, b):\n    \"\"\"You are given 2 words. You need to return True if the second word or any of its rotations is a substring in the first word\n    cycpattern_check(\"abcd\",\"abd\") => False\n    cycpattern_check(\"hello\",\"ell\") => True\n    cycpattern_check(\"whassup\",\"psus\") => False\n    cycpattern_check(\"abab\",\"baa\") => True\n    cycpattern_check(\"efef\",\"eeff\") => False\n    cycpattern_check(\"himenss\",\"simen\") => True\n\n    \"\"\"\n    # Concatenate the second word with itself to handle rotations\n    b_rotated = b + b\n    \n    # Check if the first word contains any rotation of the second word as a substring\n    for i in range(len(b)):\n        if b_rotated[i:i+len(b)] in a:\n            return True\n    return False",
+  "review": "CORRECT  \nThe function correctly checks if any rotation of `b` is a substring in `a` by using the doubled string `b + b` and iterating through all possible rotations.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/155",
+  "verdict": "pass",
+  "code": "def even_odd_count(num):\n    \"\"\"Given an integer. return a tuple that has the number of even and odd digits respectively.\n\n     Example:\n        even_odd_count(-12) ==> (1, 1)\n        even_odd_count(123) ==> (1, 2)\n    \"\"\"\n    num = abs(num)  # Ensure the number is positive for simplicity\n    even_count = sum(1 for digit in str(num) if int(digit) % 2 == 0)\n    odd_count = len(str(num)) - even_count\n    return (even_count, odd_count)",
+  "review": "CORRECT  \nThe function correctly counts the number of even and odd digits in an integer, ignoring the sign by using `abs(num)`, and returns a tuple with even count first, followed by odd count.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/156",
+  "verdict": "pass",
+  "code": "def int_to_mini_roman(number):\n    # Define the mapping of integers to their corresponding Roman numerals\n    roman_numerals = [\n        (1000, 'm'), (900, 'cm'), (500, 'd'), (400, 'cd'),\n        (100, 'c'), (90, 'xc'), (50, 'l'), (40, 'xl'),\n        (10, 'x'), (9, 'ix'), (5, 'v'), (4, 'iv'), (1, 'i')\n    ]\n    \n    result = ''\n    for value, numeral in roman_numerals:\n        while number >= value:\n            result += numeral\n            number -= value\n    \n    return result.lower()",
+  "review": "CORRECT  \nThe function correctly converts integers to lowercase Roman numerals within the specified range and handles subtractive cases (like 9, 40, 400) properly.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/157",
+  "verdict": "pass",
+  "code": "def right_angle_triangle(a, b, c):\n    # Check if any two sides are equal (i.e., it's a degenerate triangle)\n    if a == b or b == c or a == c:\n        return False\n    \n    # Sort the sides to ensure the longest side is last\n    sides = sorted([a, b, c])\n    \n    # Check if the square of the longest side is equal to the sum of squares of the other two sides\n    return sides[2]**2 == sides[0]**2 + sides[1]**2",
+  "review": "WRONG  \nThe function incorrectly rejects isosceles right triangles (like 1, 1, √2) by checking for equal sides, which is not required for a right-angled triangle. A right-angled triangle can have two equal sides (e.g., 1,",
+  "flag": true,
+  "hint": "Fix the function to handle degenerate triangles correctly by removing the condition that checks for equal sides, since a right-angled triangle can have two equal sides (like an isosceles right triangle).",
+  "fix": "def right_angle_triangle(a, b, c):\n    # Sort the sides to ensure the longest side is last\n    sides = sorted([a, b, c])\n    \n    # Check if the square of the longest side is equal to the sum of squares of the other two sides\n    return sides[2]**2 == sides[0]**2 + sides[1]**2",
+  "fix_verdict": "pass",
+  "review2": "CORRECT  \nThe function correctly checks if three sides form a right-angled triangle using the Pythagorean theorem."
+ },
+ {
+  "task_id": "HumanEval/158",
+  "verdict": "pass",
+  "code": "from typing import List\n\ndef find_max(words: List[str]) -> str:\n    max_unique_chars = 0\n    result_word = \"\"\n    \n    for word in words:\n        unique_chars = set(word)\n        if len(unique_chars) > max_unique_chars or (len(unique_chars) == max_unique_chars and word < result_word):\n            max_unique_chars = len(unique_chars)\n            result_word = word\n    \n    return result_word",
+  "review": "WRONG  \nThe condition in the if statement has a logical error: it checks `word < result_word` when comparing lexicographical order, but this should only apply when the number of unique characters is equal. However, the current condition places `result_word` to a word that comes first le",
+  "flag": true,
+  "hint": "The condition `word < result_word` is incorrect because it compares lexicographical order incorrectly; it should be `word < result_word` only when the number of unique characters is equal, but the current logic has a flaw in the `or` condition—specifically, it updates `result_word",
+  "fix": "from typing import List\n\ndef find_max(words: List[str]) -> str:\n    max_unique_chars = 0\n    result_word = \"\"\n    \n    for word in words:\n        unique_chars = set(word)\n        if len(unique_chars) > max_unique_chars or (len(unique_chars) == max_unique_chars and word < result_word):\n            max_unique_chars = len(unique_chars)\n            result_word = word\n    \n    return result_word",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe condition in the if statement has a logical error: it checks `word < result_word` when comparing lexicographical order, but this should only apply when the number of unique characters is equal. However, the current condition places `result_word` to a word that comes first le"
+ },
+ {
+  "task_id": "HumanEval/159",
+  "verdict": "pass",
+  "code": "def eat(number, need, remaining):\n    \"\"\"\n    You're a hungry rabbit, and you already have eaten a certain number of carrots,\n    but now you need to eat more carrots to complete the day's meals.\n    you should return an array of [ total number of eaten carrots after your meals,\n                                    the number of carrots left after your meals ]\n    if there are not enough remaining carrots, you will eat all remaining carrots, but will still be hungry.\n    \n    Example:\n    * eat(5, 6, 10) -> [11, 4]\n    * eat(4, 8, 9) -> [12, 1]\n    * eat(1, 10, 10) -> [11, 0]\n    * eat(2, 11, 5) -> [7, 0]\n    \n    Variables:\n    @number : integer\n        the number of carrots that you have eaten.\n    @need : integer\n        the number of carrots that you need to eat.\n    @remaining : integer\n        the number of remaining carrots thet exist in stock\n    \n    Constrain:\n    * 0 <= number <= 1000\n    * 0 <= need <= 1000\n    * 0 <= remaining <= 1000\n\n    Have fun :)\n    \"\"\"\n    total_eaten = number + min(need, remaining)\n    remaining_carrots = max(remaining - need, 0)\n    return [total_eaten, remaining_carrots]",
+  "review": "WRONG  \nThe function incorrectly calculates the remaining carrots. It subtracts `need` from `remaining`, which is wrong because the rabbit only eats up to the available carrots, not necessarily `need`. If there are not enough carrots, it should eat all remaining ones, not subtract `need`. The",
+  "flag": true,
+  "hint": "Fix the calculation for remaining_carrots: it should be `remaining - min(need, remaining)` instead of `max(remaining - need, 0)`.",
+  "fix": "def eat(number, need, remaining):\n    \"\"\"\n    You're a hungry rabbit, and you already have eaten a certain number of carrots,\n    but now you need to eat more carrots to complete the day's meals.\n    you should return an array of [ total number of eaten carrots after your meals,\n                                    the number of carrots left after your meals ]\n    if there are not enough remaining carrots, you will eat all remaining carrots, but will still be hungry.\n    \n    Example:\n    * eat(5, 6, 10) -> [11, 4]\n    * eat(4, 8, 9) -> [12, 1]\n    * eat(1, 10, 10) -> [11, 0]\n    * eat(2, 11, 5) -> [7, 0]\n    \n    Variables:\n    @number : integer\n        the number of carrots that you have eaten.\n    @need : integer\n        the number of carrots that you need to eat.\n    @remaining : integer\n        the number of remaining carrots thet exist in stock\n    \n    Constrain:\n    * 0 <= number <= 1000\n    * 0 <= need <= 1000\n    * 0 <= remaining <= 1000\n\n    Have fun :)\n    \"\"\"\n    total_eaten = number + min(need, remaining)\n    remaining_carrots = remaining - min(need, remaining)\n    return [total_eaten, remaining_carrots]",
+  "fix_verdict": "pass",
+  "review2": "WRONG  \nThe function does not handle the case where there are not enough remaining carrots to satisfy the need correctly. According to the task, if there are not enough remaining carrots, you will eat all remaining carrots but will still be hungry. However, the code returns `remaining_carrots = remaining -"
+ },
+ {
+  "task_id": "HumanEval/160",
+  "verdict": "fail: AssertionError",
+  "code": "def do_algebra(operator, operand):\n    \"\"\"\n    Given two lists operator, and operand. The first list has basic algebra operations, and \n    the second list is a list of integers. Use the two given lists to build the algebric \n    expression and return the evaluation of this expression.\n\n    The basic algebra operations:\n    Addition ( + ) \n    Subtraction ( - ) \n    Multiplication ( * ) \n    Floor division ( // ) \n    Exponentiation ( ** ) \n\n    Example:\n    operator['+', '*', '-']\n    array = [2, 3, 4, 5]\n    result = 2 + 3 * 4 - 5\n    => result = 9\n\n    Note:\n        The length of operator list is equal to the length of operand list minus one.\n        Operand is a list of of non-negative integers.\n        Operator list has at least one operator, and operand list has at least two operands.\n\n    \"\"\"\n    # Initialize the result with the first operand\n    result = operand[0]\n\n    # Iterate over the operator list and apply each operation\n    for i, op in enumerate(operator):\n        if op == '+':\n            result += operand[i+1]\n        elif op == '-':\n            result -= operand[i+1]\n        elif op == '*':\n            result *= operand[i+1]\n        elif op == '//':\n            result //= operand[i+1]\n        elif op == '**':\n            result **= operand[i+1]\n\n    return result",
+  "review": "WRONG  \nThe code incorrectly handles exponentiation and does not properly apply operator precedence. For example, in `2 + 3 * 4 - 5`, multiplication should be done before addition and subtraction, but the code evaluates left to right without respecting operator precedence.",
+  "flag": true,
+  "hint": "The code incorrectly handles exponentiation and multiplication due to operator precedence; it should evaluate operations in the correct order (e.g., multiplication and exponentiation before addition and subtraction), but the current loop applies operations left-to-right without respecting standard algebraic precedence. Fix the loop to properly handle operator precedence by evaluating",
+  "fix": "def do_algebra(operator, operand):\n    \"\"\"\n    Given two lists operator, and operand. The first list has basic algebra operations, and \n    the second list is a list of integers. Use the two given lists to build the algebric \n    expression and return the evaluation of this expression.\n\n    The basic algebra operations:\n    Addition ( + ) \n    Subtraction ( - ) \n    Multiplication ( * ) \n    Floor division ( // ) \n    Exponentiation ( ** ) \n\n    Example:\n    operator['+', '*', '-']\n    array = [2, 3, 4, 5]\n    result = 2 + 3 * 4 - 5\n    => result = 9\n\n    Note:\n        The length of operator list is equal to the length of operand list minus one.\n        Operand is a list of of non-negative integers.\n        Operator list has at least one operator, and operand list has at least two operands.\n\n    \"\"\"\n    # Initialize the result with the first operand\n    result = operand[0]\n\n    # Evaluate the expression using a stack to handle precedence\n    stack = []\n    for i, op in enumerate(operator):\n        if op == '+' or op == '-':\n            while stack and (stack[-1] == '*' or stack[-1] == '/'):\n                b = stack.pop()\n                a = stack.pop()\n                if op == '+':\n                    stack.append(a + b)\n                else:\n                    stack.append(a - b)\n            stack.append(operand[i+1])\n        elif op == '*' or op == '/':\n            while stack and (stack[-1] == '**'):\n                b = stack.pop()\n                a = stack.pop()\n                stack.append(a ** b)\n            stack.append(operand[i+1])\n        elif op == '**':\n            stack.append(operand[i+1])\n        else:\n            stack.append(operand[i])\n\n    # Apply remaining operations from the stack\n    while stack:\n        b = stack.pop()\n        a = stack.pop()\n        if op == '+':\n            stack.append(a + b)\n        else:\n            stack.append(a - b)\n\n    return stack[0]",
+  "fix_verdict": "fail: IndexError: pop from empty list",
+  "review2": "WRONG  \nThe code has a logical error: it uses `op` after the loop, which is undefined in the final `while` loop. Also, it does not properly handle operator precedence (e.g., exponentiation should be evaluated before multiplication/division), and the stack logic is flawed and"
+ },
+ {
+  "task_id": "HumanEval/161",
+  "verdict": "pass",
+  "code": "def solve(s):\n    # Check if the string contains any letters\n    has_letters = any(c.isalpha() for c in s)\n    \n    # If there are no letters, reverse the string\n    if not has_letters:\n        return s[::-1]\n    \n    # Reverse the case of each letter in the string\n    result = ''.join(c.swapcase() if c.isalpha() else c for c in s)\n    \n    return result",
+  "review": "CORRECT  \nThe code correctly checks for letters and either reverses the case of each letter or reverses the entire string if no letters are present.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/162",
+  "verdict": "pass",
+  "code": "import hashlib\n\ndef string_to_md5(text):\n    if not text:\n        return None\n    \n    # Create an MD5 hash object\n    md5_hash = hashlib.md5()\n    \n    # Update the hash object with the bytes of the input string\n    md5_hash.update(text.encode('utf-8'))\n    \n    # Return the hexadecimal representation of the digest\n    return md5_hash.hexdigest()",
+  "review": "CORRECT  \nThe function correctly computes the MD5 hash of the input string and returns None for an empty string.",
+  "flag": false
+ },
+ {
+  "task_id": "HumanEval/163",
+  "verdict": "fail: AssertionError: Test 3",
+  "code": "def generate_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the even digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(2, 8) => [2, 4, 6, 8]\n    generate_integers(8, 2) => [2, 4, 6, 8]\n    generate_integers(10, 14) => []\n    \"\"\"\n    # Ensure a is less than or equal to b\n    if a > b:\n        a, b = b, a\n    \n    # Initialize an empty list to store even digits\n    even_digits = []\n    \n    # Iterate through each digit from a to b\n    for num in range(a, b + 1):\n        # Convert the number to a string to easily access individual digits\n        str_num = str(num)\n        \n        # Check if the digit is even\n        if int(str_num[0]) % 2 == 0:\n            even_digits.append(int(str_num[0]))\n    \n    # Return the sorted list of even digits\n    return sorted(even_digits)",
+  "review": "WRONG  \nThe function only checks the first digit of each number, not all digits, and returns even digits from the first digit only, which is incorrect according to the task description.",
+  "flag": true,
+  "hint": "The function only checks the first digit of each number for evenness, instead of checking all digits in the number. Fix by modifying the digit check to iterate through each digit in the number.",
+  "fix": "def generate_integers(a, b):\n    \"\"\"\n    Given two positive integers a and b, return the even digits between a\n    and b, in ascending order.\n\n    For example:\n    generate_integers(2, 8) => [2, 4, 6, 8]\n    generate_integers(8, 2) => [2, 4, 6, 8]\n    generate_integers(10, 14) => []\n    \"\"\"\n    # Ensure a is less than or equal to b\n    if a > b:\n        a, b = b, a\n    \n    # Initialize an empty list to store even digits\n    even_digits = []\n    \n    # Iterate through each digit from a to b\n    for num in range(a, b + 1):\n        # Convert the number to a string to easily access individual digits\n        str_num = str(num)\n        \n        # Check if the digit is even\n        for digit in str_num:\n            if int(digit) % 2 == 0:\n                even_digits.append(int(digit))\n    \n    # Return the sorted list of even digits\n    return sorted(even_digits)",
+  "fix_verdict": "fail: AssertionError: Test 1",
+  "review2": "WRONG  \nThe function returns even *digits* of numbers in the range, but the task asks for even *integers* between a and b. The example shows [2, 4, 6, 8] for generate_integers(2, 8), which are even integers"
+ }
+]

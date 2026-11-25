@@ -102,8 +102,11 @@ Zkus, o krok dál: jméno modelu je jeden řetězec nahoře v `humaneval_run.py`
 ![slide](deck/assets/readme/l1.png)
 
 Sám se model 1,5B čtyřikrát ptá a nenapíše nic. Dej mu partu a jde to: **refiner** (4B) udělá z přání
-jednu přesnou větu, **builder** (1,5B) napíše funkci, **reviewer** (4B) ji zkontroluje. Na `int_to_roman`
-builder chybuje, reviewer to chytí, oprava projde. Skutečné běhy jsou v `orch_cli.log` a `orch_fix3.log`.
+jednu přesnou větu, **builder** (1,5B) napíše funkci, **reviewer** (4B) ji zkontroluje. Na HumanEval
+`double_the_difference` builder výsledek zdvojnásobí (přečetl jen jméno funkce), reviewer to chytí, senior poradí
+smazat `* 2` a oprava projde testy. Na všech 164 úlohách: revizor chytí 35 z 54 chyb, opraví se 7, a 16 dobrých
+kódů označí za špatné (5 z nich oprava rozbije); celkem 110 → 112. Běh: `dovnitr/review_humaneval.py`, výsledky
+`dovnitr/review_humaneval.json`. Ukázkový běh party je v `orch_cli.log`.
 
 Spusť: `./lekce 2`, pak napiš přání.
 
