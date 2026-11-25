@@ -474,18 +474,13 @@ add(`<div class="big">Rizikový požadavek nevypadá rizikově — a <span style
 
 // 20 co si můžete zkusit zjistit (čtyři karty)
 // 22a–d DODATEK NA ČIPU: ještě menší drobek (esp32-ai), attention v ruce, teplota (maxwell-on-a-chip), auto (esp32-robot, jen lokálně)
-add(`<div class="big">Co si můžete zkusit zjistit</div>
-<div class="sub" style="font-size:1.3vw;margin-top:.3vh">zítra, ve svém vlastním nástroji, bez instalace</div>
- <div class="row" style="gap:1.6vw;align-items:flex-end;margin-top:4vh;flex-wrap:nowrap">
-  <div class="col" style="gap:.8vh;width:22vw;justify-content:flex-end"><div class="win" style="font-size:1.35vw;max-width:21vw;padding:.6em .8em;text-align:left"><span class="d">CLAUDE.md</span>
-<span class="d">AGENTS.md</span>
-<span class="d">.cursorrules</span></div><div style="font-size:1.55vw"><b>① Co se lepí k tvému promptu</b></div><div class="sub" style="font-size:1.3vw">otevři ve svém projektu soubor s pravidly: tohle letí s každým tvým promptem</div></div>
-  <div class="col" style="gap:.8vh;width:22vw;justify-content:flex-end"><div class="win" style="font-size:1.35vw;max-width:21vw;padding:.6em .8em;text-align:left"><span class="you">…a co když je
-seznam prázdný?</span></div><div style="font-size:1.55vw"><b>② Okrajový případ</b></div><div class="sub" style="font-size:1.3vw">připiš to do zadání · náš drobek na prázdném seznamu spadl</div></div>
-  <div class="col" style="gap:.8vh;width:22vw;justify-content:flex-end"><div class="row" style="gap:.5vw;align-items:flex-end">${mascot({scale:.28})}${mascot({scale:.35,senior:true,say:'✓'})}</div><div style="font-size:1.55vw"><b>③ Druhý chat jako revizor</b></div><div class="sub" style="font-size:1.3vw">vlož kód i zadání: „Dělá tenhle kód přesně to, co zadání? ANO / NE a proč.“</div></div>
-  <div class="col" style="gap:.8vh;width:22vw;justify-content:flex-end"><img src="assets/qr_colab.png" style="height:24vh;border-radius:8px;background:#fff;padding:.4vh;box-shadow:0 6px 18px rgba(30,44,92,.12)"><div style="font-size:1.55vw"><b>④ Podívej se dovnitř</b></div><div class="sub" style="font-size:1.3vw">kurz v Colabu: GPU zdarma, Spustit vše, pak posuvníky</div></div>
+add(`<div class="big">Co si můžete zkusit</div>
+ <div class="row" style="gap:7vw;align-items:flex-end;margin-top:5vh;flex-wrap:nowrap;justify-content:center">
+  <div class="col" style="gap:1.2vh;width:34vw;justify-content:flex-end"><div class="row" style="gap:.8vw;align-items:flex-end">${mascot({scale:.36})}${mascot({scale:.46,senior:true,hat:'reviewer',say:'✓'})}</div><div style="font-size:1.9vw"><b>Zítra: druhý chat jako revizor</b></div><div class="win" style="font-size:1.3vw;max-width:33vw;padding:.7em .9em;text-align:left"><span class="you">Dělá tenhle kód přesně to, co zadání?
+ANO / NE a proč.</span></div><div class="sub" style="font-size:1.25vw">vlož mu kód i zadání · takhle u nás revizor chytil chybu</div></div>
+  <div class="col" style="gap:1.2vh;width:34vw;justify-content:flex-end"><img src="assets/qr_colab.png" style="height:34vh;border-radius:10px;background:#fff;padding:.5vh;box-shadow:0 6px 18px rgba(30,44,92,.12)"><div style="font-size:1.9vw"><b>Doma: pohni neuronem sám</b></div><div class="sub" style="font-size:1.25vw">kurz v Colabu · Spustit vše, pak posuvníky: hlava, neuron, teplota</div></div>
  </div>
- <div style="font-size:1.1vw;color:var(--dim);margin-top:2.5vh">všechno, i data a interaktivní vrstva 20: <b>github.com/moudrkat</b></div>`);
+ <div style="font-size:1.1vw;color:var(--dim);margin-top:3vh">všechno, i data a interaktivní vrstva 20: <b>github.com/moudrkat</b></div>`);
 add(`${sec('k čemu to je','na čipu')}<div class="big">Chtěla jsem ještě menšího drobka</div>
  <div class="seq"><div class="row" style="gap:3vw;align-items:center;flex-wrap:nowrap"><div class="col" style="gap:.6vh">${mascot({scale:.3})}<div style="font-size:1.2vw"><b>1,5 miliardy</b></div></div><div style="font-size:2.4vw;color:var(--dim)">→</div><div class="col" style="gap:.6vh">${chipMascot({scale:.12,say:'ahoj'})}<div style="font-size:1.2vw"><b>3 miliony</b></div></div><video src="assets/chip/coder.mp4" poster="assets/chip/coder_frame.jpg" autoplay muted loop playsinline style="height:44vh;border-radius:14px;box-shadow:0 10px 34px rgba(30,44,92,.12)"></video></div>
  <div class="row" style="gap:2.6vw;margin-top:1vh"><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">2,9 M</div><div class="sub" style="font-size:.95vw">parametrů</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">2,1 MB</div><div class="sub" style="font-size:.95vw">v čipu</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">9</div><div class="sub" style="font-size:.95vw">tokenů/s</div></div><div class="col" style="gap:0"><div class="num" style="font-size:2.4vw">17 z 18</div><div class="sub" style="font-size:.95vw">na desce</div></div></div>
