@@ -13,16 +13,6 @@ Je to kurz z mé přednášky na Vibecoding & AI Engineering Festivalu (Ostrava,
 Jeden model, **Qwen2.5-Coder-1.5B-Instruct**, teplota 0, jedna herní karta. Každé číslo na slidech má tady
 skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spustit skript v Pythonu. Nic víc.
 
-| | lekce | uvidíš | spustíš |
-|---|---|---|---|
-| 1 | [Jak malý je drobek](#1--jak-malý-je-drobek) | 110 ze 164, a z čeho je model | `dovnitr/humaneval_run.py` |
-| 2 | [Parta](#2--parta) | tři malé modely porazí jeden | `scripts/orchestrate.py` |
-| 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 74 tokenů až po `return`, 23 tvoje; slovník doslova, 74 × 1 536 | `dovnitr/input_matrix.py` |
-| 4 | [Vrstvy, další slovo, teplota](#4--vrstvy-další-slovo-teplota) | proud × slovník vrstvu po vrstvě; teplota 0 → 2 | `dovnitr/stream_walk.py`, `temperature.py` |
-| 5 | [Vrstva 20, pohnutá](#5--vrstva-20-a-hýbání) | 12 hlav a 8 960 neuronů; jeden neuron udělá ze `sum` `len` | `dovnitr/head_null.py`, `neuron_scan.py`, `play20_grid.py` |
-| 6 | [Přičti směr](#6--přičti-směr-dostaneš-javascript) | z Pythonu vyleze JavaScript | `scripts/lang_retest.py` |
-| 7 | [Probe](#7--probe) | požadavek na malware bez zlého slova, chycený | `scripts/pertoken.py` |
-
 ## Začni tady, bez instalace
 
 Většina lidí skončí tady, a stačí to.
@@ -35,6 +25,18 @@ Většina lidí skončí tady, a stačí to.
   slidech, a pak totéž na tvém vlastním promptu. Klikneš Run all a čteš.
 
 Bez GPU to jde taky, jen pomaleji. Výstup každého skriptu je přiložený vedle něj, takže čísla přečteš i bez spouštění.
+
+## Sedm lekcí
+
+| | lekce | uvidíš |
+|---|---|---|
+| 1 | [Jak malý je drobek](#1--jak-malý-je-drobek) | 110 ze 164, a z čeho je model |
+| 2 | [Parta](#2--parta) | tři malé modely porazí jeden |
+| 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 74 tokenů až po `return`, 23 tvoje; slovník doslova, 74 × 1 536 |
+| 4 | [Vrstvy, další slovo, teplota](#4--vrstvy-další-slovo-teplota) | proud × slovník vrstvu po vrstvě; teplota 0 → 2 |
+| 5 | [Vrstva 20, pohnutá](#5--vrstva-20-a-hýbání) | 12 hlav a 8 960 neuronů; jeden neuron udělá ze `sum` `len` |
+| 6 | [Přičti směr](#6--přičti-směr-dostaneš-javascript) | z Pythonu vyleze JavaScript |
+| 7 | [Probe](#7--probe) | požadavek na malware bez zlého slova, chycený |
 
 ## Máš herní kartu? Pusť to doma
 
