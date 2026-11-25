@@ -24,7 +24,7 @@ h2{font-size:2.3vw;font-weight:600;margin:0;color:var(--dim)}
 .msg b{color:var(--ink)} .msg .r{color:var(--ink)} .msg .y{color:var(--you)}
 .sub{font-size:1.25vw;color:var(--dim);margin:0;max-width:82vw}
 .layer{font-size:1.4vw;color:var(--dim);letter-spacing:.35em;text-transform:uppercase}
-.big{font-size:2.5vw;font-weight:700;margin:0}
+.big{font-size:2.5vw;font-weight:700;margin:0;display:inline-block;padding-bottom:.35vh;border-bottom:.35vh solid color-mix(in srgb, var(--steer) 55%, transparent)}.big::before{content:"▸ ";color:var(--steer)}
 .frag{opacity:0;transition:opacity .35s}.frag.show{opacity:1}
 body.blank::after{content:"";position:fixed;inset:0;background:#000;z-index:9999}
 .row{display:flex;gap:3vw;align-items:center;justify-content:center;flex-wrap:wrap;max-width:90vw}
