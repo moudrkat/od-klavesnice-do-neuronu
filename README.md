@@ -34,9 +34,7 @@ Většina lidí skončí tady, a stačí to.
   GPU zdarma, všech sedm lekcí za pár minut (jen HumanEval a parta jsou volitelné), stejná čísla jako na
   slidech, a pak totéž na tvém vlastním promptu. Klikneš Run all a čteš.
 
-Bez GPU doma: skripty se samy přepnou na CPU. Lekce 3 a 7 trvají na 16jádrovém procesoru 6 až 16 s
-(na notebooku pár desítek sekund), chtějí 10 GB RAM; lekce 4 (vzorkování při teplotě), 6 a vlastní prompt
-desítky minut; 5 (sken 8 960 neuronů) a 2 (164 úloh) hodiny; 1 chce 16 GB RAM. Výstup každého skriptu je přiložený vedle něj, takže čísla jde číst bez spouštění čehokoliv.
+Bez GPU to jde taky, jen pomaleji. Výstup každého skriptu je přiložený vedle něj, takže čísla přečteš i bez spouštění.
 
 ## Máš herní kartu? Pusť to doma
 
@@ -167,7 +165,7 @@ znovu se zásahem začne `completed_count = tasks.count(True)`.
 
 Spusť: `./lekce 5`
 
-Zkus, snadné: otevři [`deck/vrstva20.html`](deck/vrstva20.html) v prohlížeči a hýbej dvěma ovladači. Model
+Zkus, snadné: otevři `deck/vrstva20.html` v prohlížeči a hýbej dvěma ovladači. Model
 nepotřebuješ, 25 výsledků je přednahraných v `play20_grid.json`.
 
 Zkus, o krok dál: v `play20_grid.py` jsou dávky dva cykly přes `(0,0.5,1,2,4)`. Přidej do cyklu neuronu `8`
@@ -219,8 +217,7 @@ probe? Který by chytil filtr na slova?
 - Vím, co se stalo z mého promptu: kolik tokenů a kolik z nich bylo mých.
 - Vím, kde v modelu se moje zadání čte a který neuron vybral slovo.
 - Vím, proč v produkci nikdo model neřídí a co ho místo toho čte.
-- Vím čtyři věci, které si zkontroluju na vlastním setupu: co se mi lepí k promptu (`ollama show MODEL --modelfile`),
-  co z něj model čte (`pip install brainscope`), co chytí druhý model, a jestli kód přežije prázdný seznam.
+- Vím, co zkusit hned zítra: nechat kód zkontrolovat druhým chatem, „dělá přesně to, co zadání?“
 
 ## Co kde je
 
@@ -232,11 +229,7 @@ Kód MIT, slidy a videa CC BY 4.0. Kateřina Fajmanová, 2026.
 
 ---
 
-**For English readers.** This is a Czech talk taken apart as seven lessons: one vibecoding session,
-one small code model (Qwen2.5-Coder-1.5B-Instruct, temperature 0), every number on the slides reproducible
-from the scripts here. The prompts, the code and the scripts' output are in English; the slides and this
-guide are Czech. Two things need no Czech at all: **[layer 20, hands on](deck/vrstva20.html)**, where you
-move one attention head and one neuron and watch the code change, and the
-**[Colab notebook](https://colab.research.google.com/github/moudrkat/od-klavesnice-do-neuronu/blob/main/lessons.ipynb)**,
-which runs lessons 3 to 6 on a free GPU and then on your own prompt. The intent probe (lesson 7) has its own
-English repo: [hidden-intent](https://github.com/moudrkat/hidden-intent).
+**For English readers.** A Czech talk taken apart as seven lessons: one vibecoding session, one small code model
+(Qwen2.5-Coder-1.5B-Instruct, temperature 0), every number reproducible from the scripts here. The prompts, code and outputs
+are in English; the interactive layer 20 and the Colab notebook above work without Czech. The intent probe (lesson 7) has
+its own English repo: [hidden-intent](https://github.com/moudrkat/hidden-intent).
