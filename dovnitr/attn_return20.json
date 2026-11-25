@@ -1,0 +1,72 @@
+{
+ "ret_pos": 73,
+ "n_tokens": 74,
+ "staré dělení": {
+  "počty": {
+   "první token": 1,
+   "šablona": 15,
+   "systémový prompt": 27,
+   "tvoje zadání": 23,
+   "jeho kód": 8
+  },
+  "hlava 20·6": {
+   "první token": 3.6,
+   "šablona": 4.0,
+   "systémový prompt": 4.7,
+   "tvoje zadání": 71.4,
+   "jeho kód": 16.3
+  },
+  "12 hlav průměr": {
+   "první token": 11.9,
+   "šablona": 11.2,
+   "systémový prompt": 14.2,
+   "tvoje zadání": 42.9,
+   "jeho kód": 19.8
+  }
+ },
+ "opravené dělení": {
+  "počty": {
+   "první token": 1,
+   "šablona": 12,
+   "systémový prompt": 27,
+   "tvoje zadání": 23,
+   "jeho kód": 11
+  },
+  "hlava 20·6": {
+   "první token": 3.6,
+   "šablona": 2.8,
+   "systémový prompt": 4.7,
+   "tvoje zadání": 71.4,
+   "jeho kód": 17.5
+  },
+  "12 hlav průměr": {
+   "první token": 11.9,
+   "šablona": 10.0,
+   "systémový prompt": 14.2,
+   "tvoje zadání": 42.9,
+   "jeho kód": 21.0
+  }
+ },
+ "kontrola: 20·6 na 'list'": 0.453,
+ "tokeny šablony 3 (opraveně)": [
+  "\n",
+  "<|im_end|>",
+  "\n",
+  "<|im_start|>",
+  "assistant",
+  "\n"
+ ],
+ "kód (opraveně)": [
+  "```",
+  "python",
+  "\n",
+  "def",
+  " get",
+  "_completed",
+  "_tasks",
+  "(tasks",
+  "):\n",
+  "   ",
+  " return"
+ ]
+}

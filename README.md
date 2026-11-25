@@ -5,7 +5,7 @@
 Vibecoduješ? A chceš se konečně podívat dovnitř té věci, co ti píše kód?
 
 Tady je jedna vibecoding session rozebraná vrstvu po vrstvě. Napíšeš přání. Parta malých modelů z něj
-udělá kód. Do modelu jde 87 tokenů, o 28 vrstev výš vyleze jedno slovo. Uvnitř o `sum` nebo `len`
+udělá kód. Ve chvíli, kdy napsal `return`, jde do modelu 74 tokenů, o 28 vrstev výš vyleze jedno slovo. Uvnitř o `sum` nebo `len`
 rozhodne jedna attention hlava a jeden neuron, a dá se s nimi hýbat vlastníma rukama. V produkci s nimi
 nikdo nehýbe: místo toho se proud čte probe, a ta chytí požadavek na malware, ve kterém není jediné zlé slovo.
 
@@ -17,7 +17,7 @@ skript a JSON. Předpokládá, že jsi někdy použil coding agenta a umíš spu
 |---|---|---|---|
 | 1 | [Jak malý je drobek](#1--jak-malý-je-drobek) | 110 ze 164, a z čeho je model | `dovnitr/humaneval_run.py` |
 | 2 | [Parta](#2--parta) | tři malé modely porazí jeden | `scripts/orchestrate.py` |
-| 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 87 tokenů, 23 tvoje; slovník doslova, 87 × 1 536 | `dovnitr/input_matrix.py` |
+| 3 | [Co jde dovnitř](#3--co-jde-dovnitř) | 74 tokenů až po `return`, 23 tvoje; slovník doslova, 74 × 1 536 | `dovnitr/input_matrix.py` |
 | 4 | [Vrstvy, další slovo, teplota](#4--vrstvy-další-slovo-teplota) | proud × slovník vrstvu po vrstvě; teplota 0 → 2 | `dovnitr/stream_walk.py`, `temperature.py` |
 | 5 | [Vrstva 20, pohnutá](#5--vrstva-20-a-hýbání) | 12 hlav a 8 960 neuronů; jeden neuron udělá ze `sum` `len` | `dovnitr/head_null.py`, `neuron_scan.py`, `play20_grid.py` |
 | 6 | [Přičti směr](#6--přičti-směr-dostaneš-javascript) | z Pythonu vyleze JavaScript | `scripts/lang_retest.py` |
@@ -118,8 +118,8 @@ Zkus, o krok dál: napiš něco nemožného, `a function that predicts tomorrow'
 ![slide](deck/assets/readme/l3.png)
 
 Tvůj prompt neletí sám. Harness k němu nalepí systémový prompt a zabalí ho do šablony chatu. Dovnitř jde
-87 tokenů, 23 jsou tvoje. Každý token je řádek slovníku, tabulky 151 936 × 1 536 (`return` je řádek 470,
-`Write` 7985); z ní se vytáhne 87 řádků a do modelu jde matice 87 × 1 536 najednou. Jeden řádek je proud;
+74 tokenů (prompt 63 a jeho kód až po `return` 11), 23 jsou tvoje. Každý token je řádek slovníku, tabulky 151 936 × 1 536 (`return` je řádek 470,
+`Write` 7985); z ní se vytáhne 74 řádků a do modelu jde matice 74 × 1 536 najednou. Jeden řádek je proud;
 sledujeme ten na pozici `return`.
 
 Spusť: `./lekce 3`
@@ -156,8 +156,8 @@ vrstvě model ví, jak se funkce jmenuje.
 
 ![slide](deck/assets/readme/l5.png)
 
-Všech 12 hlav vrstvy 20 dohromady se z `return` dívá 17 / 18 / 17 / 18 / 30 % na první token, šablonu,
-systémový prompt, tvoje zadání a vlastní kód. Hlava 20·6 ze 72 % na tvoje zadání a 0,46 na jediné slovo
+Všech 12 hlav vrstvy 20 dohromady se z `return` dívá 12 / 10 / 14 / 43 / 21 % na první token, šablonu,
+systémový prompt, tvoje zadání a vlastní kód (`dovnitr/attn_return20.py`). Hlava 20·6 ze 72 % na tvoje zadání a 0,46 na jediné slovo
 `list`; hlava 20·2 nedělá nic (vypnutá: sum 79 → 80 %, stejný kód) a čtvrtinu sype na první token.
 Neuron 20·3545 v MLP hned za ní svítí 17 na `return` a skoro 0 všude jinde; z 8 960 neuronů vrstvy jich
 na `return` má přes 3 jen 22 a přes 10 jediný. Vypnout každý zvlášť: jen 3545 hne `sum` (−41 bodů),

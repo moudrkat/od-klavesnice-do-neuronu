@@ -25,7 +25,7 @@ mu čísla jeho slovy, a nic nevymýšlet. Všechno tady je naměřené při tep
 |---|---|---|
 | 1 Drobek | `dovnitr/model_facts.py`, `humaneval_run.py` | 28 vrstev, 1 536, 8 960 neuronů, 12 hlav; HumanEval 110/164 |
 | 2 Parta | `scripts/orchestrate.py -i` | refiner (4B) zpřesní přání → builder (1,5B) napíše kód → reviewer (4B) zkontroluje |
-| 3 Co jde dovnitř | `dovnitr/token_strips.py`, `attn_split.py`, `input_matrix.py`, `embed_piece.py`, `embed_matrix.py` | 87 tokenů, 23 uživatelovy; `return` = řádek 470 slovníku; matice 87 × 1 536 |
+| 3 Co jde dovnitř | `dovnitr/token_strips.py`, `attn_split.py`, `attn_return20.py` (12 hlav vrstvy 20 z `return`: 12/10/14/43/21 %), `input_matrix.py`, `embed_piece.py`, `embed_matrix.py` | 74 tokenů až po `return` (prompt 63 + kód 11), 23 uživatelovy; `return` = řádek 470 slovníku; matice 74 × 1 536; ```` ```python ```` napsal builder, ne šablona |
 | 4 Vrstvy, teplota | `dovnitr/stream_walk.py`, `temperature.py` | prvních 8 čísel proudu po vrstvách; `不了` → `NotImplementedError` → `count` → `sum` 79 % |
 | 5 Vrstva 20 | `dovnitr/heads_matter.py`, `layer20.py` (`--fast`: sken po 64 v dávce), `play20_grid.py` (+ `neuron_scan.py`: všech 8 960 ×0, 100 s na GPU, `--fast` po 64 v dávce 33 s; `head_null.py`: líná hlava 20·2) | hlava 20·6 (72 % na zadání, 0,46 na `list`), neuron 20·3545 (17 na `return`); dávky → `len` / `sum` / `tasks.count` |
 | 6 Směr | `scripts/lang_retest.py` | směr `function` − `def`, vrstvy 6–18, koef 6 → JavaScript 3/3 |
