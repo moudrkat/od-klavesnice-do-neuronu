@@ -127,7 +127,7 @@ Zkus, o krok dál: jméno modelu je jeden řetězec nahoře v `humaneval_run.py`
 Sám se model 1,5B čtyřikrát ptá a nenapíše nic. Dej mu partu a jde to: **refiner** (4B) udělá z přání
 jednu přesnou větu, **builder** (1,5B) napíše funkci, **reviewer** (4B) ji zkontroluje. Na HumanEval
 `double_the_difference` builder výsledek zdvojnásobí (přečetl jen jméno funkce), reviewer to chytí, senior poradí
-smazat `* 2` a oprava projde testy. Na všech 164 úlohách: revizor chytí 35 z 54 chyb, opraví se 7, a 16 dobrých
+smazat `* 2` a oprava projde testy. Na všech 164 úlohách: reviewer chytí 35 z 54 chyb, opraví se 7, a 16 dobrých
 kódů označí za špatné (5 z nich oprava rozbije); celkem 110 → 112. Běh: `dovnitr/review_humaneval.py`, výsledky
 `dovnitr/review_humaneval.json`. Ukázkový běh party je v `orch_cli.log`.
 
@@ -254,7 +254,7 @@ Papery, ze kterých kurz vychází, po lekcích:
 - Hui a kol. 2024: [Qwen2.5-Coder Technical Report](https://arxiv.org/abs/2409.12186) · drobek a parťák
 - Chen a kol. 2021: [Evaluating Large Language Models Trained on Code (HumanEval)](https://arxiv.org/abs/2107.03374) · lekce 1
 - Huang a kol. 2023: [AgentCoder: Multi-Agent-based Code Generation](https://arxiv.org/abs/2312.13010) · lekce 2, parta
-- Zheng a kol. 2023: [Judging LLM-as-a-Judge](https://arxiv.org/abs/2306.05685) · lekce 2, revizor
+- Zheng a kol. 2023: [Judging LLM-as-a-Judge](https://arxiv.org/abs/2306.05685) · lekce 2, reviewer
 - Sennrich a kol. 2015: [Neural Machine Translation of Rare Words with Subword Units](https://arxiv.org/abs/1508.07909) · lekce 3, tokeny
 - Vaswani a kol. 2017: [Attention Is All You Need](https://arxiv.org/abs/1706.03762) · lekce 4–5, vrstvy a hlavy
 - Elhage a kol. 2021: [A Mathematical Framework for Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) · lekce 4, proud
