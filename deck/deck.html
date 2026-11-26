@@ -180,7 +180,7 @@ add(`${franta('zamávej')}<h1>Od klávesnice do neuronu</h1><h2>jak rozebrat vib
  <div class="sub">Kateřina Fajmanová · Vibecoding &amp; AI Engineering Festival · Ostrava · 26. 11. 2026</div>${liQR()}`);
 
 // 1b VÝZVA — co nejmenší modely
-add(`${franta('jseš nervózní?')}<div class="big">Dnešní výzva</div><i data-anim></i>
+add(`<div class="big">Dnešní výzva</div><i data-anim></i>
   <div style="font-size:2vw;max-width:72vw;margin-top:1vh"><b>Vibecodovat</b> s <b>co nejmenším</b> modelem a <b>podívat se do něj</b>.</div>
  <div class="frag" style="font-size:2vw;max-width:72vw">Nakonec: <b>orchestrace</b>, a pohled do <b>drobka</b> — <b style="color:var(--over)">až na jeden neuron</b>.</div>
  
@@ -410,7 +410,7 @@ add(`${sec('dovnitř','jazyk')}<div class="big">Přičtu směr, a píše jiný j
  `);
 
 // 15f VÝZKUM 2025–2026 — zásahy pro kód (obrázky z paperů: 2604.16697, 2606.22673 NeurIPS, 2507.09508, 2510.02917 ICLR)
-add(`${sec('k čemu to je')}<div class="big">A k čemu to celé je? Probe: pravítko na proudu.</div>
+add(`${franta('jseš nervózní?')}${sec('k čemu to je')}<div class="big">A k čemu to celé je? Probe: pravítko na proudu.</div>
  <div class="row" style="gap:1.6vw;align-items:center;margin-top:1vh">${modelSVG({layer:14,col:.5,color:'var(--steer)',label:'probe čte tady',note:'vrstva 14 z 28'},'52vh','nekoukej!')}${eye(.5)}<div class="col" style="align-items:flex-start;max-width:34vw"><div class="msg" style="font-size:1.7vw">Z jeho proudu přečtu <b>záměr</b> — ještě <b>než to napíše</b>.</div><div class="sub" style="font-size:1.2vw;text-align:left"><b>Probe</b> = pravítko na proudu · vrstva 14</div><div class="frag col" style="gap:1vh;align-items:flex-start;text-align:left;max-width:34vw;margin-top:.6vh"><div style="font-size:1.1vw;color:var(--ink)">tohle dnes nasazují:</div><a href="https://arxiv.org/abs/2601.11516" target="_blank" style="display:block;text-decoration:none;color:var(--ink)"><img src="assets/papers/2601.11516.png" style="width:32vw;display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:.4vh .4vw;box-shadow:0 6px 18px rgba(30,44,92,.10)"><div style="font-size:.95vw;color:var(--dim);margin-top:.3vh">Google DeepMind, 2026: probe v Gemini proti kyberútokům · <span style="color:var(--you)">arxiv.org/abs/2601.11516</span></div></a><a href="https://arxiv.org/abs/2601.04603" target="_blank" style="display:block;text-decoration:none;color:var(--ink)"><img src="assets/papers/2601.04603.png" style="width:32vw;display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:.4vh .4vw;box-shadow:0 6px 18px rgba(30,44,92,.10)"><div style="font-size:.95vw;color:var(--dim);margin-top:.3vh">Anthropic, 2026: probe jako levná první vrstva · <span style="color:var(--you)">arxiv.org/abs/2601.04603</span></div></a></div></div></div>`);
 
 // (16b komiks hacker → model → probe odstraněn 6. 11.: stejný TOR útok byl v decku třikrát; čísla jsou u heatmapy. Záloha: deck.before-visitor-fixes.html)
