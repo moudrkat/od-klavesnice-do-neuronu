@@ -64,6 +64,29 @@ Copilot i Claude Code.
 - **směr**: 1 536 čísel, která k proudu přičteš, abys ho někam postrčil (třeba k JavaScriptu).
 - **teplota**: číslo, kterým se skóre vydělí, než se z něj udělají pravděpodobnosti. 0: vždycky nejvyšší skóre, stejný prompt, stejný výstup do písmene; proto se tu všechno měří při nule. 1: kostka. 2: kostka se 150 tisíci stranami, kód se rozpadá.
 
+## Devět vzorečků, co v drobkovi opravdu běží
+
+Celý drobek je 1, pak 2–4 v každé z 28 vrstev, pak 5 a 6. Sedm až devět už nejsou drobek, ale nástroje, kterými ho měříme a postrkujeme.
+
+1. **Slovo → čísla.** Řádek slovníku: 1 536 čísel pro jeden token. $E$ je tabulka 151 936 × 1 536.
+$$x = E[\text{token}]$$
+2. **Vrstva přičítá do proudu.** Proud jen roste o přírůstky, nic se nepřepisuje. Před attention i MLP je ještě normalizace (RMSNorm).
+$$h \leftarrow h + \text{attention}(h) \qquad h \leftarrow h + \text{MLP}(h)$$
+3. **Hlava čte jiné tokeny.** Každý token se ptá ($q$), ostatní nabízí klíč ($k$) a hlava si bere jejich obsah ($v$).
+$$\text{attention} = \text{softmax}\!\left(\frac{q\,k^T}{\sqrt{128}}\right) v$$
+4. **Neuron.** Jedno z 8 960 čísel v MLP každé vrstvy; v lekci 5 s ním hýbeš na vrstvě 20.
+$$n = \text{silu}(w_{\text{gate}} \cdot h) \times (w_{\text{up}} \cdot h)$$
+5. **Čísla → slovo.** Proud krát *stejný* slovník = skóre pro každé ze 151 936 slov.
+$$z = h \cdot E^T$$
+6. **Teplota.** <img src="deck/assets/kurz/teplomer.png" height="44" align="right"> $T \to 0$: vždycky nejvyšší skóre · $T = 1$: jak to model umí · velké $T$: kostka bez preferencí.
+$$p_i = \frac{e^{z_i/T}}{\sum_j e^{z_j/T}}$$
+7. **Entropie.** Kolik bitů nejistoty: 0 = jistota, s teplotou roste.
+$$H = -\sum_i p_i \log_2 p_i$$
+8. **Steering.** Přičteš směr $v$ do proudu. U jazyka $\alpha = 6$ na vrstvách 6–18, a drobek píše JavaScript.
+$$h \leftarrow h + \alpha\, v$$
+9. **Probe.** Pravítko na proudu: jeden řádek jako ve slovníku. Skóre pro každý token zadání, průměr, jeden práh.
+$$s = \text{průměr}_t\,(w \cdot h_t + b), \qquad s > \text{práh} \Rightarrow \text{riziko}$$
+
 ## Setup, když to chceš pustit sám
 
 ```
