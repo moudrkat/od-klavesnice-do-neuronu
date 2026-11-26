@@ -247,6 +247,25 @@ probe? Který by chytil filtr na slova?
 - Vím, proč v produkci nikdo model neřídí a co ho místo toho čte.
 - Vím, co zkusit hned zítra: nechat kód zkontrolovat druhým chatem, „dělá přesně to, co zadání?“
 
+## Odkud to je
+
+Papery, ze kterých kurz vychází, po lekcích:
+
+- Hui a kol. 2024: [Qwen2.5-Coder Technical Report](https://arxiv.org/abs/2409.12186) · drobek a parťák
+- Chen a kol. 2021: [Evaluating Large Language Models Trained on Code (HumanEval)](https://arxiv.org/abs/2107.03374) · lekce 1
+- Huang a kol. 2023: [AgentCoder: Multi-Agent-based Code Generation](https://arxiv.org/abs/2312.13010) · lekce 2, parta
+- Zheng a kol. 2023: [Judging LLM-as-a-Judge](https://arxiv.org/abs/2306.05685) · lekce 2, revizor
+- Sennrich a kol. 2015: [Neural Machine Translation of Rare Words with Subword Units](https://arxiv.org/abs/1508.07909) · lekce 3, tokeny
+- Vaswani a kol. 2017: [Attention Is All You Need](https://arxiv.org/abs/1706.03762) · lekce 4–5, vrstvy a hlavy
+- Elhage a kol. 2021: [A Mathematical Framework for Transformer Circuits](https://transformer-circuits.pub/2021/framework/index.html) · lekce 4, proud
+- Holtzman a kol. 2019: [The Curious Case of Neural Text Degeneration](https://arxiv.org/abs/1904.09751) · lekce 4, teplota
+- Geva a kol. 2020: [Transformer Feed-Forward Layers Are Key-Value Memories](https://arxiv.org/abs/2012.14913) · lekce 5, neuron
+- Elhage a kol. 2022: [Toy Models of Superposition](https://arxiv.org/abs/2209.10652) · proč neuron není stabilní adresa
+- Turner a kol. 2023: [Steering Language Models With Activation Engineering](https://arxiv.org/abs/2308.10248) · lekce 6, přičtení směru
+- Panickssery a kol. 2023: [Steering Llama 2 via Contrastive Activation Addition](https://arxiv.org/abs/2312.06681) · lekce 6, směr jako rozdíl průměrů
+- Alain a Bengio 2016: [Understanding intermediate layers using linear classifier probes](https://arxiv.org/abs/1610.01644) · lekce 7, probe
+- Bhatt a kol. 2023: [Purple Llama CyberSecEval](https://arxiv.org/abs/2312.04724) · lekce 7, rizikové požadavky
+
 ## Co kde je
 
 `deck/` slidy a interaktivní stránka · `scripts/` parta, guard, pokus se směrem · `dovnitr/` benchmarky,
