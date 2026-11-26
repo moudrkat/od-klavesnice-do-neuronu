@@ -80,7 +80,7 @@ přednáška běží na *tvém* promptu. Zadání piš anglicky, model je na ang
 začne „`if not words: return None`“, uvidíš, jak model dospívá k `None`, ne k hlavnímu výsledku.
 
 ## 1 · Jak malý je drobek
-*Slidy: Drobeček · Co umí a co ne*
+*Slidy: Drobek · Co umí a co ne*
 
 ![slide](deck/assets/readme/l2.png)
 
