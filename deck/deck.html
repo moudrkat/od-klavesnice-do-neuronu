@@ -579,12 +579,15 @@ S.forEach(h=>{const d=document.createElement('div');d.className='slide';d.innerH
 const sl=[...document.querySelectorAll('.slide')];let si=0,fi=0;
 const frags=()=>[...sl[si].querySelectorAll('.frag')];
 const seqs=()=>[...sl[si].querySelectorAll('.seq')];
-const nsteps=()=>{const s=seqs();return s.length?s.length-1:frags().length;};
+// kroky: každý .seq je krok a .frag uvnitř něj se odkrývají na další kliky v tom kroku; .frag mimo .seq až na konci
+const steps=()=>{const S=seqs();const st=[];let ln=0;S.forEach((q,k)=>{ln=q.querySelectorAll('.frag').length;for(let j=0;j<=ln;j++)st.push([k,j,0])});const m=frags().filter(f=>!f.closest('.seq')).length;for(let o=1;o<=m;o++)st.push([S.length-1,ln,o]);return st;};
+const nsteps=()=>{const s=seqs();return s.length?steps().length-1:frags().length;};
 function drawArcs(root){root.querySelectorAll('.arcbox').forEach(box=>{box.querySelectorAll('svg.arc').forEach(e=>e.remove());const f=box.querySelector('.arc-from'),t=box.querySelector('.arc-to');if(!f||!t||!box.offsetParent)return;const b=box.getBoundingClientRect(),fr=f.getBoundingClientRect(),tr=t.getBoundingClientRect();const fx=fr.left+fr.width/2-b.left,fy=fr.top-b.top,tx=tr.left+tr.width/2-b.left,ty=tr.bottom-b.top;const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('class','arc');svg.style.cssText='position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none';const d=(fy-ty)*0.55;svg.innerHTML=`<defs><marker id="am" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--attn)"/></marker></defs><path d="M${fx} ${fy-2} C ${fx} ${fy-d}, ${tx} ${ty+d}, ${tx} ${ty+3}" fill="none" stroke="var(--attn)" stroke-width="3" marker-end="url(#am)"/><text x="${(fx+tx)/2+10}" y="${(fy+ty)/2}" font-size="${b.width*0.012}" font-weight="700" fill="var(--attn)">0,46</text>`;box.appendChild(svg);});}
 function render(){
   sl.forEach((s,i)=>s.classList.toggle('on',i===si));
-  frags().forEach((f,i)=>f.classList.toggle('show',i<fi));
-  const s=seqs();if(s.length){const cur=Math.min(fi,s.length-1);s.forEach((e,i)=>e.classList.toggle('on',i===cur));}
+  const s=seqs();
+  if(s.length){const st=steps(),[k,j,o]=st[Math.min(fi,st.length-1)];s.forEach((e,i)=>{e.classList.toggle('on',i===k);[...e.querySelectorAll('.frag')].forEach((f,x)=>f.classList.toggle('show',i<k||(i===k&&x<j)))});frags().filter(f=>!f.closest('.seq')).forEach((f,x)=>f.classList.toggle('show',x<o));}
+  else frags().forEach((f,i)=>f.classList.toggle('show',i<fi));
   requestAnimationFrame(()=>drawArcs(sl[si]));
   document.getElementById('pg').textContent=(si+1)+' / '+sl.length;
 }
