@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Od klávesnice do neuronu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <!--
   Vibecoding & AI Engineering Festival II — Ostrava, 26. 11. 2026, 15:20–15:50. Web deck (HTML/SVG), soběstačný.
   Ovládání: →/mezerník další krok, ← zpět, F fullscreen. Žádné klikání — vše se posouvá slidy (GIF-able).
@@ -46,7 +47,7 @@ svg .fl{stroke:var(--ink);stroke-width:8.5;fill:none;stroke-linecap:round} svg .
 svg.m-ours .body{stroke-width:13} svg.m-ours .fl{stroke-width:9.5} svg.m-ours .win2{stroke-width:6.5}
 svg.m-senior .body{stroke-width:6;fill:#e9e4d6;stroke:var(--dim)} svg.m-senior .win2{stroke:var(--dim);fill:#f4f1e8} svg.m-senior .eye{fill:var(--dim)} svg.m-senior .fl{stroke-width:6;stroke:var(--dim)}
 svg.m-frontier .body{stroke:var(--other);stroke-width:8} svg.m-frontier .win2{stroke:var(--other)} svg.m-frontier .fl{stroke:var(--other)} svg.m-frontier .eye{fill:var(--other)} svg.m-frontier .crown{filter:drop-shadow(0 2px 3px rgba(192,137,43,.4))}
-.cite{position:absolute;right:1.6vw;bottom:12.5vh;font-size:.78vw;color:var(--dim);text-align:right;line-height:1.45;max-width:34vw;z-index:4}.cite a{color:var(--you);text-decoration:none}.why{font-size:1.15vw;color:var(--ink);text-align:left;line-height:1.35;margin:.2vh 0 0 .3vw}.why::before{content:"↳ ";color:var(--steer);font-weight:700}.why b{color:var(--steer)}.why .x{color:var(--over);font-weight:700}
+.cite{position:absolute;right:1.6vw;bottom:12.5vh;font-size:.78vw;color:var(--dim);text-align:right;line-height:1.45;max-width:34vw;z-index:4}.cite a{color:var(--you);text-decoration:none}.hlod{font-family:"Caveat","Segoe Print","Comic Sans MS",cursive;font-weight:700;color:var(--steer);font-size:3vw;line-height:1.15;margin-top:1.2vh}.why{font-size:1.15vw;color:var(--ink);text-align:left;line-height:1.35;margin:.2vh 0 0 .3vw}.why::before{content:"↳ ";color:var(--steer);font-weight:700}.why b{color:var(--steer)}.why .x{color:var(--over);font-weight:700}
 .tb{position:relative;background:#1a1b26;color:#c0caf5;border-radius:12px;padding:.6em .9em;font-family:ui-monospace,Menlo,monospace;font-size:1vw;line-height:1.45;text-align:left;white-space:pre-wrap;box-shadow:0 8px 26px rgba(0,0,0,.18);max-width:70vw}
 .tb::before{content:"";position:absolute;left:-10px;top:38%;border:8px solid transparent;border-right-color:#1a1b26;border-left:0}
 .tb .r{color:#7dcfff}.tb .ok{color:#9ece6a;font-weight:700}.tb .bad{color:#f7768e;font-weight:700}.tb .g{color:#787c99}
@@ -198,7 +199,7 @@ add(`${sec('klávesnice')}${cite(['Qwen2.5-Coder: Hui a kol. 2024','2409.12186']
   <div style="font-size:1.25vw;color:var(--dim)">Qwen2.5-Coder-1.5B-Instruct · září 2024 · 28 vrstev · 3 GB na disku · open weights</div>
   <div class="row" style="gap:2.2vw;font-size:1.2vw;margin-top:.3vh"><div style="font-size:1.2vw">🎮 běží na <b>mojí RTX 4070 Ti SUPER</b> <span style="color:var(--dim)">(16 GB)</span></div><div style="font-size:1.2vw">⚡ <b>99 tok/s</b></div><div style="font-size:1.2vw">📱 po kvantizaci ~1 GB</div></div>
   <div style="font-size:1.05vw;color:var(--dim)">přesně <b style="color:var(--ink)">1 543 714 304</b> čísel</div>
-  <div class="frag" style="font-size:2.4vw;font-weight:800;color:var(--steer);margin-top:1.2vh">Tak, a teď s ním jdu vajbkódit! 🚀</div>`);
+  <div class="frag hlod">…tak, a teď s ním jdu vajbkódit! 🚀</div>`);
 // 3 — vágní přání
 add(`${sec('klávesnice')}<div class="big">Když mu napíšu vágní přání, nejdřív tápe.</div>
   <div class="col" style="gap:.6vh;align-items:flex-start;margin-top:.6vh;max-width:88vw;font-size:.95vw">
@@ -212,7 +213,7 @@ add(`${sec('klávesnice')}<div class="big">Když mu napíšu vágní přání, n
   <div class="row" style="gap:.9vw;align-items:center;justify-content:flex-start;flex-wrap:nowrap"><div style="width:5vw;text-align:center">${mascot({scale:.14,spine:false,face:'happy'})}</div><div class="tb"><span class="r">drobek ▸</span> Vždycky rád! Pokud máte další dotazy nebo potřebujete další pomoc, neváhejte se zeptat.</div></div>
  </div>
  <div class="cap" style="margin-top:.8vh">Čtyři kola, žádná funkce.</div>
-  <div class="frag" style="font-size:2vw;font-weight:800;color:var(--steer);margin-top:1vh">Potřebuju někoho, kdo mu to upřesní. Protože to já teda fakt dělat nechci.</div>`);// 8a MODEL 3/5 — malý: velikost + na čem běží + jeden řádek benchmarku (sloučeno ze tří)
+  <div class="frag hlod" style="font-size:2.6vw">…potřebuju někoho, kdo mu to upřesní. Protože to já teda fakt dělat nechci.</div>`);// 8a MODEL 3/5 — malý: velikost + na čem běží + jeden řádek benchmarku (sloučeno ze tří)
 // 3b (slide „s malými to nešlo“ vyřazen 9. 11.)
 add(`${sec('drobek a parta')}${cite(['víc modelů na jeden kód: Huang a kol. 2023, AgentCoder','2312.13010'])}<div class="big">Zvládne to parta nejmenších modelů?</div><i data-anim></i>
 <div class="row" style="gap:1.6vw;align-items:flex-end;justify-content:center;margin:.6vh 0 1.4vh"><div class="col" style="align-items:center;gap:.2vh">${mascot({scale:.16,face:'confused'})}<div style="font-size:.85vw;color:var(--dim)">drobek · 1,5B</div></div><div class="col" style="align-items:center;gap:.2vh">${mascot({scale:.22,senior:true,hat:'refiner'})}<div style="font-size:.85vw;color:var(--dim)">refiner · 4B</div></div><div style="position:relative;align-self:center;margin-bottom:6vh;background:#fff;border:2px solid var(--ink);border-radius:14px;padding:.8vh 1.2vw;font-size:1.35vw;color:var(--ink);max-width:24vw;text-align:left">Ahoj, já jsem trochu větší. Upřesním mu to.<span style="position:absolute;left:-1.1vw;bottom:1.2vh;width:0;height:0;border-top:.7vw solid transparent;border-bottom:.7vw solid transparent;border-right:1.1vw solid var(--ink)"></span></div></div>
@@ -273,11 +274,18 @@ add(`${franta('zahraj fanfáru')}${sec('drobek a parta','co umí')}<div class="b
  `);// 3 roadmap
 // 4 orchestration — KDO JE KDO (infografika rolí)
 add(`${sec('drobek a parta','kdo je kdo')}<div class="big">Funkci napsat umí. Někdo ho ale musí hlídat.</div><i data-anim></i>
- <div class="row" style="gap:2.4vw;align-items:flex-start;margin-top:2.4vh">
-  <div class="col" style="gap:.7vh;max-width:21vw">${mascot({scale:.3})}<div style="font-size:1.4vw"><b>builder · 1,5B</b></div><div class="sub" style="font-size:1vw">píše kód</div></div>
-  <div class="col" style="gap:.7vh;max-width:52vw"><div class="row" style="gap:2.6vw;align-items:flex-end;flex-wrap:nowrap"><div class="col" style="gap:.5vh">${mascot({scale:.3,senior:true,hat:'refiner'})}<div class="sub" style="font-size:1.05vw">refiner</div></div><div class="col" style="gap:.5vh">${mascot({scale:.3,senior:true,hat:'reviewer'})}<div class="sub" style="font-size:1.05vw">reviewer</div></div><div class="col" style="gap:.5vh">${mascot({scale:.3,senior:true,hat:'senior'})}<div class="sub" style="font-size:1.05vw">senior</div></div></div><div style="font-size:1.4vw"><b>4B · o kus větší · jeden model, tři klobouky</b></div></div>
+ <div class="frag hlod">…a to já teda jako fakt být nechci.</div>
+ <div class="frag row" style="gap:2.2vw;align-items:flex-end;margin-top:2vh;flex-wrap:nowrap">
+  <div class="col" style="gap:.5vh">${mascot({scale:.3})}<div style="font-size:1.25vw"><b>drobek · 1,5B</b></div><div class="sub" style="font-size:1vw">píše kód</div></div>
+  <div class="col" style="gap:.5vh">${mascot({scale:.3,senior:true,hat:'refiner'})}<div style="font-size:1.25vw"><b>parťák · 4B</b></div><div class="sub" style="font-size:1vw">upřesní přání</div></div>
+  <div class="frag row" style="gap:4.5vw;align-items:flex-end;flex-wrap:nowrap;margin-left:6vw;padding-left:3vw;border-left:2px dashed var(--line)">
+   <div class="col" style="gap:.5vh">${mascot({scale:.3,senior:true,hat:'reviewer',say:'zkontroluju'})}<div style="font-size:1.25vw"><b>revizor</b></div><div class="sub" style="font-size:1vw">dělá kód, co má?</div></div>
+   <div class="col" style="gap:.5vh">${mascot({scale:.3,senior:true,hat:'senior',say:'poradím'})}<div style="font-size:1.25vw"><b>senior</b></div><div class="sub" style="font-size:1vw">co přesně změnit</div></div>
+   <div style="font-size:1.1vw;color:var(--dim);max-width:12vw;text-align:left;align-self:center">noví dva: <b style="color:var(--ink)">ten samý parťák</b>, jen jiný klobouk</div>
+  </div>
  </div>
  <div class="frag col" style="gap:1vh;align-items:flex-start;margin-top:1.4vh;max-width:86vw"><div class="row" style="gap:.9vw;align-items:center;justify-content:flex-start;flex-wrap:nowrap"><div style="width:5vw;text-align:center">${mascot({scale:.15,spine:false,senior:true,hat:'reviewer'})}</div><div class="tb"><span class="r">reviewer·4B ▸</span> <span class="ok">✓ CORRECT</span>  The function correctly counts the number of tasks marked as completed by checking the 'completed' key in each task dictionary.</div></div></div>
+ <div class="frag" style="font-size:1.7vw;margin-top:2vh;background:color-mix(in srgb, var(--steer) 10%, #fff);border:1.5px solid var(--steer);border-radius:10px;padding:.8vh 1.4vw">Takhle to <b>frčí v Claude Code i v Cursoru</b>: parta promptů nad jedním modelem, jen to nevidíte.</div>
  
  `);// 4d OPRAVA — builder chybuje, reviewer chytí, senior poradí, builder opraví (HumanEval/151 z kyvadlo/review_humaneval.json; int_to_roman z orch_fix3.log vyřazen: první verze byla správně, WRONG byl planý poplach)
 add(`${sec('drobek a parta','reviewer chytá chybu')}${cite(['model jako soudce: Zheng a kol. 2023','2306.05685'])}<div class="big">Builder chybuje, revizor to chytí, a oprava.</div>
